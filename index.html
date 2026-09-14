@@ -42,7 +42,7 @@ tailwind.config = {
         <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
       </div>
     </div>
-    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.1 NAS 直連版</span>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.3 雲端直連版</span>
   </div>
 </header>
 
@@ -110,7 +110,7 @@ tailwind.config = {
 </footer>
 
 <script>
-// 設定你的 Cloudflare 對外公開圖床網域
+// 設定你剛剛綁定的 Cloudflare 對外公開圖床網域
 const NAS_DOMAIN = 'https://images.carpuse.cc';
 
 const form = document.getElementById('search-form');
@@ -144,62 +144,67 @@ function hideError() {
   setTimeout(() => errorToast.classList.add('hidden'), 300);
 }
 
-// 智慧探測該車牌資料夾內的照片
+// 智慧解析 NAS 目錄或直接抓取常見檔名格式 (支援自動掃描)
 async function fetchPlatePhotos(plate) {
   const folderUrl = `${NAS_DOMAIN}/carpuse_events/${plate}/`;
-  
-  // 嘗試透過 WebDAV 或目錄列表抓取檔案清單
-  try {
-    const response = await fetch(folderUrl, { method: 'GET' });
-    if (!response.ok) throw new Error('找不到該車牌專屬資料夾');
-    
-    const text = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, 'text/html');
-    
-    // 從頁面連結中提取圖片檔名 (.jpg, .jpeg, .png, .webp)
-    const links = doc.querySelectorAll('a');
-    let photos = [];
-    
-    links.forEach(a => {
-      const href = a.getAttribute('href');
-      if (href && /\.(jpg|jpeg|png|webp)$/i.test(href)) {
-        // 排除絕對路徑，只取檔名
-        const fileName = href.split('/').pop();
-        if (fileName) {
-          photos.push({
-            url: `${folderUrl}${fileName}`,
-            title: fileName
-          });
-        }
-      }
-    });
+  let photos = [];
 
-    return photos;
-  } catch (err) {
-    console.warn('無法直接讀取目錄清單，啟動備用探測機制...');
-    
-    // 備用方案：若 NAS 未直接開啟目錄列表，測試常見相機命名編號 (如 1 ~ 30 張)
-    let photos = [];
-    const commonPrefixes = ['IMG_', 'DSC_', 'PHOTO_', ''];
-    
-    // 我們可以依序探測前幾張照片是否存在
-    for (let prefix of commonPrefixes) {
-      for (let i = 1; i <= 20; i++) {
-        const numStr = String(i).padStart(4, '0'); // 0001, 0002...
-        const fileName = `${prefix}${numStr}.jpg`;
-        const testUrl = `${folderUrl}${fileName}`;
-        
-        try {
-          const check = await fetch(testUrl, { method: 'HEAD' });
-          if (check.ok) {
-            photos.push({ url: testUrl, title: fileName });
+  try {
+    // 嘗試向 NAS 請求目錄 HTML 列表
+    const response = await fetch(folderUrl);
+    if (response.ok) {
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const links = doc.querySelectorAll('a');
+      
+      links.forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && /\.(jpg|jpeg|png|webp|JPG|JPEG|PNG)$/i.test(href)) {
+          const fileName = href.split('/').pop();
+          if (fileName && !photos.some(p => p.title === fileName)) {
+            photos.push({
+              url: `${folderUrl}${fileName}`,
+              title: fileName
+            });
           }
-        } catch(e) {}
+        }
+      });
+    }
+  } catch (err) {
+    console.warn('目錄列表抓取受限，啟動備用智慧探測...');
+  }
+
+  // 如果直接抓目錄失敗（例如 NAS Web 伺服器未開啟目錄瀏覽），改用智慧強力探測與常見命名
+  if (photos.length === 0) {
+    const prefixes = ['IMG_', 'DSC_', 'PHOTO_', 'IMG-', 'DSC-', ''];
+    // 批次並行探測前 30 張照片
+    const promises = [];
+    
+    for (let prefix of prefixes) {
+      for (let i = 1; i <= 35; i++) {
+        const numStr = String(i).padStart(4, '0');
+        const fileName1 = `${prefix}${numStr}.jpg`;
+        const fileName2 = `${prefix}${numStr}.JPG`;
+        
+        [fileName1, fileName2].forEach(fname => {
+          const testUrl = `${folderUrl}${fname}`;
+          promises.push(
+            fetch(testUrl, { method: 'HEAD' }).then(res => {
+              if (res.ok) {
+                photos.push({ url: testUrl, title: fname });
+              }
+            }).catch(() => {})
+          );
+        });
       }
     }
-    return photos;
+    await Promise.all(promises);
   }
+
+  // 排序確保順序一致
+  photos.sort((a, b) => a.title.localeCompare(b.title));
+  return photos;
 }
 
 form.addEventListener('submit', async (e) => {
@@ -215,14 +220,14 @@ form.addEventListener('submit', async (e) => {
   }
 
   submitBtn.disabled = true;
-  btnText.textContent = '正在調閱相簿...';
+  btnText.textContent = '正在調閱 NAS 影像庫...';
   btnSpinner.classList.remove('hidden');
 
   try {
     const photos = await fetchPlatePhotos(plate);
     
     if (photos.length === 0) {
-      showError(`找不到車牌「${plate}」的相片，請確認資料夾與檔名是否正確。`);
+      showError(`找不到車牌「${plate}」的相片，請確認 NAS 內是否有建立該車牌資料夾並放入相片。`);
     } else {
       targetPlateSpan.textContent = plate;
       renderGallery(photos);
