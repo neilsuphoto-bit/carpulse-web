@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARPULSE 車聚影像查詢系統</title>
-<!-- 使用 Tailwind CSS CDN，免除本地編譯與路徑問題 -->
+<!-- 使用 Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -30,7 +30,7 @@ tailwind.config = {
 </style>
 </head>
 <body class="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
-<!-- Header -->
+
 <header class="border-b border-gray-800 bg-[#0c0e15]/85 backdrop-blur-md sticky top-0 z-40">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
     <div class="flex items-center space-x-3">
@@ -42,11 +42,10 @@ tailwind.config = {
         <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
       </div>
     </div>
-    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.0 完整旗艦版</span>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.1 NAS 直連版</span>
   </div>
 </header>
 
-<!-- Main Content -->
 <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
   <div class="text-center max-w-2xl mx-auto mb-12">
     <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
@@ -54,7 +53,7 @@ tailwind.config = {
       <span>2026 年度車聚官方影像庫</span>
     </span>
     <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">尋找您的愛車精采瞬間</h2>
-    <p class="text-gray-400 text-sm sm:text-base">請輸入您的車牌號碼，解鎖高畫質活動現場寫真照。</p>
+    <p class="text-gray-400 text-sm sm:text-base">請輸入您的車牌號碼，系統將自動解鎖 NAS 對應資料夾寫真照。</p>
   </div>
 
   <!-- Search Box -->
@@ -63,9 +62,9 @@ tailwind.config = {
     <form id="search-form" class="space-y-5 relative z-10">
       <div>
         <label for="plate-input" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">車牌號碼 (Plate Number)</label>
-        <input type="text" id="plate-input" placeholder="例如: ABC-1234 或 ABC1234" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off" pattern="[a-zA-Z0-9\-]+" title="請輸入英文字母、數字或連字號 (-)">
+        <input type="text" id="plate-input" placeholder="例如: BHS0759" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off">
       </div>
-      <button type="submit" id="submit-btn" aria-label="查詢影像" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center space-x-2 mt-4">
+      <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center space-x-2 mt-4">
         <span id="btn-text">立即查詢影像</span>
         <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
       </button>
@@ -83,64 +82,18 @@ tailwind.config = {
   <!-- Gallery Section -->
   <section id="gallery-section" class="mt-16 hidden">
     <div class="flex items-center justify-between mb-8 border-b border-gray-800 pb-4">
-      <h3 id="event-title" class="text-xl font-bold text-white tracking-wide">活動相簿</h3>
+      <h3 id="event-title" class="text-xl font-bold text-white tracking-wide">車牌：<span id="target-plate" class="text-blue-400 font-mono"></span> 的專屬相簿</h3>
       <span class="text-xs text-gray-400">支援點擊圖片檢視原圖與下載</span>
     </div>
     <div id="results-container" class="masonry-grid">
-      <!-- 動態渲染照片處 -->
-    </div>
-  </section>
-
-  <!-- 三個贊助商 / 廣告 Banner 區塊 -->
-  <section class="mt-20 pt-10 border-t border-gray-800">
-    <div class="text-center mb-8">
-      <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">本屆車聚贊助夥伴</h3>
-      <p class="text-xs text-gray-500 mt-1">感謝各大車用品牌與在地店家聯合強力支持</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- 廣告 Banner 1 -->
-      <a href="#" target="_blank" class="group relative bg-[#13151f] border border-gray-800 hover:border-blue-500/50 rounded-2xl overflow-hidden shadow-lg transition duration-300 flex flex-col h-64">
-        <div class="w-full h-3/5 relative overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1598285918731-9a7daeef9b47?auto=format&fit=crop&w=800&q=80" alt="贊助商 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#13151f] to-transparent"></div>
-        </div>
-        <div class="p-5 flex-grow flex flex-col justify-end relative z-10 -mt-6">
-          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-400 mb-1 w-max backdrop-blur-sm">官方合作夥伴</span>
-          <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">頂級賽車改裝部品專賣</h4>
-          <p class="text-xs text-gray-400 mt-0.5">點擊了解獨家改裝優惠方案</p>
-        </div>
-      </a>
-      <!-- 廣告 Banner 2 -->
-      <a href="#" target="_blank" class="group relative bg-[#13151f] border border-gray-800 hover:border-emerald-500/50 rounded-2xl overflow-hidden shadow-lg transition duration-300 flex flex-col h-64">
-        <div class="w-full h-3/5 relative overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80" alt="贊助商 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#13151f] to-transparent"></div>
-        </div>
-        <div class="p-5 flex-grow flex flex-col justify-end relative z-10 -mt-6">
-          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 mb-1 w-max backdrop-blur-sm">精選車險服務</span>
-          <h4 class="text-sm font-bold text-white group-hover:text-emerald-400 transition">超跑與改裝車專屬保障</h4>
-          <p class="text-xs text-gray-400 mt-0.5">線上快速估價，享有車聚專屬折扣</p>
-        </div>
-      </a>
-      <!-- 廣告 Banner 3 -->
-      <a href="#" target="_blank" class="group relative bg-[#13151f] border border-gray-800 hover:border-amber-500/50 rounded-2xl overflow-hidden shadow-lg transition duration-300 flex flex-col h-64">
-        <div class="w-full h-3/5 relative overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80" alt="贊助商 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#13151f] to-transparent"></div>
-        </div>
-        <div class="p-5 flex-grow flex flex-col justify-end relative z-10 -mt-6">
-          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-400 mb-1 w-max backdrop-blur-sm">專業影像美學</span>
-          <h4 class="text-sm font-bold text-white group-hover:text-amber-400 transition">車體鍍膜與全車包膜</h4>
-          <p class="text-xs text-gray-400 mt-0.5">還原愛車鏡面光澤，預約送小禮</p>
-        </div>
-      </a>
+      <!-- 動態載入相片處 -->
     </div>
   </section>
 </main>
 
 <!-- Lightbox Modal -->
 <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
-  <button id="close-lightbox" aria-label="關閉預覽" class="absolute top-6 right-6 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 p-2.5 rounded-full transition z-10">
+  <button id="close-lightbox" class="absolute top-6 right-6 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 p-2.5 rounded-full transition z-10">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
   </button>
   <div class="max-w-5xl max-h-[90vh] flex flex-col items-center">
@@ -152,13 +105,14 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- Footer -->
 <footer class="border-t border-gray-800/80 bg-[#090a0f] py-6 text-center text-xs text-gray-500">
-  <p>© 2026 CARPULSE. All rights reserved. Powered by Vercel & Airtable.</p>
+  <p>© 2026 CARPULSE. All rights reserved. Powered by Cloudflare Tunnel & NAS.</p>
 </footer>
 
-<!-- Frontend Logic Script -->
 <script>
+// 設定你的 Cloudflare 對外公開圖床網域
+const NAS_DOMAIN = 'https://images.carpuse.cc';
+
 const form = document.getElementById('search-form');
 const plateInput = document.getElementById('plate-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -168,6 +122,7 @@ const errorToast = document.getElementById('error-toast');
 const errorMsg = document.getElementById('error-msg');
 const gallerySection = document.getElementById('gallery-section');
 const resultsContainer = document.getElementById('results-container');
+const targetPlateSpan = document.getElementById('target-plate');
 
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
@@ -179,16 +134,9 @@ let errorTimeout;
 function showError(msg) {
   errorMsg.textContent = msg;
   errorToast.classList.remove('hidden');
-  // Small delay to ensure display:block applies before changing opacity
-  requestAnimationFrame(() => {
-    errorToast.classList.remove('opacity-0');
-  });
-
-  // Auto hide error after 5 seconds
+  requestAnimationFrame(() => errorToast.classList.remove('opacity-0'));
   clearTimeout(errorTimeout);
-  errorTimeout = setTimeout(() => {
-    hideError();
-  }, 5000);
+  errorTimeout = setTimeout(hideError, 5000);
 }
 
 function hideError() {
@@ -196,42 +144,92 @@ function hideError() {
   setTimeout(() => errorToast.classList.add('hidden'), 300);
 }
 
+// 智慧探測該車牌資料夾內的照片
+async function fetchPlatePhotos(plate) {
+  const folderUrl = `${NAS_DOMAIN}/carpuse_events/${plate}/`;
+  
+  // 嘗試透過 WebDAV 或目錄列表抓取檔案清單
+  try {
+    const response = await fetch(folderUrl, { method: 'GET' });
+    if (!response.ok) throw new Error('找不到該車牌專屬資料夾');
+    
+    const text = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, 'text/html');
+    
+    // 從頁面連結中提取圖片檔名 (.jpg, .jpeg, .png, .webp)
+    const links = doc.querySelectorAll('a');
+    let photos = [];
+    
+    links.forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && /\.(jpg|jpeg|png|webp)$/i.test(href)) {
+        // 排除絕對路徑，只取檔名
+        const fileName = href.split('/').pop();
+        if (fileName) {
+          photos.push({
+            url: `${folderUrl}${fileName}`,
+            title: fileName
+          });
+        }
+      }
+    });
+
+    return photos;
+  } catch (err) {
+    console.warn('無法直接讀取目錄清單，啟動備用探測機制...');
+    
+    // 備用方案：若 NAS 未直接開啟目錄列表，測試常見相機命名編號 (如 1 ~ 30 張)
+    let photos = [];
+    const commonPrefixes = ['IMG_', 'DSC_', 'PHOTO_', ''];
+    
+    // 我們可以依序探測前幾張照片是否存在
+    for (let prefix of commonPrefixes) {
+      for (let i = 1; i <= 20; i++) {
+        const numStr = String(i).padStart(4, '0'); // 0001, 0002...
+        const fileName = `${prefix}${numStr}.jpg`;
+        const testUrl = `${folderUrl}${fileName}`;
+        
+        try {
+          const check = await fetch(testUrl, { method: 'HEAD' });
+          if (check.ok) {
+            photos.push({ url: testUrl, title: fileName });
+          }
+        } catch(e) {}
+      }
+    }
+    return photos;
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   hideError();
-  
   gallerySection.classList.add('hidden');
-  resultsContainer.innerHTML = ''; // Clear previous results
+  resultsContainer.innerHTML = '';
 
-  let plate = plateInput.value.trim().toUpperCase();
-
-  // Basic validation to remove spaces and check format if needed
-  plate = plate.replace(/\s+/g, '');
-
+  let plate = plateInput.value.trim().toUpperCase().replace(/\s+/g, '');
   if (!plate) {
     showError('請輸入有效的車牌號碼');
     return;
   }
 
-  // 開啟載入狀態
   submitBtn.disabled = true;
-  btnText.textContent = '查詢中...';
+  btnText.textContent = '正在調閱相簿...';
   btnSpinner.classList.remove('hidden');
 
   try {
-    // [說明] 這裡未來直接替換成您的 Airtable API 或後端端點
-    setTimeout(() => {
-      renderGallery([
-        { url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80', title: '活動寫真 01' },
-        { url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80', title: '活動寫真 02' },
-        { url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80', title: '活動寫真 03' }
-      ]);
-      submitBtn.disabled = false;
-      btnText.textContent = '立即查詢影像';
-      btnSpinner.classList.add('hidden');
-    }, 1000);
+    const photos = await fetchPlatePhotos(plate);
+    
+    if (photos.length === 0) {
+      showError(`找不到車牌「${plate}」的相片，請確認資料夾與檔名是否正確。`);
+    } else {
+      targetPlateSpan.textContent = plate;
+      renderGallery(photos);
+    }
   } catch (err) {
-    showError('系統連線發生錯誤，請稍後再試');
+    showError('連線至 NAS 讀取相片時發生錯誤，請稍後再試');
+  } finally {
     submitBtn.disabled = false;
     btnText.textContent = '立即查詢影像';
     btnSpinner.classList.add('hidden');
@@ -240,15 +238,17 @@ form.addEventListener('submit', async (e) => {
 
 function renderGallery(photos) {
   resultsContainer.innerHTML = '';
-  if (!photos || photos.length === 0) {
-    showError('找不到符合該車牌與 PIN 碼的影像資料');
-    return;
-  }
-
   photos.forEach(photo => {
     const div = document.createElement('div');
     div.className = 'masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg group cursor-pointer';
-    div.innerHTML = `<div class="overflow-hidden relative aspect-[4/3]"><img src="${photo.url}" alt="${photo.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4"><span class="text-xs text-white font-medium">點擊放大檢視</span></div></div>`;
+    div.innerHTML = `
+      <div class="overflow-hidden relative aspect-[4/3]">
+        <img src="${photo.url}" alt="${photo.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/800x600/13151f/ffffff?text=Image+Load+Error'">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+          <span class="text-xs text-white font-medium">點擊放大檢視 (${photo.title})</span>
+        </div>
+      </div>
+    `;
     div.addEventListener('click', () => {
       lightboxImg.src = photo.url;
       downloadBtn.href = photo.url;
@@ -257,7 +257,6 @@ function renderGallery(photos) {
     });
     resultsContainer.appendChild(div);
   });
-
   gallerySection.classList.remove('hidden');
 }
 
@@ -267,9 +266,7 @@ closeLightbox.addEventListener('click', () => {
 });
 
 lightboxModal.addEventListener('click', (e) => {
-  if (e.target === lightboxModal) {
-    closeLightbox.click();
-  }
+  if (e.target === lightboxModal) closeLightbox.click();
 });
 </script>
 </body>
