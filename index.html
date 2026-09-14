@@ -20,7 +20,6 @@ tailwind.config = {
 }
 </script>
 <style>
-  /* 隱藏捲軸但保持滾動 */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
@@ -38,7 +37,7 @@ tailwind.config = {
         <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
       </div>
     </div>
-    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v3.0 IG 旗艦版</span>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v3.2 雙軌分離旗艦版</span>
   </div>
 </header>
 
@@ -59,7 +58,7 @@ tailwind.config = {
       <form id="search-form" class="space-y-5 relative z-10">
         <div>
           <label for="plate-input" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">車牌號碼 (Plate Number)</label>
-          <input type="text" id="plate-input" placeholder="例如: BHS0759" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off">
+          <input type="text" id="plate-input" placeholder="例如: BMJ7188" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off">
         </div>
         <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center space-x-2 mt-4">
           <span id="btn-text">立即查詢影像</span>
@@ -86,7 +85,7 @@ tailwind.config = {
         <div class="flex items-center space-x-4">
           <div class="relative">
             <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
-              <img id="profile-avatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full bg-black border-2 border-black">
+              <img id="profile-avatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full bg-black border-2 border-black" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=CARPULSE'">
             </div>
             <div class="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full text-xs shadow">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -135,7 +134,7 @@ tailwind.config = {
       <div class="flex flex-col items-center flex-shrink-0 cursor-pointer">
         <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 to-purple-600">
           <div class="w-full h-full rounded-full bg-black p-0.5">
-            <img id="highlight-1" src="" class="w-full h-full object-cover rounded-full">
+            <img id="highlight-1" src="" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/100x100/121212/ffffff?text=Car'">
           </div>
         </div>
         <span class="text-[11px] text-gray-300 mt-1">精選特寫</span>
@@ -245,34 +244,30 @@ function resetToSearch() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 智慧讀取 NAS 的 index.json (相容純陣列與帶 profile 的物件格式)
+// 雙軌同步讀取：index.json (照片陣列) 與 profile.json (車主個資)
 async function fetchPlateData(plate) {
-  const jsonUrl = `${NAS_DOMAIN}/${plate}/index.json`;
-  const response = await fetch(jsonUrl);
-  
+  const indexUrl = `${NAS_DOMAIN}/${plate}/index.json`;
+  const profileUrl = `${NAS_DOMAIN}/${plate}/profile.json`;
+
+  const response = await fetch(indexUrl);
   if (!response.ok) {
     throw new Error('找不到此車牌資料夾或 index.json 清單');
   }
 
-  const data = await response.json();
-  let filenames = [];
-  let profileData = {};
-
-  if (Array.isArray(data)) {
-    filenames = data;
-    profileData = {
-      name: plate,
-      bio: `✨ 車聚官方特寫寫真檔案\n🏎️ 車牌號碼：${plate}\n📸 完整高畫質活動紀錄\n#CarPulse #CarMeet #Taiwan`
-    };
-  } else if (data && data.photos) {
-    filenames = data.photos;
-    profileData = data.profile || { name: plate };
-  } else {
-    throw new Error('index.json 格式有誤');
+  const filenames = await response.json();
+  if (!Array.isArray(filenames) || filenames.length === 0) {
+    throw new Error('相簿內目前沒有相片');
   }
 
-  if (filenames.length === 0) {
-    return { filenames: [], profile: profileData };
+  // 嘗試讀取 profile.json，若無則回傳 null
+  let profileData = null;
+  try {
+    const profileRes = await fetch(profileUrl);
+    if (profileRes.ok) {
+      profileData = await profileRes.json();
+    }
+  } catch (err) {
+    // 忽略錯誤，後續會自動套用預設公版
   }
 
   return { filenames, profile: profileData };
@@ -294,12 +289,7 @@ form.addEventListener('submit', async (e) => {
 
   try {
     const { filenames, profile } = await fetchPlateData(plate);
-    
-    if (filenames.length === 0) {
-      showError(`車牌「${plate}」的相簿內目前沒有相片。`);
-    } else {
-      renderIGProfile(plate, profile, filenames);
-    }
+    renderIGProfile(plate, profile, filenames);
   } catch (err) {
     showError(`找不到車牌「${plate}」的相片。請確認 NAS 內是否有建立該車牌資料夾，並放入 index.json 與相片。`);
   } finally {
@@ -310,12 +300,15 @@ form.addEventListener('submit', async (e) => {
 });
 
 function renderIGProfile(plate, profile, filenames) {
-  profileTitle.textContent = profile.name || plate;
-  profileBio.textContent = profile.bio || `✨ 車牌 ${plate} 專屬車聚寫真相簿`;
+  // 若有 profile.json 則讀取其資料，否則自動產生預設公版
+  const displayName = profile && profile.name ? profile.name : plate;
+  const displayBio = profile && profile.bio ? profile.bio : `✨ 車聚官方特寫寫真檔案\n🏎️ 車牌號碼：${plate}\n📸 完整高畫質活動紀錄\n#CarPulse #CarMeet #Taiwan`;
+  const avatarFilename = profile && profile.avatar ? profile.avatar : filenames[0];
+
+  profileTitle.textContent = displayName;
+  profileBio.textContent = displayBio;
   statPosts.textContent = filenames.length;
 
-  // 決定頭像來源：若 profile 有指定 avatar 則讀取該檔案，否則預設抓第一張照片
-  const avatarFilename = profile.avatar || filenames[0];
   const avatarUrl = `${NAS_DOMAIN}/${plate}/${avatarFilename}`;
   profileAvatar.src = avatarUrl;
   highlight1.src = avatarUrl;
@@ -328,7 +321,7 @@ function renderIGProfile(plate, profile, filenames) {
     const div = document.createElement('div');
     div.className = "aspect-square bg-gray-900 relative group cursor-pointer overflow-hidden";
     div.innerHTML = `
-      <img src="${photoUrl}" alt="${filename}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+      <img src="${photoUrl}" alt="${filename}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.style.display='none'">
       <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs">
         <span>❤️ 點擊觀看</span>
       </div>
@@ -337,7 +330,7 @@ function renderIGProfile(plate, profile, filenames) {
     div.addEventListener('click', () => {
       lightboxImg.src = photoUrl;
       lbAvatar.src = avatarUrl;
-      lbPlate.textContent = profile.name || plate;
+      lbPlate.textContent = displayName;
       lbFilename.textContent = filename;
       downloadBtn.href = photoUrl;
       lightboxModal.classList.remove('hidden');
