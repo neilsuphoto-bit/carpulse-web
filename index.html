@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CARPULSE 車聚影像查詢系統</title>
+<title>CARPULSE 車聚影像智能查詢系統</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -37,7 +37,7 @@ tailwind.config = {
         <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
       </div>
     </div>
-    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v3.2 雙軌分離旗艦版</span>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v3.3 雙軌分類旗艦版</span>
   </div>
 </header>
 
@@ -129,22 +129,9 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- Highlights Row -->
-    <div class="py-2 mb-4 flex space-x-4 overflow-x-auto no-scrollbar">
-      <div class="flex flex-col items-center flex-shrink-0 cursor-pointer">
-        <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 to-purple-600">
-          <div class="w-full h-full rounded-full bg-black p-0.5">
-            <img id="highlight-1" src="" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/100x100/121212/ffffff?text=Car'">
-          </div>
-        </div>
-        <span class="text-[11px] text-gray-300 mt-1">精選特寫</span>
-      </div>
-      <div class="flex flex-col items-center flex-shrink-0 cursor-pointer">
-        <div class="w-16 h-16 rounded-full border border-igborder bg-igcard flex items-center justify-center text-xl text-gray-400">
-          🏎️
-        </div>
-        <span class="text-[11px] text-gray-300 mt-1">現場直擊</span>
-      </div>
+    <!-- Highlights Category Row -->
+    <div id="highlights-container" class="py-2 mb-4 flex space-x-4 overflow-x-auto no-scrollbar">
+      <!-- 動態載入車聚活動分類圓圈 -->
     </div>
 
     <!-- IG Tabs -->
@@ -207,12 +194,12 @@ const errorMsg = document.getElementById('error-msg');
 const searchContainer = document.getElementById('search-container');
 const gallerySection = document.getElementById('gallery-section');
 const resultsContainer = document.getElementById('results-container');
+const highlightsContainer = document.getElementById('highlights-container');
 
 const profileAvatar = document.getElementById('profile-avatar');
 const profileTitle = document.getElementById('profile-title');
 const profileBio = document.getElementById('profile-bio');
 const statPosts = document.getElementById('stat-posts');
-const highlight1 = document.getElementById('highlight-1');
 
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
@@ -221,6 +208,10 @@ const lbPlate = document.getElementById('lb-plate');
 const lbFilename = document.getElementById('lb-filename');
 const downloadBtn = document.getElementById('download-btn');
 const closeLightbox = document.getElementById('close-lightbox');
+
+let currentActivePlate = '';
+let currentPhotos = [];
+let currentProfile = null;
 
 let errorTimeout;
 
@@ -244,22 +235,21 @@ function resetToSearch() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 雙軌同步讀取：index.json (照片陣列) 與 profile.json (車主個資)
+// 雙軌獨立讀取：index.json (照片清單) 與 profile.json (車主個資與分類)
 async function fetchPlateData(plate) {
   const indexUrl = `${NAS_DOMAIN}/${plate}/index.json`;
   const profileUrl = `${NAS_DOMAIN}/${plate}/profile.json`;
 
-  const response = await fetch(indexUrl);
-  if (!response.ok) {
+  const indexRes = await fetch(indexUrl);
+  if (!indexRes.ok) {
     throw new Error('找不到此車牌資料夾或 index.json 清單');
   }
 
-  const filenames = await response.json();
+  const filenames = await indexRes.json();
   if (!Array.isArray(filenames) || filenames.length === 0) {
     throw new Error('相簿內目前沒有相片');
   }
 
-  // 嘗試讀取 profile.json，若無則回傳 null
   let profileData = null;
   try {
     const profileRes = await fetch(profileUrl);
@@ -267,10 +257,15 @@ async function fetchPlateData(plate) {
       profileData = await profileRes.json();
     }
   } catch (err) {
-    // 忽略錯誤，後續會自動套用預設公版
+    // 若無 profile.json 則維持 null，自動套用預設公版
   }
 
-  return { filenames, profile: profileData };
+  const photos = filenames.map(filename => ({
+    url: `${NAS_DOMAIN}/${plate}/${filename}`,
+    title: filename
+  }));
+
+  return { profile: profileData, photos };
 }
 
 form.addEventListener('submit', async (e) => {
@@ -288,8 +283,18 @@ form.addEventListener('submit', async (e) => {
   btnSpinner.classList.remove('hidden');
 
   try {
-    const { filenames, profile } = await fetchPlateData(plate);
-    renderIGProfile(plate, profile, filenames);
+    const data = await fetchPlateData(plate);
+    currentActivePlate = plate;
+    currentPhotos = data.photos;
+    currentProfile = data.profile;
+
+    renderIGProfile(plate, data.profile, data.photos);
+    renderHighlights(plate, data.profile, data.photos);
+    renderGallery(data.photos);
+
+    searchContainer.classList.add('hidden');
+    gallerySection.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (err) {
     showError(`找不到車牌「${plate}」的相片。請確認 NAS 內是否有建立該車牌資料夾，並放入 index.json 與相片。`);
   } finally {
@@ -299,50 +304,101 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-function renderIGProfile(plate, profile, filenames) {
-  // 若有 profile.json 則讀取其資料，否則自動產生預設公版
+function renderIGProfile(plate, profile, photos) {
   const displayName = profile && profile.name ? profile.name : plate;
   const displayBio = profile && profile.bio ? profile.bio : `✨ 車聚官方特寫寫真檔案\n🏎️ 車牌號碼：${plate}\n📸 完整高畫質活動紀錄\n#CarPulse #CarMeet #Taiwan`;
-  const avatarFilename = profile && profile.avatar ? profile.avatar : filenames[0];
+  
+  // 若 profile 有指定 avatar 則用之，否則預設用第一張照片
+  let avatarUrl = '';
+  if (profile && profile.avatar) {
+    avatarUrl = `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
+  } else if (photos.length > 0) {
+    avatarUrl = photos[0].url;
+  }
 
   profileTitle.textContent = displayName;
   profileBio.textContent = displayBio;
-  statPosts.textContent = filenames.length;
-
-  const avatarUrl = `${NAS_DOMAIN}/${plate}/${avatarFilename}`;
+  statPosts.textContent = photos.length;
   profileAvatar.src = avatarUrl;
-  highlight1.src = avatarUrl;
+}
 
+// 渲染活動分類精選動態圓圈
+function renderHighlights(plate, profile, photos) {
+  highlightsContainer.innerHTML = '';
+
+  // 1. "全部" 預設圓圈
+  const allDiv = document.createElement('div');
+  allDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group";
+  const defaultCover = photos.length > 0 ? photos[0].url : '';
+  allDiv.innerHTML = `
+    <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 to-purple-600 ring-2 ring-blue-500/50">
+      <div class="w-full h-full rounded-full bg-black p-0.5">
+        <img src="${defaultCover}" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/100x100/121212/ffffff?text=All'">
+      </div>
+    </div>
+    <span class="text-[11px] text-gray-300 mt-1 font-medium">全部相片</span>
+  `;
+  allDiv.addEventListener('click', () => {
+    renderGallery(photos);
+  });
+  highlightsContainer.appendChild(allDiv);
+
+  // 2. 讀取 profile.json 裡面的 highlights 陣列
+  if (profile && Array.isArray(profile.highlights)) {
+    profile.highlights.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group";
+      const coverUrl = `${NAS_DOMAIN}/${plate}/${item.cover}`;
+      itemDiv.innerHTML = `
+        <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 to-purple-600">
+          <div class="w-full h-full rounded-full bg-black p-0.5">
+            <img src="${coverUrl}" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/100x100/121212/ffffff?text=Car'">
+          </div>
+        </div>
+        <span class="text-[11px] text-gray-300 mt-1 max-w-[64px] truncate">${item.title}</span>
+      `;
+      
+      // 點擊該車聚分類圓圈時，過濾顯示對應的相片
+      itemDiv.addEventListener('click', () => {
+        const filteredPhotos = photos.filter(p => item.photos.includes(p.title));
+        renderGallery(filteredPhotos);
+      });
+      
+      highlightsContainer.appendChild(itemDiv);
+    });
+  }
+}
+
+function renderGallery(photos) {
   resultsContainer.innerHTML = '';
-  filenames.forEach(filename => {
-    const photoUrl = `${NAS_DOMAIN}/${plate}/${filename}`;
-    
-    // IG 經典 1:1 正方形相格
+  
+  if (photos.length === 0) {
+    resultsContainer.innerHTML = `<div class="col-span-3 py-12 text-center text-gray-500 text-xs">此分類目前沒有相片</div>`;
+    return;
+  }
+
+  photos.forEach(photo => {
     const div = document.createElement('div');
     div.className = "aspect-square bg-gray-900 relative group cursor-pointer overflow-hidden";
     div.innerHTML = `
-      <img src="${photoUrl}" alt="${filename}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.style.display='none'">
+      <img src="${photo.url}" alt="${photo.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.style.display='none'">
       <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs">
         <span>❤️ 點擊觀看</span>
       </div>
     `;
 
     div.addEventListener('click', () => {
-      lightboxImg.src = photoUrl;
-      lbAvatar.src = avatarUrl;
-      lbPlate.textContent = displayName;
-      lbFilename.textContent = filename;
-      downloadBtn.href = photoUrl;
+      lightboxImg.src = photo.url;
+      lbAvatar.src = profileAvatar.src;
+      lbPlate.textContent = profileTitle.textContent;
+      lbFilename.textContent = photo.title;
+      downloadBtn.href = photo.url;
       lightboxModal.classList.remove('hidden');
       setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
     });
 
     resultsContainer.appendChild(div);
   });
-
-  searchContainer.classList.add('hidden');
-  gallerySection.classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 closeLightbox.addEventListener('click', () => {
