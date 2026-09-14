@@ -11,30 +11,25 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        darkbg: '#090a0f'
+        darkbg: '#090a0f',
+        igcard: '#121212',
+        igborder: '#262626'
       }
     }
   }
 }
 </script>
 <style>
-.masonry-grid {
-  column-count: 1;
-  column-gap: 1.5rem;
-}
-@media (min-width: 640px) { .masonry-grid { column-count: 2; } }
-@media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
-.masonry-item {
-  break-inside: avoid;
-  margin-bottom: 1.5rem;
-}
+  /* 隱藏捲軸但保持滾動 */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 </head>
 <body class="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
 <header class="border-b border-gray-800 bg-[#0c0e15]/85 backdrop-blur-md sticky top-0 z-40">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-    <div class="flex items-center space-x-3">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-3 cursor-pointer" onclick="resetToSearch()">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
       </div>
@@ -43,64 +38,155 @@ tailwind.config = {
         <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
       </div>
     </div>
-    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.8 JSON 直連版</span>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v3.0 IG 旗艦版</span>
   </div>
 </header>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-  <div class="text-center max-w-2xl mx-auto mb-12">
-    <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
-      <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-      <span>2026 年度車聚官方影像庫</span>
-    </span>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">尋找您的愛車精采瞬間</h2>
-    <p class="text-gray-400 text-sm sm:text-base">請輸入您的車牌號碼，系統將自動解鎖 NAS 對應資料夾寫真照。</p>
-  </div>
+<main class="flex-grow max-w-2xl mx-auto px-4 py-12 w-full">
+  <div id="search-container" class="transition-all duration-300">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+        <span>2026 年度車聚官方影像庫</span>
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">尋找您的愛車精采瞬間</h2>
+      <p class="text-gray-400 text-sm sm:text-base">請輸入您的車牌號碼，系統將自動解鎖 NAS 對應資料夾寫真照。</p>
+    </div>
 
-  <!-- Search Box -->
-  <div class="max-w-xl mx-auto bg-[#13151f] border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-    <div class="absolute -right-20 -top-20 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-    <form id="search-form" class="space-y-5 relative z-10">
-      <div>
-        <label for="plate-input" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">車牌號碼 (Plate Number)</label>
-        <input type="text" id="plate-input" placeholder="例如: BHS0759" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off">
+    <!-- Search Box -->
+    <div class="max-w-xl mx-auto bg-[#13151f] border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-20 -top-20 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <form id="search-form" class="space-y-5 relative z-10">
+        <div>
+          <label for="plate-input" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">車牌號碼 (Plate Number)</label>
+          <input type="text" id="plate-input" placeholder="例如: BHS0759" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off">
+        </div>
+        <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center space-x-2 mt-4">
+          <span id="btn-text">立即查詢影像</span>
+          <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Error Toast Container -->
+    <div id="error-toast" class="max-w-xl mx-auto mt-6 hidden opacity-0 transition-opacity duration-300">
+      <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3 text-red-400">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <span id="error-msg" class="text-sm font-medium">錯誤提示訊息</span>
       </div>
-      <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center space-x-2 mt-4">
-        <span id="btn-text">立即查詢影像</span>
-        <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-      </button>
-    </form>
-  </div>
-
-  <!-- Error Toast Container -->
-  <div id="error-toast" class="max-w-xl mx-auto mt-6 hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3 text-red-400">
-      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-      <span id="error-msg" class="text-sm font-medium">錯誤提示訊息</span>
     </div>
   </div>
 
-  <!-- Gallery Section -->
-  <section id="gallery-section" class="mt-16 hidden">
-    <div class="flex items-center justify-between mb-8 border-b border-gray-800 pb-4">
-      <h3 id="event-title" class="text-xl font-bold text-white tracking-wide">車牌：<span id="target-plate" class="text-blue-400 font-mono"></span> 的專屬相簿</h3>
-      <span class="text-xs text-gray-400">支援點擊圖片檢視原圖與下載</span>
+  <section id="gallery-section" class="mt-4 hidden">
+    
+    <!-- Profile Header Info -->
+    <div class="bg-igcard border border-igborder rounded-2xl p-5 mb-6 shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <!-- Avatar & Plate -->
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
+              <img id="profile-avatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full bg-black border-2 border-black">
+            </div>
+            <div class="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full text-xs shadow">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <h3 id="profile-title" class="text-base sm:text-lg font-bold text-white tracking-wide font-mono">BHS0759</h3>
+              <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            </div>
+            <p class="text-xs text-gray-400 mt-0.5">官方認證車聚寫真檔案</p>
+          </div>
+        </div>
+
+        <!-- Stats Counter -->
+        <div class="flex space-x-6 text-center pr-2">
+          <div>
+            <div id="stat-posts" class="font-bold text-white text-base">0</div>
+            <div class="text-xs text-gray-400">貼文</div>
+          </div>
+          <div>
+            <div class="font-bold text-white text-base">2026</div>
+            <div class="text-xs text-gray-400">年度</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio Info -->
+      <div class="text-xs sm:text-sm text-gray-200 space-y-1 mb-4 bg-black/40 border border-igborder p-3.5 rounded-xl">
+        <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex space-x-2">
+        <button onclick="resetToSearch()" class="flex-1 bg-black hover:bg-gray-900 border border-igborder text-white text-xs font-semibold py-2.5 rounded-xl transition">
+          切換其他車牌
+        </button>
+        <button onclick="shareProfile()" class="flex-1 bg-black hover:bg-gray-900 border border-igborder text-white text-xs font-semibold py-2.5 rounded-xl transition">
+          分享此車主主頁
+        </button>
+      </div>
     </div>
-    <div id="results-container" class="masonry-grid">
-      <!-- 動態相片載入處 -->
+
+    <!-- Highlights Row -->
+    <div class="py-2 mb-4 flex space-x-4 overflow-x-auto no-scrollbar">
+      <div class="flex flex-col items-center flex-shrink-0 cursor-pointer">
+        <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 to-purple-600">
+          <div class="w-full h-full rounded-full bg-black p-0.5">
+            <img id="highlight-1" src="" class="w-full h-full object-cover rounded-full">
+          </div>
+        </div>
+        <span class="text-[11px] text-gray-300 mt-1">精選特寫</span>
+      </div>
+      <div class="flex flex-col items-center flex-shrink-0 cursor-pointer">
+        <div class="w-16 h-16 rounded-full border border-igborder bg-igcard flex items-center justify-center text-xl text-gray-400">
+          🏎️
+        </div>
+        <span class="text-[11px] text-gray-300 mt-1">現場直擊</span>
+      </div>
+    </div>
+
+    <!-- IG Tabs -->
+    <div class="border-t border-igborder flex justify-center mb-1">
+      <div class="border-t-2 border-white text-white px-6 py-3 flex items-center space-x-2 -mt-[1px]">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
+        <span class="text-xs font-semibold tracking-wider uppercase">相片牆 (Posts)</span>
+      </div>
+    </div>
+
+    <!-- IG 3-Column Square Grid Container -->
+    <div id="results-container" class="grid grid-cols-3 gap-1 bg-igborder rounded-xl overflow-hidden shadow-2xl">
+      <!-- 動態 1:1 正方形相片載入處 -->
     </div>
   </section>
 </main>
 
-<div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
-  <button id="close-lightbox" class="absolute top-6 right-6 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 p-2.5 rounded-full transition z-10">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-  </button>
-  <div class="max-w-5xl max-h-[90vh] flex flex-col items-center">
-    <img id="lightbox-img" src="" alt="Enlarged photo" class="max-h-[75vh] max-w-full object-contain rounded-lg shadow-2xl mb-4">
-    <a id="download-btn" href="" target="_blank" download class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-6 py-2.5 rounded-xl shadow-lg transition flex items-center space-x-2">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-      <span>下載原始檔 (Download Original)</span>
+<div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex flex-col justify-between">
+  <div class="flex items-center justify-between p-4 border-b border-igborder bg-black/80">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-full bg-gray-800 overflow-hidden">
+        <img id="lb-avatar" src="" class="w-full h-full object-cover">
+      </div>
+      <div>
+        <h4 id="lb-plate" class="text-xs font-bold text-white font-mono">BHS0759</h4>
+        <p class="text-[10px] text-gray-400">CARPULSE Official</p>
+      </div>
+    </div>
+    <button id="close-lightbox" class="text-gray-400 hover:text-white p-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+  </div>
+
+  <div class="flex-grow flex items-center justify-center p-2 overflow-hidden">
+    <img id="lightbox-img" src="" alt="Post Detail" class="max-h-[75vh] max-w-full object-contain">
+  </div>
+
+  <div class="p-4 border-t border-igborder bg-igcard flex items-center justify-between">
+    <div class="text-xs text-gray-400 font-mono truncate max-w-[50%]" id="lb-filename">filename.jpg</div>
+    <a id="download-btn" href="" target="_blank" download class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow">
+      下載原圖 (Original)
     </a>
   </div>
 </div>
@@ -110,7 +196,6 @@ tailwind.config = {
 </footer>
 
 <script>
-// 對外公開的 Cloudflare Tunnel 網域
 const NAS_DOMAIN = 'https://images.carpuse.cc';
 
 const form = document.getElementById('search-form');
@@ -120,12 +205,21 @@ const btnText = document.getElementById('btn-text');
 const btnSpinner = document.getElementById('btn-spinner');
 const errorToast = document.getElementById('error-toast');
 const errorMsg = document.getElementById('error-msg');
+const searchContainer = document.getElementById('search-container');
 const gallerySection = document.getElementById('gallery-section');
 const resultsContainer = document.getElementById('results-container');
-const targetPlateSpan = document.getElementById('target-plate');
+
+const profileAvatar = document.getElementById('profile-avatar');
+const profileTitle = document.getElementById('profile-title');
+const profileBio = document.getElementById('profile-bio');
+const statPosts = document.getElementById('stat-posts');
+const highlight1 = document.getElementById('highlight-1');
 
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
+const lbAvatar = document.getElementById('lb-avatar');
+const lbPlate = document.getElementById('lb-plate');
+const lbFilename = document.getElementById('lb-filename');
 const downloadBtn = document.getElementById('download-btn');
 const closeLightbox = document.getElementById('close-lightbox');
 
@@ -144,8 +238,15 @@ function hideError() {
   setTimeout(() => errorToast.classList.add('hidden'), 300);
 }
 
-// 透過讀取 NAS 目錄下的 index.json 抓取相片清單
-async function fetchPlatePhotos(plate) {
+function resetToSearch() {
+  gallerySection.classList.add('hidden');
+  searchContainer.classList.remove('hidden');
+  plateInput.value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 智慧讀取 NAS 的 index.json (相容純陣列與帶 profile 的物件格式)
+async function fetchPlateData(plate) {
   const jsonUrl = `${NAS_DOMAIN}/${plate}/index.json`;
   const response = await fetch(jsonUrl);
   
@@ -153,22 +254,33 @@ async function fetchPlatePhotos(plate) {
     throw new Error('找不到此車牌資料夾或 index.json 清單');
   }
 
-  const filenames = await response.json();
-  if (!Array.isArray(filenames) || filenames.length === 0) {
-    return [];
+  const data = await response.json();
+  let filenames = [];
+  let profileData = {};
+
+  if (Array.isArray(data)) {
+    filenames = data;
+    profileData = {
+      name: plate,
+      bio: `✨ 車聚官方特寫寫真檔案\n🏎️ 車牌號碼：${plate}\n📸 完整高畫質活動紀錄\n#CarPulse #CarMeet #Taiwan`
+    };
+  } else if (data && data.photos) {
+    filenames = data.photos;
+    profileData = data.profile || { name: plate };
+  } else {
+    throw new Error('index.json 格式有誤');
   }
 
-  return filenames.map(filename => ({
-    url: `${NAS_DOMAIN}/${plate}/${filename}`,
-    title: filename
-  }));
+  if (filenames.length === 0) {
+    return { filenames: [], profile: profileData };
+  }
+
+  return { filenames, profile: profileData };
 }
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   hideError();
-  gallerySection.classList.add('hidden');
-  resultsContainer.innerHTML = '';
 
   let plate = plateInput.value.trim().toUpperCase().replace(/\s+/g, '');
   if (!plate) {
@@ -177,17 +289,16 @@ form.addEventListener('submit', async (e) => {
   }
 
   submitBtn.disabled = true;
-  btnText.textContent = '正在調閱 NAS 影像庫...';
+  btnText.textContent = '正在調閱 IG 車主主頁...';
   btnSpinner.classList.remove('hidden');
 
   try {
-    const photos = await fetchPlatePhotos(plate);
+    const { filenames, profile } = await fetchPlateData(plate);
     
-    if (photos.length === 0) {
+    if (filenames.length === 0) {
       showError(`車牌「${plate}」的相簿內目前沒有相片。`);
     } else {
-      targetPlateSpan.textContent = plate;
-      renderGallery(photos);
+      renderIGProfile(plate, profile, filenames);
     }
   } catch (err) {
     showError(`找不到車牌「${plate}」的相片。請確認 NAS 內是否有建立該車牌資料夾，並放入 index.json 與相片。`);
@@ -198,28 +309,44 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-function renderGallery(photos) {
+function renderIGProfile(plate, profile, filenames) {
+  profileTitle.textContent = profile.name || plate;
+  profileBio.textContent = profile.bio || `✨ 車牌 ${plate} 專屬車聚寫真相簿`;
+  statPosts.textContent = filenames.length;
+
+  const firstPhotoUrl = `${NAS_DOMAIN}/${plate}/${filenames[0]}`;
+  profileAvatar.src = firstPhotoUrl;
+  highlight1.src = firstPhotoUrl;
+
   resultsContainer.innerHTML = '';
-  photos.forEach(photo => {
+  filenames.forEach(filename => {
+    const photoUrl = `${NAS_DOMAIN}/${plate}/${filename}`;
+    
     const div = document.createElement('div');
-    div.className = 'masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg group cursor-pointer';
+    div.className = "aspect-square bg-gray-900 relative group cursor-pointer overflow-hidden";
     div.innerHTML = `
-      <div class="overflow-hidden relative aspect-[4/3]">
-        <img src="${photo.url}" alt="${photo.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.style.display='none'">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
-          <span class="text-xs text-white font-medium">點擊放大檢視 (${photo.title})</span>
-        </div>
+      <img src="${photoUrl}" alt="${filename}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs">
+        <span>❤️ 點擊觀看</span>
       </div>
     `;
+
     div.addEventListener('click', () => {
-      lightboxImg.src = photo.url;
-      downloadBtn.href = photo.url;
+      lightboxImg.src = photoUrl;
+      lbAvatar.src = firstPhotoUrl;
+      lbPlate.textContent = profile.name || plate;
+      lbFilename.textContent = filename;
+      downloadBtn.href = photoUrl;
       lightboxModal.classList.remove('hidden');
       setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
     });
+
     resultsContainer.appendChild(div);
   });
+
+  searchContainer.classList.add('hidden');
   gallerySection.classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 closeLightbox.addEventListener('click', () => {
@@ -230,6 +357,23 @@ closeLightbox.addEventListener('click', () => {
 lightboxModal.addEventListener('click', (e) => {
   if (e.target === lightboxModal) closeLightbox.click();
 });
+
+function shareProfile() {
+  if (navigator.clipboard) {
+    const url = window.location.href;
+    const dummy = document.createElement('input');
+    document.body.appendChild(dummy);
+    dummy.value = url;
+    dummy.select();
+    document.execCommand('copy');
+    document.body.removeChild(dummy);
+    
+    const btn = event.currentTarget;
+    const oldText = btn.textContent;
+    btn.textContent = '連結已複製！';
+    setTimeout(() => btn.textContent = oldText, 2000);
+  }
+}
 </script>
 </body>
 </html>
