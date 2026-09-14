@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARPULSE 車聚影像查詢系統</title>
+<!-- 使用 Tailwind CSS CDN，免除本地編譯與路徑問題 -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: { darkbg: '#090a0f' }
+    }
+  }
+}
+</script>
+<style>
+.masonry-grid {
+  column-count: 1;
+  column-gap: 1.5rem;
+}
+@media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+@media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+}
+</style>
+</head>
+<body class="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+<!-- Header -->
+<header class="border-b border-gray-800 bg-[#0c0e15]/85 backdrop-blur-md sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-wider text-white">CARPULSE</h1>
+        <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
+      </div>
+    </div>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.0 完整旗艦版</span>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+      <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+      <span>2026 年度車聚官方影像庫</span>
+    </span>
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">尋找您的愛車精采瞬間</h2>
+    <p class="text-gray-400 text-sm sm:text-base">請輸入您的車牌號碼，解鎖高畫質活動現場寫真照。</p>
+  </div>
+
+  <!-- Search Box -->
+  <div class="max-w-xl mx-auto bg-[#13151f] border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-20 -top-20 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <form id="search-form" class="space-y-5 relative z-10">
+      <div>
+        <label for="plate-input" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">車牌號碼 (Plate Number)</label>
+        <input type="text" id="plate-input" placeholder="例如: ABC-1234 或 ABC1234" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition uppercase font-mono tracking-wider text-lg" required autocomplete="off" pattern="[a-zA-Z0-9\-]+" title="請輸入英文字母、數字或連字號 (-)">
+      </div>
+      <button type="submit" id="submit-btn" aria-label="查詢影像" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center space-x-2 mt-4">
+        <span id="btn-text">立即查詢影像</span>
+        <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Error Toast -->
+  <div id="error-toast" class="max-w-xl mx-auto mt-6 hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3 text-red-400">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+      <span id="error-msg" class="text-sm font-medium">錯誤提示訊息</span>
+    </div>
+  </div>
+
+  <!-- Gallery Section -->
+  <section id="gallery-section" class="mt-16 hidden">
+    <div class="flex items-center justify-between mb-8 border-b border-gray-800 pb-4">
+      <h3 id="event-title" class="text-xl font-bold text-white tracking-wide">活動相簿</h3>
+      <span class="text-xs text-gray-400">支援點擊圖片檢視原圖與下載</span>
+    </div>
+    <div id="results-container" class="masonry-grid">
+      <!-- 動態渲染照片處 -->
+    </div>
+  </section>
+
+  <!-- 三個贊助商 / 廣告 Banner 區塊 -->
+  <section class="mt-20 pt-10 border-t border-gray-800">
+    <div class="text-center mb-8">
+      <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">本屆車聚贊助夥伴</h3>
+      <p class="text-xs text-gray-500 mt-1">感謝各大車用品牌與在地店家聯合強力支持</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- 廣告 Banner 1 -->
+      <a href="#" target="_blank" class="group relative bg-[#13151f] border border-gray-800 hover:border-blue-500/50 rounded-2xl overflow-hidden shadow-lg transition duration-300 flex flex-col h-64">
+        <div class="w-full h-3/5 relative overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1598285918731-9a7daeef9b47?auto=format&fit=crop&w=800&q=80" alt="贊助商 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#13151f] to-transparent"></div>
+        </div>
+        <div class="p-5 flex-grow flex flex-col justify-end relative z-10 -mt-6">
+          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-400 mb-1 w-max backdrop-blur-sm">官方合作夥伴</span>
+          <h4 class="text-sm font-bold text-white group-hover:text-blue-400 transition">頂級賽車改裝部品專賣</h4>
+          <p class="text-xs text-gray-400 mt-0.5">點擊了解獨家改裝優惠方案</p>
+        </div>
+      </a>
+      <!-- 廣告 Banner 2 -->
+      <a href="#" target="_blank" class="group relative bg-[#13151f] border border-gray-800 hover:border-emerald-500/50 rounded-2xl overflow-hidden shadow-lg transition duration-300 flex flex-col h-64">
+        <div class="w-full h-3/5 relative overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80" alt="贊助商 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#13151f] to-transparent"></div>
+        </div>
+        <div class="p-5 flex-grow flex flex-col justify-end relative z-10 -mt-6">
+          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 mb-1 w-max backdrop-blur-sm">精選車險服務</span>
+          <h4 class="text-sm font-bold text-white group-hover:text-emerald-400 transition">超跑與改裝車專屬保障</h4>
+          <p class="text-xs text-gray-400 mt-0.5">線上快速估價，享有車聚專屬折扣</p>
+        </div>
+      </a>
+      <!-- 廣告 Banner 3 -->
+      <a href="#" target="_blank" class="group relative bg-[#13151f] border border-gray-800 hover:border-amber-500/50 rounded-2xl overflow-hidden shadow-lg transition duration-300 flex flex-col h-64">
+        <div class="w-full h-3/5 relative overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80" alt="贊助商 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#13151f] to-transparent"></div>
+        </div>
+        <div class="p-5 flex-grow flex flex-col justify-end relative z-10 -mt-6">
+          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-400 mb-1 w-max backdrop-blur-sm">專業影像美學</span>
+          <h4 class="text-sm font-bold text-white group-hover:text-amber-400 transition">車體鍍膜與全車包膜</h4>
+          <p class="text-xs text-gray-400 mt-0.5">還原愛車鏡面光澤，預約送小禮</p>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- Lightbox Modal -->
+<div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+  <button id="close-lightbox" aria-label="關閉預覽" class="absolute top-6 right-6 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 p-2.5 rounded-full transition z-10">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+  </button>
+  <div class="max-w-5xl max-h-[90vh] flex flex-col items-center">
+    <img id="lightbox-img" src="" alt="Enlarged photo" class="max-h-[75vh] max-w-full object-contain rounded-lg shadow-2xl mb-4">
+    <a id="download-btn" href="" target="_blank" download class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-6 py-2.5 rounded-xl shadow-lg transition flex items-center space-x-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      <span>下載原始檔 (Download Original)</span>
+    </a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-gray-800/80 bg-[#090a0f] py-6 text-center text-xs text-gray-500">
+  <p>© 2026 CARPULSE. All rights reserved. Powered by Vercel & Airtable.</p>
+</footer>
+
+<!-- Frontend Logic Script -->
+<script>
+const form = document.getElementById('search-form');
+const plateInput = document.getElementById('plate-input');
+const submitBtn = document.getElementById('submit-btn');
+const btnText = document.getElementById('btn-text');
+const btnSpinner = document.getElementById('btn-spinner');
+const errorToast = document.getElementById('error-toast');
+const errorMsg = document.getElementById('error-msg');
+const gallerySection = document.getElementById('gallery-section');
+const resultsContainer = document.getElementById('results-container');
+
+const lightboxModal = document.getElementById('lightbox-modal');
+const lightboxImg = document.getElementById('lightbox-img');
+const downloadBtn = document.getElementById('download-btn');
+const closeLightbox = document.getElementById('close-lightbox');
+
+let errorTimeout;
+
+function showError(msg) {
+  errorMsg.textContent = msg;
+  errorToast.classList.remove('hidden');
+  // Small delay to ensure display:block applies before changing opacity
+  requestAnimationFrame(() => {
+    errorToast.classList.remove('opacity-0');
+  });
+
+  // Auto hide error after 5 seconds
+  clearTimeout(errorTimeout);
+  errorTimeout = setTimeout(() => {
+    hideError();
+  }, 5000);
+}
+
+function hideError() {
+  errorToast.classList.add('opacity-0');
+  setTimeout(() => errorToast.classList.add('hidden'), 300);
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  hideError();
+  
+  gallerySection.classList.add('hidden');
+  resultsContainer.innerHTML = ''; // Clear previous results
+
+  let plate = plateInput.value.trim().toUpperCase();
+
+  // Basic validation to remove spaces and check format if needed
+  plate = plate.replace(/\s+/g, '');
+
+  if (!plate) {
+    showError('請輸入有效的車牌號碼');
+    return;
+  }
+
+  // 開啟載入狀態
+  submitBtn.disabled = true;
+  btnText.textContent = '查詢中...';
+  btnSpinner.classList.remove('hidden');
+
+  try {
+    // [說明] 這裡未來直接替換成您的 Airtable API 或後端端點
+    setTimeout(() => {
+      renderGallery([
+        { url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80', title: '活動寫真 01' },
+        { url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80', title: '活動寫真 02' },
+        { url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80', title: '活動寫真 03' }
+      ]);
+      submitBtn.disabled = false;
+      btnText.textContent = '立即查詢影像';
+      btnSpinner.classList.add('hidden');
+    }, 1000);
+  } catch (err) {
+    showError('系統連線發生錯誤，請稍後再試');
+    submitBtn.disabled = false;
+    btnText.textContent = '立即查詢影像';
+    btnSpinner.classList.add('hidden');
+  }
+});
+
+function renderGallery(photos) {
+  resultsContainer.innerHTML = '';
+  if (!photos || photos.length === 0) {
+    showError('找不到符合該車牌與 PIN 碼的影像資料');
+    return;
+  }
+
+  photos.forEach(photo => {
+    const div = document.createElement('div');
+    div.className = 'masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg group cursor-pointer';
+    div.innerHTML = `<div class="overflow-hidden relative aspect-[4/3]"><img src="${photo.url}" alt="${photo.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4"><span class="text-xs text-white font-medium">點擊放大檢視</span></div></div>`;
+    div.addEventListener('click', () => {
+      lightboxImg.src = photo.url;
+      downloadBtn.href = photo.url;
+      lightboxModal.classList.remove('hidden');
+      setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
+    });
+    resultsContainer.appendChild(div);
+  });
+
+  gallerySection.classList.remove('hidden');
+}
+
+closeLightbox.addEventListener('click', () => {
+  lightboxModal.classList.add('opacity-0');
+  setTimeout(() => lightboxModal.classList.add('hidden'), 300);
+});
+
+lightboxModal.addEventListener('click', (e) => {
+  if (e.target === lightboxModal) {
+    closeLightbox.click();
+  }
+});
+</script>
+</body>
+</html>
