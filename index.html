@@ -314,14 +314,17 @@ function renderIGProfile(plate, profile, filenames) {
   profileBio.textContent = profile.bio || `✨ 車牌 ${plate} 專屬車聚寫真相簿`;
   statPosts.textContent = filenames.length;
 
-  const firstPhotoUrl = `${NAS_DOMAIN}/${plate}/${filenames[0]}`;
-  profileAvatar.src = firstPhotoUrl;
-  highlight1.src = firstPhotoUrl;
+  // 決定頭像來源：若 profile 有指定 avatar 則讀取該檔案，否則預設抓第一張照片
+  const avatarFilename = profile.avatar || filenames[0];
+  const avatarUrl = `${NAS_DOMAIN}/${plate}/${avatarFilename}`;
+  profileAvatar.src = avatarUrl;
+  highlight1.src = avatarUrl;
 
   resultsContainer.innerHTML = '';
   filenames.forEach(filename => {
     const photoUrl = `${NAS_DOMAIN}/${plate}/${filename}`;
     
+    // IG 經典 1:1 正方形相格
     const div = document.createElement('div');
     div.className = "aspect-square bg-gray-900 relative group cursor-pointer overflow-hidden";
     div.innerHTML = `
@@ -333,7 +336,7 @@ function renderIGProfile(plate, profile, filenames) {
 
     div.addEventListener('click', () => {
       lightboxImg.src = photoUrl;
-      lbAvatar.src = firstPhotoUrl;
+      lbAvatar.src = avatarUrl;
       lbPlate.textContent = profile.name || plate;
       lbFilename.textContent = filename;
       downloadBtn.href = photoUrl;
