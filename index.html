@@ -4,14 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARPULSE 車聚影像查詢系統</title>
-<!-- 使用 Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
   darkMode: 'class',
   theme: {
     extend: {
-      colors: { darkbg: '#090a0f' }
+      colors: {
+        darkbg: '#090a0f'
+      }
     }
   }
 }
@@ -42,7 +43,7 @@ tailwind.config = {
         <p class="text-xs text-gray-400">車聚影像智能查詢系統</p>
       </div>
     </div>
-    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.3 雲端直連版</span>
+    <span class="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">v2.8 JSON 直連版</span>
   </div>
 </header>
 
@@ -71,7 +72,7 @@ tailwind.config = {
     </form>
   </div>
 
-  <!-- Error Toast -->
+  <!-- Error Toast Container -->
   <div id="error-toast" class="max-w-xl mx-auto mt-6 hidden opacity-0 transition-opacity duration-300">
     <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3 text-red-400">
       <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -86,12 +87,11 @@ tailwind.config = {
       <span class="text-xs text-gray-400">支援點擊圖片檢視原圖與下載</span>
     </div>
     <div id="results-container" class="masonry-grid">
-      <!-- 動態載入相片處 -->
+      <!-- 動態相片載入處 -->
     </div>
   </section>
 </main>
 
-<!-- Lightbox Modal -->
 <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
   <button id="close-lightbox" class="absolute top-6 right-6 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 p-2.5 rounded-full transition z-10">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -106,11 +106,11 @@ tailwind.config = {
 </div>
 
 <footer class="border-t border-gray-800/80 bg-[#090a0f] py-6 text-center text-xs text-gray-500">
-  <p>© 2026 CARPULSE. All rights reserved. Powered by Cloudflare Tunnel & NAS.</p>
+  <p>© 2026 CARPULSE. All rights reserved. Powered by Cloudflare Tunnel & NAS JSON Engine.</p>
 </footer>
 
 <script>
-// 設定你剛剛綁定的 Cloudflare 對外公開圖床網域
+// 對外公開的 Cloudflare Tunnel 網域
 const NAS_DOMAIN = 'https://images.carpuse.cc';
 
 const form = document.getElementById('search-form');
@@ -136,7 +136,7 @@ function showError(msg) {
   errorToast.classList.remove('hidden');
   requestAnimationFrame(() => errorToast.classList.remove('opacity-0'));
   clearTimeout(errorTimeout);
-  errorTimeout = setTimeout(hideError, 5000);
+  errorTimeout = setTimeout(hideError, 6000);
 }
 
 function hideError() {
@@ -144,67 +144,24 @@ function hideError() {
   setTimeout(() => errorToast.classList.add('hidden'), 300);
 }
 
-// 智慧解析 NAS 目錄或直接抓取常見檔名格式 (支援自動掃描)
+// 透過讀取 NAS 目錄下的 index.json 抓取相片清單
 async function fetchPlatePhotos(plate) {
-  const folderUrl = `${NAS_DOMAIN}/carpuse_events/${plate}/`;
-  let photos = [];
-
-  try {
-    // 嘗試向 NAS 請求目錄 HTML 列表
-    const response = await fetch(folderUrl);
-    if (response.ok) {
-      const text = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, 'text/html');
-      const links = doc.querySelectorAll('a');
-      
-      links.forEach(a => {
-        const href = a.getAttribute('href');
-        if (href && /\.(jpg|jpeg|png|webp|JPG|JPEG|PNG)$/i.test(href)) {
-          const fileName = href.split('/').pop();
-          if (fileName && !photos.some(p => p.title === fileName)) {
-            photos.push({
-              url: `${folderUrl}${fileName}`,
-              title: fileName
-            });
-          }
-        }
-      });
-    }
-  } catch (err) {
-    console.warn('目錄列表抓取受限，啟動備用智慧探測...');
+  const jsonUrl = `${NAS_DOMAIN}/${plate}/index.json`;
+  const response = await fetch(jsonUrl);
+  
+  if (!response.ok) {
+    throw new Error('找不到此車牌資料夾或 index.json 清單');
   }
 
-  // 如果直接抓目錄失敗（例如 NAS Web 伺服器未開啟目錄瀏覽），改用智慧強力探測與常見命名
-  if (photos.length === 0) {
-    const prefixes = ['IMG_', 'DSC_', 'PHOTO_', 'IMG-', 'DSC-', ''];
-    // 批次並行探測前 30 張照片
-    const promises = [];
-    
-    for (let prefix of prefixes) {
-      for (let i = 1; i <= 35; i++) {
-        const numStr = String(i).padStart(4, '0');
-        const fileName1 = `${prefix}${numStr}.jpg`;
-        const fileName2 = `${prefix}${numStr}.JPG`;
-        
-        [fileName1, fileName2].forEach(fname => {
-          const testUrl = `${folderUrl}${fname}`;
-          promises.push(
-            fetch(testUrl, { method: 'HEAD' }).then(res => {
-              if (res.ok) {
-                photos.push({ url: testUrl, title: fname });
-              }
-            }).catch(() => {})
-          );
-        });
-      }
-    }
-    await Promise.all(promises);
+  const filenames = await response.json();
+  if (!Array.isArray(filenames) || filenames.length === 0) {
+    return [];
   }
 
-  // 排序確保順序一致
-  photos.sort((a, b) => a.title.localeCompare(b.title));
-  return photos;
+  return filenames.map(filename => ({
+    url: `${NAS_DOMAIN}/${plate}/${filename}`,
+    title: filename
+  }));
 }
 
 form.addEventListener('submit', async (e) => {
@@ -227,13 +184,13 @@ form.addEventListener('submit', async (e) => {
     const photos = await fetchPlatePhotos(plate);
     
     if (photos.length === 0) {
-      showError(`找不到車牌「${plate}」的相片，請確認 NAS 內是否有建立該車牌資料夾並放入相片。`);
+      showError(`車牌「${plate}」的相簿內目前沒有相片。`);
     } else {
       targetPlateSpan.textContent = plate;
       renderGallery(photos);
     }
   } catch (err) {
-    showError('連線至 NAS 讀取相片時發生錯誤，請稍後再試');
+    showError(`找不到車牌「${plate}」的相片。請確認 NAS 內是否有建立該車牌資料夾，並放入 index.json 與相片。`);
   } finally {
     submitBtn.disabled = false;
     btnText.textContent = '立即查詢影像';
@@ -248,7 +205,7 @@ function renderGallery(photos) {
     div.className = 'masonry-item bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-lg group cursor-pointer';
     div.innerHTML = `
       <div class="overflow-hidden relative aspect-[4/3]">
-        <img src="${photo.url}" alt="${photo.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/800x600/13151f/ffffff?text=Image+Load+Error'">
+        <img src="${photo.url}" alt="${photo.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.style.display='none'">
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
           <span class="text-xs text-white font-medium">點擊放大檢視 (${photo.title})</span>
         </div>
