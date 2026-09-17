@@ -46,7 +46,7 @@ tailwind.config = {
   
   <div id="search-container" class="transition-all duration-300">
     
-    <!-- 1. 標題與免責隱私區 -->
+    <!-- Header info & privacy banner -->
     <div class="text-center max-w-2xl mx-auto mb-12">
       <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-semibold bg-gray-900/80 text-gray-400 border border-gray-800 mb-4 tracking-widest uppercase shadow-inner">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -55,7 +55,6 @@ tailwind.config = {
       <h2 class="text-3xl font-extrabold text-white tracking-widest mb-3 font-mono drop-shadow-lg">車聚精彩影像智搜</h2>
       <p class="text-gray-400 text-sm tracking-wide">輸入車牌即可免費預覽活動相簿，下載高畫質原圖或解鎖專屬數位車庫。</p>
       
-      <!-- 隱私防禦護城河文案 -->
       <div class="mt-5 p-3 bg-black/40 border border-gray-800/60 rounded-lg inline-block max-w-lg">
         <p class="text-[10px] text-gray-500 leading-relaxed tracking-wide text-left flex items-start space-x-2">
           <svg class="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -64,7 +63,7 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- 2. 搜尋輸入列 -->
+    <!-- Search Bar -->
     <div class="max-w-xl mx-auto bg-[#0c0e15] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.8)] relative overflow-hidden">
       <div class="absolute -right-20 -top-20 w-40 h-40 bg-indigo-900/10 rounded-full blur-3xl pointer-events-none"></div>
       
@@ -88,7 +87,7 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- 動態 12 宮格首頁精選牆 -->
+    <!-- Featured Cars Grid -->
     <div id="home-grid-section" class="max-w-4xl mx-auto mt-20">
       <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
         <div>
@@ -101,16 +100,14 @@ tailwind.config = {
         <span class="text-[10px] font-mono text-emerald-400 bg-emerald-900/30 px-2.5 py-1 rounded-full border border-emerald-500/30">全彩原圖展示</span>
       </div>
       
-      <!-- 12 宮格容器 -->
       <div id="car-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        <!-- 動態由 JS 渲染 -->
+        <!-- Rendered by JS -->
       </div>
     </div>
   </div>
 
   <section id="gallery-section" class="mt-2 hidden max-w-2xl mx-auto">
     
-    <!-- Profile Header Info -->
     <div class="bg-igcard border border-igborder rounded-2xl p-5 mb-6 shadow-xl relative overflow-hidden">
       <div class="absolute top-0 right-0 p-4">
         <button onclick="resetToSearch()" class="text-xs text-gray-400 hover:text-white transition flex items-center space-x-1 bg-gray-900/50 px-3 py-1.5 rounded-lg border border-gray-800">
@@ -120,7 +117,6 @@ tailwind.config = {
       </div>
 
       <div class="flex items-center justify-between mb-4 mt-6">
-        <!-- Avatar & Plate -->
         <div class="flex items-center space-x-4">
           <div class="relative">
             <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-tr from-gray-500 via-gray-400 to-white shadow-lg">
@@ -139,7 +135,6 @@ tailwind.config = {
           </div>
         </div>
 
-        <!-- Stats Counter -->
         <div class="flex space-x-6 text-center pr-2">
           <div>
             <div id="stat-posts" class="font-bold text-white text-base">0</div>
@@ -152,12 +147,10 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- Bio Info -->
       <div class="text-xs sm:text-sm text-gray-300 space-y-1 mb-4 bg-black/60 border border-gray-800 p-4 rounded-xl shadow-inner font-mono tracking-wide">
         <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
       </div>
 
-      <!-- 整合式車主解鎖 / 狀態列 (放在這裡最合理，兼顧導覽與防盜) -->
       <div id="auth-banner" class="bg-gradient-to-r from-emerald-950/60 to-gray-900 border border-emerald-500/30 rounded-xl p-3.5 flex items-center justify-between text-xs shadow-md">
         <div class="flex items-center space-x-2.5">
           <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -172,12 +165,10 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- Albums Category Row -->
     <div id="albums-container" class="py-2 mb-4 flex space-x-5 overflow-x-auto no-scrollbar pl-2">
-      <!-- 動態載入活動分類圓圈 -->
+      <!-- Loaded dynamically -->
     </div>
 
-    <!-- IG Tabs -->
     <div class="border-t border-igborder flex justify-center mb-1">
       <div class="border-t-2 border-gray-300 text-gray-200 px-6 py-3 flex items-center space-x-2 -mt-[1px]">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
@@ -185,14 +176,12 @@ tailwind.config = {
       </div>
     </div>
     
-    <!-- Currently Viewing Label -->
     <div class="text-center mb-3">
         <span id="current-album-label" class="text-xs font-medium text-gray-500">請點擊上方圓圈選擇活動場次</span>
     </div>
 
-    <!-- IG 3-Column Square Grid Container (全彩原圖呈現) -->
     <div id="results-container" class="grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px]">
-      <!-- 動態 1:1 正方形相片載入處 -->
+      <!-- Loaded dynamically -->
     </div>
   </section>
 </main>
@@ -286,22 +275,22 @@ let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 let isAuthorizedOwner = false;
 
-// 網頁載入時檢查是否有帶入已驗證的參數
 window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const urlPlate = urlParams.get('plate');
+    const rawUrlPlate = urlParams.get('plate');
     const urlKey = urlParams.get('key');
 
-    if (urlPlate) {
-        plateInput.value = urlPlate;
+    if (rawUrlPlate) {
+        // Clean plate parsing: strip out any trailing vehicle descriptions (e.g. "BHS0759 / BMW Z4" -> "BHS0759")
+        const cleanPlate = rawUrlPlate.split('/')[0].trim().toUpperCase();
+        plateInput.value = cleanPlate;
         if (urlKey) isAuthorizedOwner = true;
-        await loadAndDisplayVault(urlPlate);
+        await loadAndDisplayVault(cleanPlate);
     } else {
         loadHomeGrid();
     }
 });
 
-// 載入首頁 12 宮格全彩預覽牆
 async function loadHomeGrid() {
     const gridContainer = document.getElementById('car-grid');
     if (!gridContainer) return;
@@ -315,13 +304,14 @@ async function loadHomeGrid() {
 
         cars.forEach(car => {
             const coverUrl = `${NAS_DOMAIN}/${car.cover}`;
+            const cleanCarPlate = car.plate.split('/')[0].trim().toUpperCase();
             const card = `
-                <div onclick="quickSelectPlate('${car.plate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0c0e15] border border-gray-800 cursor-pointer shadow-lg hover:border-gray-500 hover:shadow-gray-500/20 transition-all duration-300">
-                    <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-90 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${car.plate}'">
+                <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0c0e15] border border-gray-800 cursor-pointer shadow-lg hover:border-gray-500 hover:shadow-gray-500/20 transition-all duration-300">
+                    <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-90 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${cleanCarPlate}'">
                     
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-4">
                         <span class="text-[9px] font-mono text-emerald-400 mb-1 tracking-widest uppercase">FEATURED CAR</span>
-                        <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${car.plate}</h4>
+                        <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${cleanCarPlate}</h4>
                     </div>
                 </div>
             `;
@@ -346,7 +336,8 @@ async function loadHomeGrid() {
 }
 
 function quickSelectPlate(plate) {
-    plateInput.value = plate;
+    const cleanPlate = plate.split('/')[0].trim().toUpperCase();
+    plateInput.value = cleanPlate;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form.dispatchEvent(new Event('submit'));
 }
@@ -374,7 +365,6 @@ function resetToSearch() {
   loadHomeGrid(); 
 }
 
-// 核心：公開檢索相簿（先預覽，後綁定）
 async function loadAndDisplayVault(plate) {
     submitBtn.disabled = true;
     btnText.textContent = 'CONNECTING TO VAULT...';
@@ -417,10 +407,14 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
     hideError();
 
-    let plate = plateInput.value.trim().toUpperCase().replace(/\s+/g, '');
-    if (!plate) return;
+    const rawInput = plateInput.value.trim();
+    if (!rawInput) return;
 
-    loadAndDisplayVault(plate);
+    // Strict clean plate parsing: extract only the alphanumeric plate number before any slash
+    const cleanPlate = rawInput.split('/')[0].trim().toUpperCase();
+    plateInput.value = cleanPlate;
+
+    loadAndDisplayVault(cleanPlate);
 });
 
 function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
@@ -445,7 +439,6 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lbAvatar.src = `https://placehold.co/100x100/121212/ffffff?text=Car`;
   }
 
-  // 根據是否已通過 LINE 驗證切換狀態列
   if (isAuthorizedOwner) {
       authStatusText.textContent = "✅ 車主專屬身分已驗證 (數位車庫全面解鎖)";
       authActionBtn.textContent = "已綁定";
@@ -461,9 +454,8 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
   }
 }
 
-// 點擊 LINE 授權綁定
 function triggerLineLogin() {
-    let plate = profileTitle.textContent.trim();
+    let plate = profileTitle.textContent.trim().split('/')[0].trim();
     window.location.href = `/api/login?plate=${plate}`;
 }
 
@@ -555,16 +547,13 @@ function showLightboxPhoto(index) {
   lbCounter.textContent = `${index + 1} / ${currentGalleryPhotos.length}`;
 }
 
-// 點擊下載原圖時的智慧攔截防盜機制
 function handleDownloadClick() {
   const path = currentGalleryPhotos[currentGalleryIndex];
   const imgUrl = `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
 
   if (isAuthorizedOwner) {
-      // 已驗證車主直接開啟下載
       window.open(imgUrl, '_blank');
   } else {
-      // 未驗證訪客跳出溫和提示，引導進行車主身分驗證
       closeLightbox.click();
       showError("🔒 為了保護車主隱私，下載高畫質原圖需透過 LINE 進行車主身分驗證。請點擊上方「解鎖完整數位車庫」。");
       window.scrollTo({ top: 0, behavior: 'smooth' });
