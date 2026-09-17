@@ -43,24 +43,59 @@ export default async function handler(req, res) {
 
         const airtableToken = process.env.AIRTABLE_PAT;
         const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-        const airtableTable = process.env.AIRTABLE_TABLE_NAME || 'Access_Logs';
+        const airtableTable = 'Vault_Keys';
 
-        if (airtableToken && airtableBaseId) {
-            await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${airtableToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    fields: {
-                        "Plate": cleanPlate || "未知車牌",
-                        "LineUID": lineUid,
-                        "DisplayName": lineDisplayName,
-                        "Timestamp": new Date().toISOString()
-                    }
-                })
-            }).catch(err => console.error("Airtable 寫入稽核紀錄失敗:", err));
+if (airtableToken && airtableBaseId) {
+            // 1. 先查詢該車牌是否已經有記錄
+            const queryRes = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}?filterByFormula={PLATE}='${cleanPlate}'`, {
+                headers: { 'Authorization': `Bearer ${airtableToken}` }
+            });
+            const queryData = await queryRes.json();
+            const records = queryData.records || [];
+
+            if (records.length === 0) {
+                // 狀況 A：完全沒有這張車牌的記錄 ➔ 直接建立，並將此人設為 OwnerUID
+                await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${airtableToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fields: {
+                            "PLATE": cleanPlate,
+                            "OwnerUID": lineUid,
+                            "LineUID": lineUid,
+                            "AccessKey": lineDisplayName
+                        }
+                    })
+                });
+            } else {
+                // 狀況 B：已經有記錄，檢查 OwnerUID
+                const record = records[0];
+                const ownerUid = record.fields.OwnerUID;
+
+                if (!ownerUid) {
+                    // 如果 OwnerUID 是空的 ➔ 自動幫他補上成為車主
+                    await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}/${record.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${airtableToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fields: {
+                                "OwnerUID": lineUid,
+                                "LineUID": lineUid,
+                                "AccessKey": lineDisplayName
+                            }
+                        })
+                    });
+                } else if (ownerUid !== lineUid) {
+                    // 狀況 C：已有車主，但登入的人不是車主 ➔ 擋下！
+                    return res.redirect(`/?plate=${encodeURIComponent(cleanPlate)}&auth=error&msg=${encodeURIComponent('ACCESS DENIED: 此車庫已由其他 LINE 帳號綁定，非車主本人無法解密。')}`);
+                }
+            }
         }
 
         res.writeHead(302, { 
