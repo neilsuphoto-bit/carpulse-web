@@ -2,7 +2,7 @@ export default function handler(req, res) {
     const channelId = process.env.LINE_CHANNEL_ID;
     
     // 強制硬編碼與 LINE Developers 後台 100% 吻合的回呼網址
-    const redirectUri = 'https://www.carpuse.cc/api/callback';
+    const redirectUri = 'https://www.carpuse.cc/api/auth/callback';
     
     // 隨機產生 state 參數防止 CSRF 攻擊
     const state = Math.random().toString(36).substring(7);
