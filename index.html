@@ -55,13 +55,6 @@ tailwind.config = {
       </span>
       <h2 class="text-3xl font-extrabold text-white tracking-widest mb-3 font-mono drop-shadow-lg">車庫影像智慧檢索</h2>
       <p class="text-gray-400 text-sm tracking-wide">輸入精準車牌號碼，解鎖專屬展間與活動寫真。</p>
-      
-      <div class="mt-5 p-3 bg-black/40 border border-gray-800/60 rounded-lg inline-block max-w-lg">
-        <p class="text-[10px] text-gray-500 leading-relaxed tracking-wide text-left flex items-start space-x-2">
-          <svg class="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span><strong class="text-gray-400">雙模式說明：</strong>車主可自由切換「公開展間」供車聚交流，或透過 LINE 驗證開啟「私密金庫」。</span>
-        </p>
-      </div>
     </div>
 
     <div class="max-w-xl mx-auto bg-[#0c0e15] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.8)] relative overflow-hidden">
@@ -119,16 +112,17 @@ tailwind.config = {
             <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-tr from-gray-500 via-gray-400 to-white shadow-lg">
               <img id="profile-avatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full bg-black border-2 border-black" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=CARPULSE'">
             </div>
-            <div id="avatar-verified-badge" class="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full text-xs shadow-md border-2 border-black hidden">
+            <div class="absolute bottom-0 right-0 bg-gray-100 text-black p-1 rounded-full text-xs shadow-md border-2 border-black">
               <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
             </div>
           </div>
           <div>
             <div class="flex items-center space-x-1.5">
               <h3 id="profile-title" class="text-base sm:text-lg font-bold text-white tracking-widest font-mono">BHS0759</h3>
-              <svg id="title-verified-badge" class="w-4 h-4 text-blue-500 flex-shrink-0 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+              <!-- 藍勾勾標章 -->
+              <svg id="verified-badge" class="w-4 h-4 text-blue-500 flex-shrink-0 hidden" fill="currentColor" viewBox="0 0 20 20" title="車主已認證經營"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             </div>
-            <p id="owner-status-label" class="text-[10px] text-gray-500 mt-0.5 tracking-widest uppercase">Verified Showcase</p>
+            <p id="profile-status-subtitle" class="text-[10px] text-gray-500 mt-0.5 tracking-widest uppercase">Verified Showcase</p>
           </div>
         </div>
 
@@ -148,21 +142,21 @@ tailwind.config = {
         <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
       </div>
 
-      <!-- 動態按鈕狀態區：如果是公開展間且已由車主認領，不放顯眼登入按鈕，提供隱密連結或專屬面板 -->
-      <div id="auth-action-box" class="mb-4 p-3.5 bg-black/40 border border-gray-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+      <!-- 隱蔽且友善的狀態與控制列（取消大綠按鈕，改為低調文字鏈結） -->
+      <div id="auth-action-box" class="mb-4 p-3.5 bg-gray-900/60 border border-gray-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="flex items-center space-x-2 text-xs text-gray-400">
-          <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span id="auth-status-text">載入驗證狀態中...</span>
+          <svg class="w-4 h-4 flex-shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          <span id="auth-status-text">載入展間防護狀態中...</span>
         </div>
         
         <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-          <!-- 隱密且防呆的認領連結 -->
-          <button id="line-login-btn" onclick="showClaimWarning()" class="text-gray-500 hover:text-gray-300 text-[10px] transition tracking-wider underline underline-offset-4 bg-transparent border-none cursor-pointer">
-            我是車主？點此進行身分認領
+          <!-- 極低調隱蔽的認領按鈕（僅在未認領時以文字鏈結呈現） -->
+          <button id="hidden-claim-btn" onclick="openClaimWarningModal()" class="hidden text-[11px] text-gray-500 hover:text-gray-300 underline tracking-wider py-1 px-2 cursor-pointer bg-transparent border-none">
+            我是車主？點此認領
           </button>
           
-          <!-- 車主專屬車貼 QR Code / 管理按鈕 -->
-          <button id="open-owner-modal-btn" onclick="openOwnerModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider">
+          <!-- 車主專屬車貼 QR Code / 控制面板按鈕 -->
+          <button id="open-owner-modal-btn" onclick="openOwnerModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider font-mono">
             <span>車主管理 & QR Code</span>
           </button>
         </div>
@@ -194,31 +188,29 @@ tailwind.config = {
   </section>
 </main>
 
-<!-- 防手賤惡意冒領警告 Modal -->
-<div id="claim-warning-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
-  <div class="bg-[#0c0e15] border border-amber-500/40 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl relative">
-    <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center mx-auto mb-3 text-amber-400">
+<!-- 防手賤惡意搶佔警告 Modal -->
+<div id="claim-warning-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+  <div class="bg-[#0c0e15] border border-red-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center">
+    <div class="w-12 h-12 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-3 text-red-400">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
     </div>
-    <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-2">⚠️ 車主身分認領聲明</h3>
-    
-    <div class="text-xs text-gray-300 space-y-2 mb-6 text-left bg-black/50 p-4 rounded-xl border border-gray-800 leading-relaxed font-sans">
-      <p><strong class="text-amber-400">嚴正提醒：</strong> 本系統僅限「該車輛之真實車主」進行 LINE 身分認領。</p>
-      <p>若您非本車車主而惡意冒領或測試，將導致真正車主無法管理其數位車庫，並對平台管理員造成不必要的核實與人工重置負擔。</p>
-      <p class="text-gray-400">請確認您為該車牌之車主本人後再行授權。</p>
-    </div>
-
+    <h3 class="text-base font-bold text-white font-mono tracking-wider mb-2">⚠️ 車主權限認領安全聲明</h3>
+    <p class="text-xs text-gray-400 leading-relaxed text-left mb-6 bg-black/50 p-3.5 rounded-xl border border-gray-800">
+      您即將進行此車牌的管理權限綁定。本系統僅限<strong class="text-white">該車輛之真實車主</strong>進行認領。<br><br>
+      非車主請勿惡意冒領或測試。惡意搶佔他人車庫將造成管理員人工審核與車主權益受損。若您非本車車主，請點擊下方取消離開。
+    </p>
     <div class="flex space-x-3">
-      <button onclick="closeClaimWarning()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-3 px-4 rounded-xl transition text-xs tracking-wider">
+      <button onclick="closeClaimWarningModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-3 rounded-xl transition text-xs tracking-wider">
         取消離開
       </button>
-      <button id="confirm-claim-btn" onclick="proceedToLineLogin()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl transition text-xs tracking-wider shadow-lg">
-        我是真實車主，確認認領
+      <button onclick="proceedToLineLogin()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition text-xs tracking-wider shadow-lg">
+        我是真實車主，確認授權
       </button>
     </div>
   </div>
 </div>
 
+<!-- 車主專屬控制面板 Modal -->
 <div id="owner-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
   <div class="bg-[#0c0e15] border border-gray-800 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl relative">
     <button onclick="closeOwnerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
@@ -323,16 +315,15 @@ const profileBio = document.getElementById('profile-bio');
 const statPosts = document.getElementById('stat-posts');
 const statAlbums = document.getElementById('stat-albums');
 
-const lineLoginBtn = document.getElementById('line-login-btn');
 const authStatusText = document.getElementById('auth-status-text');
+const hiddenClaimBtn = document.getElementById('hidden-claim-btn');
 const openOwnerModalBtn = document.getElementById('open-owner-modal-btn');
 const ownerModal = document.getElementById('owner-modal');
 const ownerModalSubtitle = document.getElementById('owner-modal-subtitle');
 const togglePublicBtn = document.getElementById('toggle-public-btn');
+const verifiedBadge = document.getElementById('verified-badge');
+const profileStatusSubtitle = document.getElementById('profile-status-subtitle');
 
-const avatarVerifiedBadge = document.getElementById('avatar-verified-badge');
-const titleVerifiedBadge = document.getElementById('title-verified-badge');
-const ownerStatusLabel = document.getElementById('owner-status-label');
 const claimWarningModal = document.getElementById('claim-warning-modal');
 
 const lightboxModal = document.getElementById('lightbox-modal');
@@ -354,7 +345,7 @@ let currentGalleryPhotos = [];
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 let currentIsPublicState = false;
-let currentVaultStatus = null;
+let currentHasOwner = false;
 
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -368,11 +359,11 @@ window.addEventListener('DOMContentLoaded', () => {
         plateInput.value = cleanPlate;
 
         if (authStatus === 'success') {
-            localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
-            localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
             if (lineUid) {
                 localStorage.setItem(`carpuse_uid_${cleanPlate}`, lineUid);
             }
+            localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
+            localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
             window.history.replaceState({}, document.title, window.location.pathname + `?plate=${encodeURIComponent(cleanPlate)}`);
             loadAndShowVault(cleanPlate);
         } else {
@@ -520,8 +511,8 @@ async function checkCloudVaultStatus(plate) {
         const res = await fetch(`/api/status?plate=${encodeURIComponent(plate)}`);
         if (res.ok) {
             const data = await res.json();
-            currentVaultStatus = data;
             currentIsPublicState = data.isPublic === true;
+            currentHasOwner = data.hasOwner === true;
         }
     } catch (e) {
         console.log("無法取得雲端公開狀態");
@@ -550,51 +541,55 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lbAvatar.src = `https://placehold.co/100x100/121212/ffffff?text=Car`;
   }
 
-  const hasOwner = currentVaultStatus && currentVaultStatus.hasOwner;
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
 
-  // 藍勾勾機制：只要雲端有登記車主（hasOwner），就點亮官方認證藍勾勾
-  if (hasOwner) {
-      avatarVerifiedBadge.classList.remove('hidden');
-      titleVerifiedBadge.classList.remove('hidden');
-      ownerStatusLabel.textContent = 'VERIFIED OWNER · 官方認證車主';
+  if (currentHasOwner) {
+      verifiedBadge.classList.remove('hidden');
+      profileStatusSubtitle.textContent = 'VERIFIED ACTIVE OWNER';
   } else {
-      avatarVerifiedBadge.classList.add('hidden');
-      titleVerifiedBadge.classList.add('hidden');
-      ownerStatusLabel.textContent = 'UNCLAIMED VAULT · 待認領空間';
+      verifiedBadge.classList.add('hidden');
+      profileStatusSubtitle.textContent = 'VERIFIED SHOWCASE';
   }
 
   if (isAuthed) {
-      authStatusText.textContent = currentIsPublicState ? '展間模式：公開展示中 (車主已掌控)' : '展間模式：私密金庫 (車主已掌控)';
-      lineLoginBtn.classList.add('hidden');
+      authStatusText.innerHTML = currentIsPublicState ? 
+          `<strong class="text-emerald-400">【車主本人】</strong> 展間公開中（點擊右側可管理與改為私密）` : 
+          `<strong class="text-indigo-400">【車主本人】</strong> 展間私密中（僅您與訪客受限，點擊右側可開啟公開）`;
+      
+      hiddenClaimBtn.classList.add('hidden');
       openOwnerModalBtn.classList.remove('hidden');
   } else {
       if (currentIsPublicState) {
-          authStatusText.textContent = '公開展間模式 (訪客自由瀏覽)';
+          authStatusText.textContent = currentHasOwner ? '✨ 車主已認證並設為公開展間 (全體自由瀏覽)' : '車主已設為公開展間 (全體自由瀏覽)';
       } else {
-          authStatusText.textContent = '私密金庫 (需驗證或授權解鎖)';
+          authStatusText.textContent = '🔒 私密金庫模式 (相片已上鎖)';
       }
-      lineLoginBtn.classList.remove('hidden');
+
+      if (!currentHasOwner) {
+          hiddenClaimBtn.classList.remove('hidden');
+      } else {
+          hiddenClaimBtn.classList.add('hidden');
+      }
       openOwnerModalBtn.classList.add('hidden');
   }
 }
 
-function showClaimWarning() {
+function openClaimWarningModal() {
     claimWarningModal.classList.remove('hidden');
 }
 
-function closeClaimWarning() {
+function closeClaimWarningModal() {
     claimWarningModal.classList.add('hidden');
 }
 
 function proceedToLineLogin() {
-    const plate = profileTitle.textContent.split('/')[0].trim().toUpperCase();
+    const plate = profileTitle.textContent;
     window.location.href = `/api/login?plate=${encodeURIComponent(plate)}`;
 }
 
 function openOwnerModal() {
-    const plate = profileTitle.textContent.split('/')[0].trim().toUpperCase();
-    ownerModalSubtitle.textContent = `車牌：${profileTitle.textContent}`;
+    const plate = profileTitle.textContent;
+    ownerModalSubtitle.textContent = `車牌：${plate}`;
     
     updateTogglePublicUI();
 
@@ -616,8 +611,7 @@ function openOwnerModal() {
 
 function closeOwnerModal() {
     ownerModal.classList.add('hidden');
-    const plate = profileTitle.textContent.split('/')[0].trim().toUpperCase();
-    loadAndShowVault(plate);
+    loadAndShowVault(profileTitle.textContent);
 }
 
 function updateTogglePublicUI() {
@@ -631,10 +625,9 @@ function updateTogglePublicUI() {
 }
 
 async function togglePublicMode() {
-    const rawTitle = profileTitle.textContent;
-    const plate = rawTitle.split('/')[0].trim().toUpperCase();
+    const plate = profileTitle.textContent;
     const newStatus = !currentIsPublicState;
-    const userUid = localStorage.getItem(`carpuse_uid_${plate}`) || 'LINE_USER_VERIFIED';
+    const userUid = localStorage.getItem(`carpuse_uid_${plate}`) || 'LINE_USER_DEFAULT';
 
     togglePublicBtn.disabled = true;
     togglePublicBtn.textContent = '更新中...';
@@ -643,11 +636,7 @@ async function togglePublicMode() {
         const res = await fetch('/api/toggle-public', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                plate: plate, 
-                isPublic: newStatus, 
-                userUid: userUid 
-            })
+            body: JSON.stringify({ plate: plate, isPublic: newStatus, userUid: userUid })
         });
 
         const data = await res.json();
@@ -749,7 +738,7 @@ function renderGallery(photoPaths, plate, albumTitle) {
           </div>
         `;
         div.addEventListener('click', () => {
-            showError("此車庫為私密空間，請進行 LINE 身分認領後解鎖。");
+            showError("此車庫為私密空間，需透過授權方可解鎖。");
         });
     }
 
