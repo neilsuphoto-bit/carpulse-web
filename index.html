@@ -38,7 +38,7 @@ tailwind.config = {
         <p class="text-[10px] text-gray-500 tracking-widest uppercase">Digital Vault</p>
       </div>
     </div>
-    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.2 SECURE LINE</span>
+    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.3 SECURE LINE</span>
   </div>
 </header>
 
@@ -281,15 +281,17 @@ let currentGalleryPhotos = [];
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 
-// 檢查網址列是否有帶入授權的 plate 與 key (來自 LINE 回調後的自動登入)
+// 檢查網址列是否有帶入授權的 plate (來自 LINE 回調後的自動登入)
 window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const urlPlate = urlParams.get('plate');
+    const rawPlate = urlParams.get('plate');
     const urlKey = urlParams.get('key');
 
-    if (urlPlate && urlKey) {
-        plateInput.value = urlPlate;
-        await loadAndDisplayVault(urlPlate);
+    if (rawPlate) {
+        // 關鍵修復：用斜線切割，只取純車牌，過濾掉多餘的車型
+        const cleanPlate = rawPlate.split('/')[0].trim().toUpperCase();
+        plateInput.value = cleanPlate;
+        await loadAndDisplayVault(cleanPlate);
     } else {
         loadHomeGrid();
     }
@@ -339,10 +341,11 @@ async function loadHomeGrid() {
     }
 }
 
-// 點擊 12 宮格卡片時，直接導向 LINE 驗證
+// 點擊 12 宮格卡片時，直接導向 LINE 驗證（純車牌過濾）
 function quickSelectPlate(plate) {
-    plateInput.value = plate;
-    window.location.href = `/api/login?plate=${plate}`;
+    const cleanPlate = plate.split('/')[0].trim().toUpperCase();
+    plateInput.value = cleanPlate;
+    window.location.href = `/api/login?plate=${cleanPlate}`;
 }
 
 function showError(msg) {
@@ -405,19 +408,22 @@ async function loadAndDisplayVault(plate) {
     }
 }
 
-// 表單送出：改為導向 /api/login 觸發 LINE 授權
+// 表單送出：強制清洗純車牌後導向 /api/login 觸發 LINE 授權
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     hideError();
 
-    let plate = plateInput.value.trim().toUpperCase().replace(/\s+/g, '');
-    if (!plate) return;
+    let rawPlate = plateInput.value.trim();
+    if (!rawPlate) return;
+
+    // 關鍵修復：點擊送出時強制切掉斜線後面的車型文字
+    let cleanPlate = rawPlate.split('/')[0].trim().toUpperCase().replace(/\s+/g, '');
 
     submitBtn.disabled = true;
     btnText.textContent = 'REDIRECTING TO LINE...';
     btnSpinner.classList.remove('hidden');
 
-    window.location.href = `/api/login?plate=${plate}`;
+    window.location.href = `/api/login?plate=${cleanPlate}`;
 });
 
 function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
