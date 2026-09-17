@@ -119,7 +119,6 @@ tailwind.config = {
           <div>
             <div class="flex items-center space-x-1.5">
               <h3 id="profile-title" class="text-base sm:text-lg font-bold text-white tracking-widest font-mono">BHS0759</h3>
-              <!-- 藍勾勾標章 -->
               <svg id="verified-badge" class="w-4 h-4 text-blue-500 flex-shrink-0 hidden" fill="currentColor" viewBox="0 0 20 20" title="車主已認證經營"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             </div>
             <p id="profile-status-subtitle" class="text-[10px] text-gray-500 mt-0.5 tracking-widest uppercase">Verified Showcase</p>
@@ -142,7 +141,6 @@ tailwind.config = {
         <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
       </div>
 
-      <!-- 隱蔽且友善的狀態與控制列（取消大綠按鈕，改為低調文字鏈結） -->
       <div id="auth-action-box" class="mb-4 p-3.5 bg-gray-900/60 border border-gray-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="flex items-center space-x-2 text-xs text-gray-400">
           <svg class="w-4 h-4 flex-shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
@@ -150,12 +148,10 @@ tailwind.config = {
         </div>
         
         <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-          <!-- 極低調隱蔽的認領按鈕（僅在未認領時以文字鏈結呈現） -->
-          <button id="hidden-claim-btn" onclick="openClaimWarningModal()" class="hidden text-[11px] text-gray-500 hover:text-gray-300 underline tracking-wider py-1 px-2 cursor-pointer bg-transparent border-none">
+          <button id="hidden-claim-btn" onclick="openClaimWarningModal()" class="hidden text-[11px] text-gray-500 hover:text-gray-300 underline tracking-wider py-1 px-2">
             我是車主？點此認領
           </button>
           
-          <!-- 車主專屬車貼 QR Code / 控制面板按鈕 -->
           <button id="open-owner-modal-btn" onclick="openOwnerModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider font-mono">
             <span>車主管理 & QR Code</span>
           </button>
@@ -194,17 +190,30 @@ tailwind.config = {
     <div class="w-12 h-12 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-3 text-red-400">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
     </div>
-    <h3 class="text-base font-bold text-white font-mono tracking-wider mb-2">⚠️ 車主權限認領安全聲明</h3>
-    <p class="text-xs text-gray-400 leading-relaxed text-left mb-6 bg-black/50 p-3.5 rounded-xl border border-gray-800">
-      您即將進行此車牌的管理權限綁定。本系統僅限<strong class="text-white">該車輛之真實車主</strong>進行認領。<br><br>
-      非車主請勿惡意冒領或測試。惡意搶佔他人車庫將造成管理員人工審核與車主權益受損。若您非本車車主，請點擊下方取消離開。
+    <h3 class="text-base font-bold text-white font-mono tracking-wider mb-2">⚠️ 車主身分認領聲明</h3>
+    <p class="text-xs text-gray-400 leading-relaxed text-left mb-4 bg-black/50 p-3.5 rounded-xl border border-gray-800">
+      <strong class="text-amber-400">嚴正提醒：</strong>本系統僅限「該車輛之真實車主」進行 LINE 身分認領。<br><br>
+      若您非本車車主而惡意冒領或測試，將導致真正車主無法管理其數位車庫，並對平台管理員造成不必要的核實與人工重置負擔。<br>
+      請確認您為該車牌之車主本人後再行授權。
     </p>
+
+    <!-- 聯絡管理員 LINE 快捷按鈕 -->
+    <div class="mb-5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-between text-left">
+      <div>
+        <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">遇到認領問題或誤佔？</div>
+        <div class="text-xs text-gray-300 font-mono mt-0.5">管理員 LINE: NEILSUPHOTO0312</div>
+      </div>
+      <a href="https://line.me/ti/p/~NEILSUPHOTO0312" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex-shrink-0 ml-2">
+        聯繫管理員
+      </a>
+    </div>
+
     <div class="flex space-x-3">
       <button onclick="closeClaimWarningModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-3 rounded-xl transition text-xs tracking-wider">
         取消離開
       </button>
       <button onclick="proceedToLineLogin()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition text-xs tracking-wider shadow-lg">
-        我是真實車主，確認授權
+        我是真實車主，確認認領
       </button>
     </div>
   </div>
