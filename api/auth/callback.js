@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         const airtableBaseId = process.env.AIRTABLE_BASE_ID;
         const airtableTable = 'Vault_Keys';
 
-if (airtableToken && airtableBaseId) {
+        if (airtableToken && airtableBaseId) {
             // 1. 先查詢該車牌是否已經有記錄
             const queryRes = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}?filterByFormula={PLATE}='${cleanPlate}'`, {
                 headers: { 'Authorization': `Bearer ${airtableToken}` }
