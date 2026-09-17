@@ -3,10 +3,17 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const { plate, isPublic, userUid } = req.body;
+    const { plate, isPublic, userUid } = req.body || {};
+    
+    // 印出接收到的參數，方便在 Vercel Logs 中除錯
+    console.log("TOGGLE REQUEST BODY:", { plate, isPublic, userUid });
 
     if (!plate || isPublic === undefined || !userUid) {
-        return res.status(400).json({ success: false, error: '參數不完整' });
+        return res.status(400).json({ 
+            success: false, 
+            error: '參數不完整', 
+            received: { plate: !!plate, isPublic: isPublic !== undefined, userUid: !!userUid } 
+        });
     }
 
     const airtableToken = process.env.AIRTABLE_TOKEN;
@@ -14,7 +21,6 @@ export default async function handler(req, res) {
     const airtableTable = 'Vault_Keys';
 
     try {
-        // 1. 尋找該車牌記錄以核對車主身分
         const queryUrl = `https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}?filterByFormula={PLATE}='${plate.toUpperCase()}'`;
         const queryRes = await fetch(queryUrl, {
             headers: { 'Authorization': `Bearer ${airtableToken}` }
@@ -29,12 +35,10 @@ export default async function handler(req, res) {
         const record = records[0];
         const ownerUid = record.fields.OwnerUID;
 
-        // 2. 鐵律防線：檢查操作者是否為真正的車主
         if (ownerUid !== userUid) {
-            return res.status(403).json({ success: false, error: '權限不足：您不是此車庫的登記車主，無法修改狀態' });
+            return res.status(403).json({ success: false, error: '權限不足：您不是此車庫的登記車主' });
         }
 
-        // 3. 更新 Airtable 中的 IsPublic 狀態
         const updateRes = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}/${record.id}`, {
             method: 'PATCH',
             headers: {
@@ -55,7 +59,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, isPublic: isPublic ? "true" : "false" });
 
     } catch (err) {
-        console.error("UPDATE PUBLIC ERROR:", err);
+        console.error("TOGGLE PUBLIC ERROR:", err);
         return res.status(500).json({ success: false, error: err.message });
     }
 }
