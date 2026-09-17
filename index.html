@@ -285,10 +285,9 @@ let currentGalleryPlate = '';
 window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const rawPlate = urlParams.get('plate');
-    const urlKey = urlParams.get('key');
 
     if (rawPlate) {
-        // 關鍵修復：用斜線切割，只取純車牌，過濾掉多餘的車型
+        // 清洗純車牌，過濾掉多餘的車型
         const cleanPlate = rawPlate.split('/')[0].trim().toUpperCase();
         plateInput.value = cleanPlate;
         await loadAndDisplayVault(cleanPlate);
@@ -416,7 +415,6 @@ form.addEventListener('submit', (e) => {
     let rawPlate = plateInput.value.trim();
     if (!rawPlate) return;
 
-    // 關鍵修復：點擊送出時強制切掉斜線後面的車型文字
     let cleanPlate = rawPlate.split('/')[0].trim().toUpperCase().replace(/\s+/g, '');
 
     submitBtn.disabled = true;
