@@ -103,8 +103,8 @@ export default async function handler(req, res) {
         });
         res.end();
 
-    } catch (err) {
+} catch (err) {
         console.error("LINE Auth Error:", err);
-        res.status(500).send(`授權過程發生錯誤: ${err.message}`);
+        return res.status(500).send(`授權與 Airtable 寫入發生嚴重錯誤: ${err.message} | Stack: ${err.stack}`);
     }
 }
