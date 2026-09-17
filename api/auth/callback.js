@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         const lineDisplayName = profile.displayName;
         const lineAvatar = profile.pictureUrl || '';
 
-        const airtableToken = process.env.AIRTABLE_PAT;
+        const airtableToken = process.env.AIRTABLE_TOKEN;
         const airtableBaseId = process.env.AIRTABLE_BASE_ID;
         const airtableTable = 'Vault_Keys';
 
