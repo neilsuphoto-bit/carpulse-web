@@ -42,25 +42,17 @@ export default async function handler(req, res) {
         const airtableBaseId = process.env.AIRTABLE_BASE_ID;
         const airtableTable = 'Vault_Keys';
 
-        console.log("=== AIRTABLE DEBUG ===");
-        console.log("Token exists:", !!airtableToken);
-        console.log("BaseID exists:", !!airtableBaseId);
-        console.log("Target Plate:", cleanPlate);
-
         if (airtableToken && airtableBaseId) {
             const queryUrl = `https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}?filterByFormula={PLATE}='${cleanPlate}'`;
             const queryRes = await fetch(queryUrl, {
                 headers: { 'Authorization': `Bearer ${airtableToken}` }
             });
-            const queryText = await queryRes.text();
-            console.log("Airtable Query Status:", queryRes.status);
-            console.log("Airtable Query Response:", queryText);
-
-            const queryData = JSON.parse(queryText);
+            const queryData = await queryRes.json();
             const records = queryData.records || [];
 
             if (records.length === 0) {
-                const createRes = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
+                // 狀況 A：全新車牌，直接註冊並綁定當前登入者為車主，預設私密
+                await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${airtableToken}`,
@@ -71,13 +63,31 @@ export default async function handler(req, res) {
                             "PLATE": cleanPlate,
                             "OwnerUID": lineUid,
                             "LineUID": lineUid,
-                            "AccessKey": lineDisplayName
+                            "AccessKey": lineDisplayName,
+                            "IsPublic": "false"
                         }
                     })
                 });
-                const createText = await createRes.text();
-                console.log("Airtable Create Status:", createRes.status);
-                console.log("Airtable Create Response:", textToLog => createText);
+            } else {
+                // 狀況 B：車牌已存在，絕對不能覆蓋 OwnerUID！
+                // 這裡可以選擇是否記錄最後登入的 LineUID，但 OwnerUID 保持不動
+                const existingRecord = records[0];
+                if (!existingRecord.fields.OwnerUID) {
+                    // 如果剛好舊資料沒有 OwnerUID，補上
+                    await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}/${existingRecord.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${airtableToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fields: {
+                                "OwnerUID": lineUid,
+                                "LineUID": lineUid
+                            }
+                        })
+                    });
+                }
             }
         }
 
