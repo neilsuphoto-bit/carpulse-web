@@ -327,6 +327,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const paramPlate = urlParams.get('plate');
     const authStatus = urlParams.get('auth');
     const lineName = urlParams.get('name');
+    const lineUid = urlParams.get('uid');
 
     if (paramPlate) {
         const cleanPlate = paramPlate.split('/')[0].trim().toUpperCase();
@@ -335,6 +336,9 @@ window.addEventListener('DOMContentLoaded', () => {
         if (authStatus === 'success') {
             localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
             localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
+            if (lineUid) {
+                localStorage.setItem(`carpuse_uid_${cleanPlate}`, lineUid);
+            }
             window.history.replaceState({}, document.title, window.location.pathname + `?plate=${encodeURIComponent(cleanPlate)}`);
             loadAndShowVault(cleanPlate);
         } else {
@@ -459,7 +463,6 @@ async function loadAndShowVault(cleanPlate) {
     if (albums.length === 0) {
         showError(`檔案「${cleanPlate}」已存在，但金庫內暫無相片記錄。`);
     } else {
-        // 同步檢查雲端公開狀態
         await checkCloudVaultStatus(cleanPlate);
 
         renderIGProfile(profileData, cleanPlate, totalPhotos, albums.length);
@@ -539,8 +542,8 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
 }
 
 function openOwnerModal() {
-    const plate = profileTitle.textContent;
-    ownerModalSubtitle.textContent = `車牌：${plate}`;
+    const plate = profileTitle.textContent.split('/')[0].trim().toUpperCase();
+    ownerModalSubtitle.textContent = `車牌：${profileTitle.textContent}`;
     
     updateTogglePublicUI();
 
@@ -562,7 +565,8 @@ function openOwnerModal() {
 
 function closeOwnerModal() {
     ownerModal.classList.add('hidden');
-    loadAndShowVault(profileTitle.textContent);
+    const plate = profileTitle.textContent.split('/')[0].trim().toUpperCase();
+    loadAndShowVault(plate);
 }
 
 function updateTogglePublicUI() {
@@ -576,8 +580,12 @@ function updateTogglePublicUI() {
 }
 
 async function togglePublicMode() {
-    const plate = profileTitle.textContent;
+    const rawTitle = profileTitle.textContent;
+    const plate = rawTitle.split('/')[0].trim().toUpperCase();
     const newStatus = !currentIsPublicState;
+    
+    // 從 localStorage 抓取對應車牌的 LINE UID，若無則預設一個防呆標記
+    const userUid = localStorage.getItem(`carpuse_uid_${plate}`) || 'LINE_USER_VERIFIED';
 
     togglePublicBtn.disabled = true;
     togglePublicBtn.textContent = '更新中...';
@@ -586,10 +594,15 @@ async function togglePublicMode() {
         const res = await fetch('/api/toggle-public', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plate: plate, isPublic: newStatus })
+            body: JSON.stringify({ 
+                plate: plate, 
+                isPublic: newStatus, 
+                userUid: userUid 
+            })
         });
 
-        if (!res.ok) throw new Error('更新公開狀態失敗');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '更新公開狀態失敗');
         
         currentIsPublicState = newStatus;
         updateTogglePublicUI();
