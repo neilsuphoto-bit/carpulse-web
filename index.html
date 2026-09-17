@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARPULSE 車聚影像智能查詢系統</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 tailwind.config = {
   darkMode: 'class',
@@ -184,6 +185,30 @@ tailwind.config = {
   </section>
 </main>
 
+<!-- LINE 驗證成功 QR Code 金鑰彈窗 -->
+<div id="success-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
+  <div class="bg-[#0c0e15] border border-gray-800 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+    <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    </div>
+    <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">私密金庫解鎖成功</h3>
+    <p id="modal-subtitle" class="text-xs text-gray-400 font-mono mb-6">車牌：BHS0759</p>
+
+    <!-- QR Code 產生區 -->
+    <div class="bg-white p-4 rounded-xl inline-block mb-4 shadow-inner">
+      <div id="qrcode-container" class="flex justify-center"></div>
+    </div>
+
+    <p class="text-[11px] text-gray-500 mb-6 leading-relaxed">
+      這是您的專屬金鑰 QR Code。<br>請截圖保存，日後掃描或透過連結即可直接進入車庫。
+    </p>
+
+    <button id="enter-vault-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl transition shadow-lg tracking-widest text-xs">
+      立即進入專屬車庫
+    </button>
+  </div>
+</div>
+
 <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/98 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 flex flex-col justify-between">
   <div class="flex items-center justify-between p-4 border-b border-gray-900 bg-black/50">
     <div class="flex items-center space-x-3">
@@ -253,6 +278,10 @@ const statAlbums = document.getElementById('stat-albums');
 const lineLoginBtn = document.getElementById('line-login-btn');
 const authStatusText = document.getElementById('auth-status-text');
 
+const successModal = document.getElementById('success-modal');
+const modalSubtitle = document.getElementById('modal-subtitle');
+const enterVaultBtn = document.getElementById('enter-vault-btn');
+
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
 const lbAvatar = document.getElementById('lb-avatar');
@@ -272,7 +301,7 @@ let currentGalleryPhotos = [];
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 
-// 檢查網址是否帶有驗證成功回調參數
+// 初始化檢查網址是否有帶 auth=success 回調參數
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const paramPlate = urlParams.get('plate');
@@ -280,22 +309,49 @@ window.addEventListener('DOMContentLoaded', () => {
     const lineName = urlParams.get('name');
 
     if (paramPlate) {
-        // 清洗純車牌
+        // 純車牌清洗
         const cleanPlate = paramPlate.split('/')[0].trim().toUpperCase();
         plateInput.value = cleanPlate;
-        
+
         if (authStatus === 'success') {
-            // 已透過 LINE 驗證成功
+            // 記錄驗證狀態
             localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
             localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
-        }
 
-        // 自動觸發檢索並進入圖庫
-        loadAndShowVault(cleanPlate);
+            // 彈出 QR Code 金鑰畫面
+            showSuccessModal(cleanPlate);
+        } else {
+            loadAndShowVault(cleanPlate);
+        }
     } else {
         loadHomeGrid();
     }
 });
+
+function showSuccessModal(plate) {
+    modalSubtitle.textContent = `車牌：${plate}`;
+    
+    // 清空並產生 QR Code
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    qrcodeContainer.innerHTML = '';
+    
+    const currentUrl = window.location.origin + window.location.pathname + `?plate=${encodeURIComponent(plate)}`;
+    new QRCode(qrcodeContainer, {
+        text: currentUrl,
+        width: 180,
+        height: 180,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    successModal.classList.remove('hidden');
+
+    enterVaultBtn.onclick = () => {
+        successModal.classList.add('hidden');
+        loadAndShowVault(plate);
+    };
+}
 
 async function loadHomeGrid() {
     const gridContainer = document.getElementById('car-grid');
@@ -449,7 +505,6 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lbAvatar.src = `https://placehold.co/100x100/121212/ffffff?text=Car`;
   }
 
-  // 檢查此瀏覽器是否已經對該車牌完成 LINE 驗證
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
   const ownerName = localStorage.getItem(`carpuse_name_${plate}`) || '';
 
@@ -464,7 +519,6 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lineLoginBtn.textContent = 'LINE 驗證解鎖';
       lineLoginBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
       lineLoginBtn.classList.remove('bg-gray-700', 'cursor-default');
-      // 點擊後導向後端 api/login.js，並把純車牌帶進去記錄
       lineLoginBtn.href = `/api/login?plate=${encodeURIComponent(plate)}`;
   }
 }
