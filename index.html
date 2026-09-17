@@ -40,7 +40,7 @@ tailwind.config = {
         <p class="text-[10px] text-gray-500 tracking-widest uppercase">Digital Vault</p>
       </div>
     </div>
-    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.3 SECURE</span>
+    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.4 SECURE</span>
   </div>
 </header>
 
@@ -50,16 +50,16 @@ tailwind.config = {
     
     <div class="text-center max-w-2xl mx-auto mb-12">
       <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-semibold bg-gray-900/80 text-gray-400 border border-gray-800 mb-4 tracking-widest uppercase shadow-inner">
-        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-        <span>RESTRICTED ACCESS · 私密金庫</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>VERIFIED VAULT · 智慧車聚影像系統</span>
       </span>
-      <h2 class="text-3xl font-extrabold text-white tracking-widest mb-3 font-mono drop-shadow-lg">解鎖專屬數位車庫</h2>
-      <p class="text-gray-400 text-sm tracking-wide">請輸入精準車牌號碼，進行身分核實與影像提領。</p>
+      <h2 class="text-3xl font-extrabold text-white tracking-widest mb-3 font-mono drop-shadow-lg">車庫影像智慧檢索</h2>
+      <p class="text-gray-400 text-sm tracking-wide">輸入精準車牌號碼，解鎖專屬展間與活動寫真。</p>
       
       <div class="mt-5 p-3 bg-black/40 border border-gray-800/60 rounded-lg inline-block max-w-lg">
         <p class="text-[10px] text-gray-500 leading-relaxed tracking-wide text-left flex items-start space-x-2">
-          <svg class="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span><strong class="text-gray-400">隱私安全聲明：</strong>本站支援公開預覽。下載高畫質原圖或完整授權需透過 LINE 官方進行身分驗證，確保車庫僅供車主本人存取。</span>
+          <svg class="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span><strong class="text-gray-400">雙模式說明：</strong>車主可自由切換「公開展間」供車聚交流，或透過 LINE 驗證開啟「私密金庫」。</span>
         </p>
       </div>
     </div>
@@ -109,7 +109,7 @@ tailwind.config = {
       <div class="absolute top-0 right-0 p-4">
         <button onclick="resetToSearch()" class="text-xs text-gray-400 hover:text-white transition flex items-center space-x-1 bg-gray-900/50 px-3 py-1.5 rounded-lg border border-gray-800">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          <span>返回金庫大門</span>
+          <span>返回大門</span>
         </button>
       </div>
 
@@ -148,15 +148,21 @@ tailwind.config = {
         <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
       </div>
 
-      <!-- LINE 驗證解鎖專屬區塊 -->
-      <div id="auth-action-box" class="mb-4 p-3.5 bg-emerald-950/20 border border-emerald-500/30 rounded-xl flex items-center justify-between">
+      <div id="auth-action-box" class="mb-4 p-3.5 bg-emerald-950/20 border border-emerald-500/30 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="flex items-center space-x-2 text-xs text-emerald-400">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span id="auth-status-text">訪客預覽模式 (圖片已鎖定)</span>
+          <span id="auth-status-text">載入驗證狀態中...</span>
         </div>
-        <a id="line-login-btn" href="#" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider">
-          <span>LINE 驗證解鎖</span>
-        </a>
+        
+        <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+          <a id="line-login-btn" href="#" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider">
+            <span>LINE 身分認領</span>
+          </a>
+          <!-- 車主專屬車貼 QR Code 按鈕 -->
+          <button id="open-owner-modal-btn" onclick="openOwnerModal()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider">
+            <span>車主管理 & QR Code</span>
+          </button>
+        </div>
       </div>
 
       <div class="flex space-x-2">
@@ -185,24 +191,40 @@ tailwind.config = {
   </section>
 </main>
 
-<div id="success-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
-  <div class="bg-[#0c0e15] border border-gray-800 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-    <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+<div id="owner-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
+  <div class="bg-[#0c0e15] border border-gray-800 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl relative">
+    <button onclick="closeOwnerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    
+    <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/30 rounded-full flex items-center justify-center mx-auto mb-3 text-indigo-400">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.115 6.848l.015-.045M18.816 16.666A14.179 14.179 0 0020 11a8 8 0 10-14.09 4.96L5 21l4-1.008"></path></svg>
     </div>
-    <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">私密金庫解鎖成功</h3>
-    <p id="modal-subtitle" class="text-xs text-gray-400 font-mono mb-6">車牌：BHS0759</p>
+    <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">車主專屬控制面板</h3>
+    <p id="owner-modal-subtitle" class="text-xs text-gray-400 font-mono mb-5">車牌：BHS0759</p>
 
-    <div class="bg-white p-4 rounded-xl inline-block mb-4 shadow-inner">
-      <div id="qrcode-container" class="flex justify-center"></div>
+    <!-- 公開 / 私密 切換開關 -->
+    <div class="bg-black/60 border border-gray-800 rounded-xl p-4 mb-5 text-left flex items-center justify-between">
+      <div>
+        <h4 class="text-xs font-bold text-white">展間存取權限模式</h4>
+        <p class="text-[10px] text-gray-400 mt-0.5">切換為公開模式時，所有訪客無需驗證即可直接查看照片。</p>
+      </div>
+      <button id="toggle-public-btn" onclick="togglePublicMode()" class="px-4 py-2 rounded-lg text-xs font-bold transition font-mono">
+        檢查中...
+      </button>
     </div>
 
-    <p class="text-[11px] text-gray-500 mb-6 leading-relaxed">
-      這是您的專屬金鑰 QR Code。<br>請截圖保存，日後掃描或透過連結即可直接進入車庫。
+    <!-- 車貼 QR Code -->
+    <div class="bg-white p-4 rounded-xl inline-block mb-3 shadow-inner">
+      <div id="owner-qrcode-container" class="flex justify-center"></div>
+    </div>
+
+    <p class="text-[11px] text-gray-500 mb-5 leading-relaxed">
+      這是您的車聚專屬數位車貼 QR Code。<br>您可以列印並放置於車內，方便車友掃描瀏覽。
     </p>
 
-    <button id="enter-vault-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl transition shadow-lg tracking-widest text-xs">
-      立即進入專屬車庫
+    <button onclick="closeOwnerModal()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl transition shadow-lg tracking-widest text-xs">
+      完成設定並關閉
     </button>
   </div>
 </div>
@@ -275,10 +297,10 @@ const statAlbums = document.getElementById('stat-albums');
 
 const lineLoginBtn = document.getElementById('line-login-btn');
 const authStatusText = document.getElementById('auth-status-text');
-
-const successModal = document.getElementById('success-modal');
-const modalSubtitle = document.getElementById('modal-subtitle');
-const enterVaultBtn = document.getElementById('enter-vault-btn');
+const openOwnerModalBtn = document.getElementById('open-owner-modal-btn');
+const ownerModal = document.getElementById('owner-modal');
+const ownerModalSubtitle = document.getElementById('owner-modal-subtitle');
+const togglePublicBtn = document.getElementById('toggle-public-btn');
 
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
@@ -298,8 +320,8 @@ let activeCircleObj = null;
 let currentGalleryPhotos = [];
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
+let currentIsPublicState = false;
 
-// 初始化檢查網址是否有帶 auth=success 回調參數
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const paramPlate = urlParams.get('plate');
@@ -311,12 +333,10 @@ window.addEventListener('DOMContentLoaded', () => {
         plateInput.value = cleanPlate;
 
         if (authStatus === 'success') {
-            // 記錄驗證狀態至此瀏覽器
             localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
             localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
-
-            // 彈出 QR Code 金鑰畫面
-            showSuccessModal(cleanPlate);
+            window.history.replaceState({}, document.title, window.location.pathname + `?plate=${encodeURIComponent(cleanPlate)}`);
+            loadAndShowVault(cleanPlate);
         } else {
             loadAndShowVault(cleanPlate);
         }
@@ -324,30 +344,6 @@ window.addEventListener('DOMContentLoaded', () => {
         loadHomeGrid();
     }
 });
-
-function showSuccessModal(plate) {
-    modalSubtitle.textContent = `車牌：${plate}`;
-    
-    const qrcodeContainer = document.getElementById('qrcode-container');
-    qrcodeContainer.innerHTML = '';
-    
-    const currentUrl = window.location.origin + window.location.pathname + `?plate=${encodeURIComponent(plate)}`;
-    new QRCode(qrcodeContainer, {
-        text: currentUrl,
-        width: 180,
-        height: 180,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
-
-    successModal.classList.remove('hidden');
-
-    enterVaultBtn.onclick = () => {
-        successModal.classList.add('hidden');
-        loadAndShowVault(plate);
-    };
-}
 
 async function loadHomeGrid() {
     const gridContainer = document.getElementById('car-grid');
@@ -463,6 +459,9 @@ async function loadAndShowVault(cleanPlate) {
     if (albums.length === 0) {
         showError(`檔案「${cleanPlate}」已存在，但金庫內暫無相片記錄。`);
     } else {
+        // 同步檢查雲端公開狀態
+        await checkCloudVaultStatus(cleanPlate);
+
         renderIGProfile(profileData, cleanPlate, totalPhotos, albums.length);
         renderAlbums(albums, cleanPlate);
         
@@ -477,6 +476,18 @@ async function loadAndShowVault(cleanPlate) {
     btnText.textContent = '立即檢索相簿 (SEARCH)';
     btnSpinner.classList.add('hidden');
   }
+}
+
+async function checkCloudVaultStatus(plate) {
+    try {
+        const res = await fetch(`/api/status?plate=${encodeURIComponent(plate)}`);
+        if (res.ok) {
+            const data = await res.json();
+            currentIsPublicState = data.isPublic === true;
+        }
+    } catch (e) {
+        console.log("無法取得雲端公開狀態，預設維持私密");
+    }
 }
 
 function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
@@ -501,23 +512,94 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lbAvatar.src = `https://placehold.co/100x100/121212/ffffff?text=Car`;
   }
 
-  // 嚴格檢查目前瀏覽器是否有此車牌的授權憑證
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
-  const ownerName = localStorage.getItem(`carpuse_name_${plate}`) || '';
+  const ownerName = localStorage.getItem(`carpuse_name_${plate}`) || '車主';
 
   if (isAuthed) {
-      authStatusText.textContent = `已透過 LINE 驗證解鎖 (${ownerName})`;
-      lineLoginBtn.textContent = '已解鎖';
+      authStatusText.textContent = currentIsPublicState ? `展間模式：公開展示中 (${ownerName})` : `展間模式：私密金庫 (${ownerName})`;
+      lineLoginBtn.textContent = '已認領';
       lineLoginBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
-      lineLoginBtn.classList.add('bg-gray-700', 'cursor-default');
+      lineLoginBtn.classList.add('bg-gray-800', 'cursor-default');
       lineLoginBtn.href = '#';
+
+      openOwnerModalBtn.classList.remove('hidden');
   } else {
-      authStatusText.textContent = '訪客預覽模式 (圖片已上鎖)';
-      lineLoginBtn.textContent = 'LINE 驗證解鎖';
+      if (currentIsPublicState) {
+          authStatusText.textContent = '車主已設為公開展間 (全體自由瀏覽)';
+      } else {
+          authStatusText.textContent = '訪客預覽模式 (圖片已上鎖)';
+      }
+      lineLoginBtn.textContent = 'LINE 身分認領';
       lineLoginBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
-      lineLoginBtn.classList.remove('bg-gray-700', 'cursor-default');
+      lineLoginBtn.classList.remove('bg-gray-800', 'cursor-default');
       lineLoginBtn.href = `/api/login?plate=${encodeURIComponent(plate)}`;
+
+      openOwnerModalBtn.classList.add('hidden');
   }
+}
+
+function openOwnerModal() {
+    const plate = profileTitle.textContent;
+    ownerModalSubtitle.textContent = `車牌：${plate}`;
+    
+    updateTogglePublicUI();
+
+    const qrcodeContainer = document.getElementById('owner-qrcode-container');
+    qrcodeContainer.innerHTML = '';
+    
+    const currentUrl = window.location.origin + window.location.pathname + `?plate=${encodeURIComponent(plate)}`;
+    new QRCode(qrcodeContainer, {
+        text: currentUrl,
+        width: 160,
+        height: 160,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    ownerModal.classList.remove('hidden');
+}
+
+function closeOwnerModal() {
+    ownerModal.classList.add('hidden');
+    loadAndShowVault(profileTitle.textContent);
+}
+
+function updateTogglePublicUI() {
+    if (currentIsPublicState) {
+        togglePublicBtn.textContent = '狀態：公開中 (切換私密)';
+        togglePublicBtn.className = 'px-4 py-2 rounded-lg text-xs font-bold transition font-mono bg-emerald-600 hover:bg-emerald-500 text-white';
+    } else {
+        togglePublicBtn.textContent = '狀態：私密中 (切換公開)';
+        togglePublicBtn.className = 'px-4 py-2 rounded-lg text-xs font-bold transition font-mono bg-gray-700 hover:bg-gray-600 text-gray-300';
+    }
+}
+
+async function togglePublicMode() {
+    const plate = profileTitle.textContent;
+    const newStatus = !currentIsPublicState;
+
+    togglePublicBtn.disabled = true;
+    togglePublicBtn.textContent = '更新中...';
+
+    try {
+        const res = await fetch('/api/toggle-public', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plate: plate, isPublic: newStatus })
+        });
+
+        if (!res.ok) throw new Error('更新公開狀態失敗');
+        
+        currentIsPublicState = newStatus;
+        updateTogglePublicUI();
+        loadAndShowVault(plate);
+    } catch (err) {
+        alert(err.message);
+        updateTogglePublicUI();
+    } finally {
+        togglePublicBtn.disabled = false;
+    }
 }
 
 function renderAlbums(albums, plate) {
@@ -574,8 +656,8 @@ function renderGallery(photoPaths, plate, albumTitle) {
   currentGalleryPhotos = photoPaths;
   currentGalleryPlate = plate;
 
-  // 檢查目前瀏覽器是否有解鎖權限
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
+  const canAccess = isAuthed || currentIsPublicState;
 
   photoPaths.forEach((path, index) => {
     const imgUrl = `${NAS_DOMAIN}/${plate}/${path}`;
@@ -584,8 +666,7 @@ function renderGallery(photoPaths, plate, albumTitle) {
     const div = document.createElement('div');
     div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
     
-    if (isAuthed) {
-        // 已解鎖：正常顯示圖片
+    if (canAccess) {
         div.innerHTML = `
           <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" onerror="this.style.display='none'">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-2">
@@ -598,7 +679,6 @@ function renderGallery(photoPaths, plate, albumTitle) {
           setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
         });
     } else {
-        // 未解鎖（訪客模式）：圖片模糊並加上鎖定遮罩提示
         div.innerHTML = `
           <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover blur-preview" onerror="this.style.display='none'">
           <div class="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-2 text-center">
@@ -607,7 +687,7 @@ function renderGallery(photoPaths, plate, albumTitle) {
           </div>
         `;
         div.addEventListener('click', () => {
-            showError("此車庫為私密空間，請點擊上方綠色按鈕進行 LINE 驗證解鎖。");
+            showError("此車庫為私密空間，請點擊上方綠色按鈕進行 LINE 身分認領。");
         });
     }
 
