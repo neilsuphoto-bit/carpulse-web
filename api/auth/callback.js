@@ -5,7 +5,6 @@ export default async function handler(req, res) {
         return res.status(400).send('缺少 LINE 授權驗證碼 (Code)');
     }
 
-    // 精準解析帶在 state 裡面的車牌 (格式為 random_BHS0759)
     const stateParts = state ? state.split('_') : [];
     const cleanPlate = stateParts.length > 1 ? stateParts[1].trim().toUpperCase() : 'BHS0759';
 
@@ -38,23 +37,30 @@ export default async function handler(req, res) {
         
         const lineUid = profile.userId;
         const lineDisplayName = profile.displayName;
-        const lineAvatar = profile.pictureUrl || '';
 
         const airtableToken = process.env.AIRTABLE_TOKEN;
         const airtableBaseId = process.env.AIRTABLE_BASE_ID;
         const airtableTable = 'Vault_Keys';
 
+        console.log("=== AIRTABLE DEBUG ===");
+        console.log("Token exists:", !!airtableToken);
+        console.log("BaseID exists:", !!airtableBaseId);
+        console.log("Target Plate:", cleanPlate);
+
         if (airtableToken && airtableBaseId) {
-            // 1. 先查詢該車牌是否已經有記錄
-            const queryRes = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}?filterByFormula={PLATE}='${cleanPlate}'`, {
+            const queryUrl = `https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}?filterByFormula={PLATE}='${cleanPlate}'`;
+            const queryRes = await fetch(queryUrl, {
                 headers: { 'Authorization': `Bearer ${airtableToken}` }
             });
-            const queryData = await queryRes.json();
+            const queryText = await queryRes.text();
+            console.log("Airtable Query Status:", queryRes.status);
+            console.log("Airtable Query Response:", queryText);
+
+            const queryData = JSON.parse(queryText);
             const records = queryData.records || [];
 
             if (records.length === 0) {
-                // 狀況 A：完全沒有這張車牌的記錄 ➔ 直接建立，並將此人設為 OwnerUID
-                await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
+                const createRes = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${airtableToken}`,
@@ -69,31 +75,9 @@ export default async function handler(req, res) {
                         }
                     })
                 });
-            } else {
-                // 狀況 B：已經有記錄，檢查 OwnerUID
-                const record = records[0];
-                const ownerUid = record.fields.OwnerUID;
-
-                if (!ownerUid) {
-                    // 如果 OwnerUID 是空的 ➔ 自動幫他補上成為車主
-                    await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}/${record.id}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `Bearer ${airtableToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            fields: {
-                                "OwnerUID": lineUid,
-                                "LineUID": lineUid,
-                                "AccessKey": lineDisplayName
-                            }
-                        })
-                    });
-                } else if (ownerUid !== lineUid) {
-                    // 狀況 C：已有車主，但登入的人不是車主 ➔ 擋下！
-                    return res.redirect(`/?plate=${encodeURIComponent(cleanPlate)}&auth=error&msg=${encodeURIComponent('ACCESS DENIED: 此車庫已由其他 LINE 帳號綁定，非車主本人無法解密。')}`);
-                }
+                const createText = await createRes.text();
+                console.log("Airtable Create Status:", createRes.status);
+                console.log("Airtable Create Response:", textToLog => createText);
             }
         }
 
@@ -103,7 +87,7 @@ export default async function handler(req, res) {
         res.end();
 
     } catch (err) {
-        console.error("LINE Auth Error:", err);
-        res.status(500).send(`授權過程發生錯誤: ${err.message}`);
+        console.error("FATAL ERROR:", err);
+        res.status(500).send(`伺服器崩潰錯誤: ${err.message}`);
     }
 }
