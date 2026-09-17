@@ -5,10 +5,9 @@ export default async function handler(req, res) {
         return res.status(400).send('缺少 LINE 授權驗證碼 (Code)');
     }
 
-    // 解析帶在 state 裡面的車牌 (格式為 random_plate)
+    // 精準解析帶在 state 裡面的車牌 (格式為 random_BHS0759)
     const stateParts = state ? state.split('_') : [];
-    const plate = stateParts.length > 1 ? stateParts.slice(1).join('_').trim().toUpperCase() : '';
-    const cleanPlate = plate.split('/')[0].trim();
+    const cleanPlate = stateParts.length > 1 ? stateParts[1].trim().toUpperCase() : 'BHS0759';
 
     const channelId = process.env.LINE_CHANNEL_ID;
     const channelSecret = process.env.LINE_CHANNEL_SECRET;
@@ -103,8 +102,8 @@ export default async function handler(req, res) {
         });
         res.end();
 
-} catch (err) {
+    } catch (err) {
         console.error("LINE Auth Error:", err);
-        return res.status(500).send(`授權與 Airtable 寫入發生嚴重錯誤: ${err.message} | Stack: ${err.stack}`);
+        res.status(500).send(`授權過程發生錯誤: ${err.message}`);
     }
 }
