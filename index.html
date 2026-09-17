@@ -38,7 +38,7 @@ tailwind.config = {
         <p class="text-[10px] text-gray-500 tracking-widest uppercase">Digital Vault</p>
       </div>
     </div>
-    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.1 PRIVATE</span>
+    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.3 SECURE</span>
   </div>
 </header>
 
@@ -47,7 +47,6 @@ tailwind.config = {
   <!-- 搜尋與首頁金庫容器 -->
   <div id="search-container" class="transition-all duration-300">
     
-    <!-- 1. 標題與免責隱私區 (The Vault Header) -->
     <div class="text-center max-w-2xl mx-auto mb-12">
       <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-semibold bg-gray-900/80 text-gray-400 border border-gray-800 mb-4 tracking-widest uppercase shadow-inner">
         <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
@@ -56,32 +55,29 @@ tailwind.config = {
       <h2 class="text-3xl font-extrabold text-white tracking-widest mb-3 font-mono drop-shadow-lg">解鎖專屬數位車庫</h2>
       <p class="text-gray-400 text-sm tracking-wide">請輸入精準車牌號碼，進行身分核實與影像提領。</p>
       
-      <!-- 隱私防禦護城河文案 -->
       <div class="mt-5 p-3 bg-black/40 border border-gray-800/60 rounded-lg inline-block max-w-lg">
         <p class="text-[10px] text-gray-500 leading-relaxed tracking-wide text-left flex items-start space-x-2">
           <svg class="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span><strong class="text-gray-400">隱私安全聲明：</strong>基於資安與隱私保護，本系統無對外公開目錄。非授權車輛將予以隱藏，僅供車主本人憑車牌精準調閱歷史影像。</span>
+          <span><strong class="text-gray-400">隱私安全聲明：</strong>本站支援公開預覽。下載高畫質原圖或完整授權需透過 LINE 官方進行身分驗證，確保車庫僅供車主本人存取。</span>
         </p>
       </div>
     </div>
 
-    <!-- 2. 密碼輸入盤 (The Terminal Input) -->
     <div class="max-w-xl mx-auto bg-[#0c0e15] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.8)] relative overflow-hidden">
       <div class="absolute -right-20 -top-20 w-40 h-40 bg-indigo-900/10 rounded-full blur-3xl pointer-events-none"></div>
       
       <form id="search-form" class="space-y-5 relative z-10">
         <div>
-          <label for="plate-input" class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">授權車牌 (AUTHORIZED PLATE)</label>
+          <label for="plate-input" class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">車牌號碼 (SEARCH PLATE)</label>
           <input type="text" id="plate-input" placeholder="例: BHS0759" class="w-full bg-black/80 border border-gray-700 rounded-xl px-4 py-4 text-white placeholder-gray-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition uppercase font-mono tracking-[0.2em] text-xl text-center" required autocomplete="off">
         </div>
         <button type="submit" id="submit-btn" class="w-full bg-gray-100 hover:bg-white text-black font-bold py-4 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 mt-4 tracking-widest">
-          <span id="btn-text">驗證並解鎖 (UNLOCK)</span>
+          <span id="btn-text">立即檢索相簿 (SEARCH)</span>
           <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden text-black" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
         </button>
       </form>
     </div>
 
-    <!-- Error Toast Container -->
     <div id="error-toast" class="max-w-xl mx-auto mt-6 hidden opacity-0 transition-opacity duration-300">
       <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3 text-red-400">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -89,7 +85,6 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- 動態 12 宮格首頁精選牆 -->
     <div id="home-grid-section" class="max-w-4xl mx-auto mt-20">
       <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
         <div>
@@ -97,22 +92,18 @@ tailwind.config = {
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
             <span>精選車輛主頁牆</span>
           </h3>
-          <p class="text-xs text-gray-500 mt-1">點擊任意車卡，即可一鍵解鎖該車主專屬寫真</p>
+          <p class="text-xs text-gray-500 mt-1">點擊任意車卡，即可一鍵查看該車主所有活動寫真</p>
         </div>
-        <span class="text-[10px] font-mono text-indigo-400 bg-indigo-900/30 px-2.5 py-1 rounded-full border border-indigo-500/30">NAS 即時同步</span>
+        <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-500/30">全彩原圖展示</span>
       </div>
       
-      <!-- 12 宮格容器 (手機2格、平板3格、電腦4格) -->
       <div id="car-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        <!-- 動態由 JS 渲染 -->
       </div>
     </div>
   </div>
 
-  <!-- 車主專屬頁面區塊 -->
   <section id="gallery-section" class="mt-2 hidden max-w-2xl mx-auto">
     
-    <!-- Profile Header Info -->
     <div class="bg-igcard border border-igborder rounded-2xl p-5 mb-6 shadow-xl relative overflow-hidden">
       <div class="absolute top-0 right-0 p-4">
         <button onclick="resetToSearch()" class="text-xs text-gray-400 hover:text-white transition flex items-center space-x-1 bg-gray-900/50 px-3 py-1.5 rounded-lg border border-gray-800">
@@ -122,7 +113,6 @@ tailwind.config = {
       </div>
 
       <div class="flex items-center justify-between mb-4 mt-6">
-        <!-- Avatar & Plate -->
         <div class="flex items-center space-x-4">
           <div class="relative">
             <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-tr from-gray-500 via-gray-400 to-white shadow-lg">
@@ -137,11 +127,10 @@ tailwind.config = {
               <h3 id="profile-title" class="text-base sm:text-lg font-bold text-white tracking-widest font-mono">BHS0759</h3>
               <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             </div>
-            <p class="text-[10px] text-gray-500 mt-0.5 tracking-widest uppercase">Official Archive</p>
+            <p class="text-[10px] text-gray-500 mt-0.5 tracking-widest uppercase">Verified Showcase</p>
           </div>
         </div>
 
-        <!-- Stats Counter -->
         <div class="flex space-x-6 text-center pr-2">
           <div>
             <div id="stat-posts" class="font-bold text-white text-base">0</div>
@@ -154,12 +143,21 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- Bio Info -->
       <div class="text-xs sm:text-sm text-gray-300 space-y-1 mb-4 bg-black/60 border border-gray-800 p-4 rounded-xl shadow-inner font-mono tracking-wide">
         <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
       </div>
 
-      <!-- Action Buttons -->
+      <!-- LINE 驗證解鎖 / 綁定專屬區塊 -->
+      <div id="auth-action-box" class="mb-4 p-3.5 bg-emerald-950/20 border border-emerald-500/30 rounded-xl flex items-center justify-between">
+        <div class="flex items-center space-x-2 text-xs text-emerald-400">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          <span id="auth-status-text">訪客預覽模式 (可瀏覽預覽與縮圖)</span>
+        </div>
+        <a id="line-login-btn" href="#" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider">
+          <span>LINE 驗證解鎖</span>
+        </a>
+      </div>
+
       <div class="flex space-x-2">
         <button onclick="shareProfile(event)" class="flex-1 bg-gray-100 hover:bg-white text-black text-xs font-bold py-3 rounded-xl transition shadow text-center tracking-widest">
           分享專屬展間 (SHARE)
@@ -167,12 +165,9 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- Albums Category Row (Highlights) -->
     <div id="albums-container" class="py-2 mb-4 flex space-x-5 overflow-x-auto no-scrollbar pl-2">
-      <!-- 動態載入活動分類圓圈 -->
     </div>
 
-    <!-- IG Tabs -->
     <div class="border-t border-igborder flex justify-center mb-1">
       <div class="border-t-2 border-gray-300 text-gray-200 px-6 py-3 flex items-center space-x-2 -mt-[1px]">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
@@ -180,19 +175,15 @@ tailwind.config = {
       </div>
     </div>
     
-    <!-- Currently Viewing Label -->
     <div class="text-center mb-3">
         <span id="current-album-label" class="text-xs font-medium text-gray-500">請點擊上方圓圈選擇活動場次</span>
     </div>
 
-    <!-- IG 3-Column Square Grid Container -->
     <div id="results-container" class="grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px]">
-      <!-- 動態 1:1 正方形相片載入處 -->
     </div>
   </section>
 </main>
 
-<!-- Lightbox Modal -->
 <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/98 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 flex flex-col justify-between">
   <div class="flex items-center justify-between p-4 border-b border-gray-900 bg-black/50">
     <div class="flex items-center space-x-3">
@@ -238,14 +229,8 @@ tailwind.config = {
 </footer>
 
 <script>
-// ==========================================
-// API 設定 (指向你的 Cloudflare Tunnel 網域)
-// ==========================================
 const NAS_DOMAIN = 'https://images.carpuse.cc';
 
-// ==========================================
-// DOM Elements 綁定
-// ==========================================
 const form = document.getElementById('search-form');
 const plateInput = document.getElementById('plate-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -265,6 +250,9 @@ const profileBio = document.getElementById('profile-bio');
 const statPosts = document.getElementById('stat-posts');
 const statAlbums = document.getElementById('stat-albums');
 
+const lineLoginBtn = document.getElementById('line-login-btn');
+const authStatusText = document.getElementById('auth-status-text');
+
 const lightboxModal = document.getElementById('lightbox-modal');
 const lightboxImg = document.getElementById('lightbox-img');
 const lbAvatar = document.getElementById('lb-avatar');
@@ -280,14 +268,35 @@ const lbCounter = document.getElementById('lb-counter');
 let errorTimeout;
 let activeCircleObj = null;
 
-// 畫廊輪播專用記憶體
 let currentGalleryPhotos = [];
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 
-// ==========================================
-// 初始化首頁 12 宮格預覽牆 (向 NAS 抓取 cars.json)
-// ==========================================
+// 檢查網址是否帶有驗證成功回調參數
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramPlate = urlParams.get('plate');
+    const authStatus = urlParams.get('auth');
+    const lineName = urlParams.get('name');
+
+    if (paramPlate) {
+        // 清洗純車牌
+        const cleanPlate = paramPlate.split('/')[0].trim().toUpperCase();
+        plateInput.value = cleanPlate;
+        
+        if (authStatus === 'success') {
+            // 已透過 LINE 驗證成功
+            localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
+            localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
+        }
+
+        // 自動觸發檢索並進入圖庫
+        loadAndShowVault(cleanPlate);
+    } else {
+        loadHomeGrid();
+    }
+});
+
 async function loadHomeGrid() {
     const gridContainer = document.getElementById('car-grid');
     if (!gridContainer) return;
@@ -299,23 +308,22 @@ async function loadHomeGrid() {
 
         gridContainer.innerHTML = '';
 
-        // 1. 渲染真實存在的車輛卡片
         cars.forEach(car => {
             const coverUrl = `${NAS_DOMAIN}/${car.cover}`;
+            const cleanCarPlate = car.plate ? car.plate.split('/')[0].trim().toUpperCase() : '';
             const card = `
-                <div onclick="quickSelectPlate('${car.plate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0c0e15] border border-gray-800 cursor-pointer shadow-lg hover:border-gray-500 hover:shadow-gray-500/20 transition-all duration-300 grayscale hover:grayscale-0">
-                    <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-60 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${car.plate}'">
+                <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0c0e15] border border-gray-800 cursor-pointer shadow-lg hover:border-gray-500 hover:shadow-gray-500/20 transition-all duration-300">
+                    <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-80 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${cleanCarPlate}'">
                     
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-4 opacity-100 transition duration-300">
-                        <span class="text-[9px] font-mono text-gray-400 mb-1 tracking-widest uppercase">FEATURED</span>
-                        <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${car.plate}</h4>
+                        <span class="text-[9px] font-mono text-emerald-400 mb-1 tracking-widest uppercase">FEATURED</span>
+                        <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${cleanCarPlate}</h4>
                     </div>
                 </div>
             `;
             gridContainer.insertAdjacentHTML('beforeend', card);
         });
 
-        // 2. 如果不足 12 台，自動補上虛線佔位符保持版面工整
         const remaining = 12 - cars.length;
         for (let i = 0; i < remaining; i++) {
             const placeholder = `
@@ -333,9 +341,9 @@ async function loadHomeGrid() {
     }
 }
 
-// 點擊 12 宮格卡片時，自動幫使用者輸入車牌並點擊查詢
 function quickSelectPlate(plate) {
-    plateInput.value = plate;
+    const cleanPlate = plate.split('/')[0].trim().toUpperCase();
+    plateInput.value = cleanPlate;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form.dispatchEvent(new Event('submit'));
 }
@@ -357,6 +365,7 @@ function resetToSearch() {
   gallerySection.classList.add('hidden');
   searchContainer.classList.remove('hidden');
   plateInput.value = '';
+  window.history.replaceState({}, document.title, window.location.pathname);
   window.scrollTo({ top: 0, behavior: 'smooth' });
   loadHomeGrid(); 
 }
@@ -366,7 +375,7 @@ async function fetchProfileData(plate) {
   try {
     const profileRes = await fetch(`${profileUrl}?t=${new Date().getTime()}`);
     if (!profileRes.ok) {
-      throw new Error(`ACCESS DENIED: 查無此車牌號碼「${plate}」，或該檔案未授權解密。`);
+      throw new Error(`ACCESS DENIED: 查無此車牌號碼「${plate}」，或該檔案未授權。`);
     }
     return await profileRes.json();
   } catch (err) {
@@ -378,15 +387,20 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   hideError();
 
-  let plate = plateInput.value.trim().toUpperCase().replace(/\s+/g, '');
-  if (!plate) return;
+  let rawValue = plateInput.value.trim().toUpperCase();
+  let cleanPlate = rawValue.split('/')[0].trim().replace(/\s+/g, '');
+  if (!cleanPlate) return;
 
+  loadAndShowVault(cleanPlate);
+});
+
+async function loadAndShowVault(cleanPlate) {
   submitBtn.disabled = true;
-  btnText.textContent = 'DECRYPTING...';
+  btnText.textContent = 'SEARCHING...';
   btnSpinner.classList.remove('hidden');
 
   try {
-    const profileData = await fetchProfileData(plate);
+    const profileData = await fetchProfileData(cleanPlate);
     const albums = profileData.albums || profileData.highlights || [];
     
     let totalPhotos = 0;
@@ -395,10 +409,10 @@ form.addEventListener('submit', async (e) => {
     });
 
     if (albums.length === 0) {
-        showError(`檔案「${plate}」已存在，但金庫內暫無相片記錄。`);
+        showError(`檔案「${cleanPlate}」已存在，但金庫內暫無相片記錄。`);
     } else {
-        renderIGProfile(profileData, plate, totalPhotos, albums.length);
-        renderAlbums(albums, plate);
+        renderIGProfile(profileData, cleanPlate, totalPhotos, albums.length);
+        renderAlbums(albums, cleanPlate);
         
         searchContainer.classList.add('hidden');
         gallerySection.classList.remove('hidden');
@@ -408,10 +422,10 @@ form.addEventListener('submit', async (e) => {
     showError(err.message);
   } finally {
     submitBtn.disabled = false;
-    btnText.textContent = '驗證並解鎖 (UNLOCK)';
+    btnText.textContent = '立即檢索相簿 (SEARCH)';
     btnSpinner.classList.add('hidden');
   }
-});
+}
 
 function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
   const displayName = profile.name ? profile.name : plate;
@@ -434,6 +448,25 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       profileAvatar.src = `https://placehold.co/200x200/121212/ffffff?text=${plate}`;
       lbAvatar.src = `https://placehold.co/100x100/121212/ffffff?text=Car`;
   }
+
+  // 檢查此瀏覽器是否已經對該車牌完成 LINE 驗證
+  const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
+  const ownerName = localStorage.getItem(`carpuse_name_${plate}`) || '';
+
+  if (isAuthed) {
+      authStatusText.textContent = `已透過 LINE 驗證解鎖 (${ownerName})`;
+      lineLoginBtn.textContent = '已解鎖';
+      lineLoginBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+      lineLoginBtn.classList.add('bg-gray-700', 'cursor-default');
+      lineLoginBtn.href = '#';
+  } else {
+      authStatusText.textContent = '訪客預覽模式 (可瀏覽預覽與縮圖)';
+      lineLoginBtn.textContent = 'LINE 驗證解鎖';
+      lineLoginBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+      lineLoginBtn.classList.remove('bg-gray-700', 'cursor-default');
+      // 點擊後導向後端 api/login.js，並把純車牌帶進去記錄
+      lineLoginBtn.href = `/api/login?plate=${encodeURIComponent(plate)}`;
+  }
 }
 
 function renderAlbums(albums, plate) {
@@ -451,7 +484,7 @@ function renderAlbums(albums, plate) {
     circleDiv.innerHTML = `
       <div class="ring-wrapper w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gray-800 group-hover:bg-gray-400 transition-all duration-300 ring-2 ring-transparent ring-offset-2 ring-offset-[#090a0f]">
         <div class="w-full h-full rounded-full bg-black p-0.5">
-          <img src="${coverUrl}" class="w-full h-full object-cover rounded-full grayscale group-hover:grayscale-0 transition duration-300" onerror="this.src='https://placehold.co/200x200/1e293b/ffffff?text=No+Img'">
+          <img src="${coverUrl}" class="w-full h-full object-cover rounded-full transition duration-300" onerror="this.src='https://placehold.co/200x200/1e293b/ffffff?text=No+Img'">
         </div>
       </div>
       <span class="text-[10px] text-gray-500 mt-2 font-medium truncate w-full text-center group-hover:text-gray-300 transition">${safeTitle}</span>
@@ -497,7 +530,7 @@ function renderGallery(photoPaths, plate, albumTitle) {
     const div = document.createElement('div');
     div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
     div.innerHTML = `
-      <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out grayscale hover:grayscale-0" onerror="this.style.display='none'">
+      <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" onerror="this.style.display='none'">
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-2">
         <span class="text-gray-300 font-mono text-[9px] truncate tracking-widest uppercase">VIEW FILE</span>
       </div>
@@ -588,9 +621,6 @@ function shareProfile(event) {
     }, 2500);
   }
 }
-
-window.onload = loadHomeGrid;
-
 </script>
 </body>
 </html>
