@@ -24,6 +24,7 @@ tailwind.config = {
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .ring-active { ring-color: #3b82f6 !important; ring-width: 2px !important; ring-offset-width: 2px !important; ring-offset-color: #090a0f !important; }
+  .blur-preview { filter: blur(12px); pointer-events: none; user-select: none; }
 </style>
 </head>
 <body class="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col justify-between selection:bg-indigo-600 selection:text-white">
@@ -45,7 +46,6 @@ tailwind.config = {
 
 <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
   
-  <!-- 搜尋與首頁金庫容器 -->
   <div id="search-container" class="transition-all duration-300">
     
     <div class="text-center max-w-2xl mx-auto mb-12">
@@ -148,11 +148,11 @@ tailwind.config = {
         <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
       </div>
 
-      <!-- LINE 驗證解鎖 / 綁定專屬區塊 -->
+      <!-- LINE 驗證解鎖專屬區塊 -->
       <div id="auth-action-box" class="mb-4 p-3.5 bg-emerald-950/20 border border-emerald-500/30 rounded-xl flex items-center justify-between">
         <div class="flex items-center space-x-2 text-xs text-emerald-400">
           <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span id="auth-status-text">訪客預覽模式 (可瀏覽預覽與縮圖)</span>
+          <span id="auth-status-text">訪客預覽模式 (圖片已鎖定)</span>
         </div>
         <a id="line-login-btn" href="#" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition shadow flex items-center space-x-1 tracking-wider">
           <span>LINE 驗證解鎖</span>
@@ -180,12 +180,11 @@ tailwind.config = {
         <span id="current-album-label" class="text-xs font-medium text-gray-500">請點擊上方圓圈選擇活動場次</span>
     </div>
 
-    <div id="results-container" class="grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px]">
+    <div id="results-container" class="grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px] relative">
     </div>
   </section>
 </main>
 
-<!-- LINE 驗證成功 QR Code 金鑰彈窗 -->
 <div id="success-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
   <div class="bg-[#0c0e15] border border-gray-800 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
     <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400">
@@ -194,7 +193,6 @@ tailwind.config = {
     <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">私密金庫解鎖成功</h3>
     <p id="modal-subtitle" class="text-xs text-gray-400 font-mono mb-6">車牌：BHS0759</p>
 
-    <!-- QR Code 產生區 -->
     <div class="bg-white p-4 rounded-xl inline-block mb-4 shadow-inner">
       <div id="qrcode-container" class="flex justify-center"></div>
     </div>
@@ -309,12 +307,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const lineName = urlParams.get('name');
 
     if (paramPlate) {
-        // 純車牌清洗
         const cleanPlate = paramPlate.split('/')[0].trim().toUpperCase();
         plateInput.value = cleanPlate;
 
         if (authStatus === 'success') {
-            // 記錄驗證狀態
+            // 記錄驗證狀態至此瀏覽器
             localStorage.setItem(`carpuse_auth_${cleanPlate}`, 'true');
             localStorage.setItem(`carpuse_name_${cleanPlate}`, lineName || '車主');
 
@@ -331,7 +328,6 @@ window.addEventListener('DOMContentLoaded', () => {
 function showSuccessModal(plate) {
     modalSubtitle.textContent = `車牌：${plate}`;
     
-    // 清空並產生 QR Code
     const qrcodeContainer = document.getElementById('qrcode-container');
     qrcodeContainer.innerHTML = '';
     
@@ -505,6 +501,7 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lbAvatar.src = `https://placehold.co/100x100/121212/ffffff?text=Car`;
   }
 
+  // 嚴格檢查目前瀏覽器是否有此車牌的授權憑證
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
   const ownerName = localStorage.getItem(`carpuse_name_${plate}`) || '';
 
@@ -515,7 +512,7 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
       lineLoginBtn.classList.add('bg-gray-700', 'cursor-default');
       lineLoginBtn.href = '#';
   } else {
-      authStatusText.textContent = '訪客預覽模式 (可瀏覽預覽與縮圖)';
+      authStatusText.textContent = '訪客預覽模式 (圖片已上鎖)';
       lineLoginBtn.textContent = 'LINE 驗證解鎖';
       lineLoginBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
       lineLoginBtn.classList.remove('bg-gray-700', 'cursor-default');
@@ -577,24 +574,42 @@ function renderGallery(photoPaths, plate, albumTitle) {
   currentGalleryPhotos = photoPaths;
   currentGalleryPlate = plate;
 
+  // 檢查目前瀏覽器是否有解鎖權限
+  const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
+
   photoPaths.forEach((path, index) => {
     const imgUrl = `${NAS_DOMAIN}/${plate}/${path}`;
     const filename = path.split('/').pop();
 
     const div = document.createElement('div');
     div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
-    div.innerHTML = `
-      <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" onerror="this.style.display='none'">
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-2">
-        <span class="text-gray-300 font-mono text-[9px] truncate tracking-widest uppercase">VIEW FILE</span>
-      </div>
-    `;
-
-    div.addEventListener('click', () => {
-      showLightboxPhoto(index);
-      lightboxModal.classList.remove('hidden');
-      setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
-    });
+    
+    if (isAuthed) {
+        // 已解鎖：正常顯示圖片
+        div.innerHTML = `
+          <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" onerror="this.style.display='none'">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-2">
+            <span class="text-gray-300 font-mono text-[9px] truncate tracking-widest uppercase">VIEW FILE</span>
+          </div>
+        `;
+        div.addEventListener('click', () => {
+          showLightboxPhoto(index);
+          lightboxModal.classList.remove('hidden');
+          setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
+        });
+    } else {
+        // 未解鎖（訪客模式）：圖片模糊並加上鎖定遮罩提示
+        div.innerHTML = `
+          <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover blur-preview" onerror="this.style.display='none'">
+          <div class="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-2 text-center">
+            <svg class="w-5 h-5 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            <span class="text-[9px] font-mono text-gray-300 tracking-wider">LOCKED</span>
+          </div>
+        `;
+        div.addEventListener('click', () => {
+            showError("此車庫為私密空間，請點擊上方綠色按鈕進行 LINE 驗證解鎖。");
+        });
+    }
 
     resultsContainer.appendChild(div);
   });
