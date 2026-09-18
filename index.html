@@ -328,7 +328,7 @@ tailwind.config = {
             
             <!-- IG 按鈕 + Hover Card 容器 -->
             <div class="relative group/hovercard">
-              <a id="lb-ig-link" href="https://instagram.com/neilsu_photo" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block tracking-wider">
+              <a id="lb-ig-link" href="https://www.instagram.com/neilsuphoto/" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block tracking-wider">
                 IG
               </a>
               
@@ -340,7 +340,7 @@ tailwind.config = {
                   </div>
                   <div class="overflow-hidden">
                     <h5 id="hover-card-name" class="text-xs font-bold text-white truncate">Neilsu Photo</h5>
-                    <p id="hover-card-handle" class="text-[10px] text-purple-400 font-mono truncate">@neilsu_photo</p>
+                    <p id="hover-card-handle" class="text-[10px] text-purple-400 font-mono truncate">@neilsuphoto</p>
                   </div>
                 </div>
                 <p class="text-[10px] text-gray-300 leading-relaxed font-mono mb-2 bg-black/40 p-2 rounded-lg border border-gray-800">
@@ -354,7 +354,7 @@ tailwind.config = {
             </div>
 
             <!-- FB 按鈕 -->
-            <a id="lb-fb-link" href="https://facebook.com/neilsuphoto" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-blue-800/50 block tracking-wider">
+            <a id="lb-fb-link" href="https://www.facebook.com/neilsuphoto/" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-blue-800/50 block tracking-wider">
               FB
             </a>
             
@@ -861,26 +861,16 @@ function showLightboxPhoto(index) {
   const currentAlbum = currentGalleryAlbums.find(a => a.title === currentGalleryAlbumTitle) || {};
   const photographer = currentAlbum.photographer || {
       name: "Neilsu Photo",
-      ig: "https://instagram.com/neilsu_photo",
-      fb: "https://facebook.com/neilsuphoto",
+      ig: "https://www.instagram.com/neilsuphoto/",
+      fb: "https://www.facebook.com/neilsuphoto/",
       web: "https://carpuse.cc"
   };
 
   lbPhotographerName.textContent = photographer.name;
   hoverCardName.textContent = photographer.name;
-  
-  // 自動解析 IG 帳號顯示在小卡上
-  let igHandle = "@neilsu_photo";
-  if (photographer.ig && photographer.ig.includes("instagram.com/")) {
-      const parts = photographer.ig.split("instagram.com/");
-      if (parts[1]) {
-          igHandle = "@" + parts[1].replace(/\/$/, "");
-      }
-  }
-  hoverCardHandle.textContent = igHandle;
 
-  setSocialLink(lbIgLink, photographer.ig);
-  setSocialLink(lbFbLink, photographer.fb);
+  setSocialLink(lbIgLink, photographer.ig || "https://www.instagram.com/neilsuphoto/");
+  setSocialLink(lbFbLink, photographer.fb || "https://www.facebook.com/neilsuphoto/");
   setSocialLink(lbWebLink, photographer.web || "https://carpuse.cc");
 }
 
