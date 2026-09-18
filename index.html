@@ -131,6 +131,7 @@
 </div>
 
 
+<!-- 聯絡管理員 LINE 快捷按鈕 -->
 <div class="mb-5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-between text-left">
   <div>
     <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">遇到認領問題或誤佔？</div>
@@ -157,6 +158,7 @@
 <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">車主專屬控制面板</h3>
 <p id="owner-modal-subtitle" class="text-xs text-gray-400 font-mono mb-5">車牌：BHS0759</p>
 
+<!-- 公開 / 私密 切換開關 -->
 <div class="bg-black/60 border border-gray-800 rounded-xl p-4 mb-5 text-left flex items-center justify-between">
   <div>
     <h4 class="text-xs font-bold text-white">展間存取權限模式</h4>
@@ -167,6 +169,7 @@
   </button>
 </div>
 
+<!-- 車貼 QR Code -->
 <div class="bg-white p-4 rounded-xl inline-block mb-3 shadow-inner">
   <div id="owner-qrcode-container" class="flex justify-center"></div>
 </div>
@@ -180,29 +183,21 @@
 </button>
 
 
-<div class="flex items-center space-x-3">
-  <span id="lb-counter" class="text-[9px] font-mono text-gray-400 bg-gray-900 px-2 py-0.5 rounded-md border border-gray-800">1 / 1</span>
-  <button id="close-lightbox" class="text-gray-400 hover:text-white p-1 transition rounded-lg hover:bg-gray-900">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-  </button>
-</div>
-
-
-<!-- 左側照片區：桌機佔 78%，手機佔 65vh 確保大圖沈浸感 -->
-<div class="flex-grow h-[62vh] sm:h-[65vh] lg:h-full w-full lg:w-[78%] flex items-center justify-center relative">
-  <button id="lb-prev" class="absolute left-2 sm:left-4 p-2 bg-black/70 hover:bg-white hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+<!-- 左側照片區：桌機佔 75%，手機佔 65vh 確保大圖沈浸感 -->
+<div class="flex-grow h-[62vh] sm:h-[65vh] lg:h-full w-full lg:w-[75%] flex items-center justify-center relative">
+  <button id="lb-prev" class="absolute left-2 sm:left-4 p-2.5 bg-black/60 hover:bg-white hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
   </button>
   
   <img id="lightbox-img" src="" alt="Post Detail" class="max-h-[62vh] sm:max-h-[65vh] lg:max-h-[82vh] max-w-full object-contain drop-shadow-2xl z-30 rounded-lg">
   
-  <button id="lb-next" class="absolute right-2 sm:right-4 p-2 bg-black/70 hover:bg-white hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+  <button id="lb-next" class="absolute right-2 sm:right-4 p-2.5 bg-black/60 hover:bg-white hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
   </button>
 </div>
 
 <!-- 右側 / 手機下方資訊欄：手機版精簡不佔位，桌機版標準側邊欄 -->
-<div class="w-full lg:w-[240px] flex-shrink-0 bg-[#0d0f17] border border-gray-800/80 rounded-xl p-2.5 sm:p-3 lg:p-4 flex flex-col justify-between text-white shadow-2xl">
+<div class="w-full lg:w-[260px] flex-shrink-0 bg-[#0d0f17] border border-gray-800/80 rounded-xl p-3 sm:p-4 flex flex-col justify-between text-white shadow-2xl">
   
   <!-- 手機版隱藏檔名，桌機版正常顯示 -->
   <div class="hidden lg:block">
@@ -212,28 +207,28 @@
 
   <!-- 攝影師名片與社群導流 (含 Hover Card) -->
   <div>
-    <div class="text-[8px] lg:text-[9px] text-gray-500 uppercase tracking-widest mb-1 font-mono flex items-center justify-between">
+    <div class="text-[9px] text-gray-500 uppercase tracking-widest mb-1.5 font-mono flex items-center justify-between">
       <span>PHOTOGRAPHER</span>
       <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
     </div>
     
-    <div class="bg-black/60 p-2 lg:p-2.5 rounded-lg border border-gray-800 space-y-1.5">
+    <div class="bg-black/60 p-2.5 rounded-lg border border-gray-800 space-y-2">
       <div class="flex items-center space-x-2">
-        <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-[9px] font-bold text-white">N</div>
+        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white">N</div>
         <span id="lb-photographer-name" class="text-xs font-bold text-white">Neilsu Photo</span>
       </div>
 
       <!-- 具備懸浮預覽與直覺超連結的社群按鈕 -->
-      <div class="grid grid-cols-3 gap-1 pt-0.5 relative">
+      <div class="grid grid-cols-3 gap-1.5 pt-0.5 relative">
         
         <!-- IG 按鈕含 Hover Card -->
         <div class="relative group/hovercard">
-          <a id="lb-ig-link" href="https://www.instagram.com/neilsuphoto/" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1 rounded text-center transition border border-purple-800/50 block tracking-wider">
+          <a id="lb-ig-link" href="https://www.instagram.com/neilsuphoto/" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block tracking-wider">
             IG
           </a>
           
           <!-- 懸浮預覽卡 (Hover Card) -->
-          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3.5 bg-[#12141c]/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover/hovercard:opacity-100 group-hover/hovercard:visible transition-all duration-300 transform group-hover/hovercard:-translate-y-1 z-50 pointer-events-none text-left">
+          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 w-56 p-3.5 bg-[#12141c]/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover/hovercard:opacity-100 group-hover/hovercard:visible transition-all duration-300 transform group-hover/hovercard:-translate-y-1 z-50 pointer-events-none text-left">
             <div class="flex items-center space-x-3 mb-2.5">
               <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-amber-500 p-[2px] flex-shrink-0">
                 <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-xs font-bold text-white">N</div>
@@ -254,12 +249,12 @@
         </div>
 
         <!-- FB 按鈕 -->
-        <a id="lb-fb-link" href="https://www.facebook.com/neilsuphoto/" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1 rounded text-center transition border border-blue-800/50 block tracking-wider">
+        <a id="lb-fb-link" href="https://www.facebook.com/neilsuphoto/" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-blue-800/50 block tracking-wider">
           FB
         </a>
         
         <!-- 官網按鈕 -->
-        <a id="lb-web-link" href="https://carpuse.cc" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-[10px] font-bold py-1 rounded text-center transition border border-gray-700 block tracking-wider">
+        <a id="lb-web-link" href="https://carpuse.cc" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-[10px] font-bold py-1.5 rounded text-center transition border border-gray-700 block tracking-wider">
           官網
         </a>
 
@@ -268,8 +263,8 @@
   </div>
 
   <!-- 下載原圖按鈕 -->
-  <div class="mt-1.5 lg:mt-3">
-    <a id="download-btn" href="" target="_blank" download class="w-full bg-gray-100 hover:bg-white text-black text-[10px] lg:text-[11px] font-bold py-2 rounded-lg transition shadow-md flex items-center justify-center space-x-1.5 tracking-widest">
+  <div class="mt-2">
+    <a id="download-btn" href="" target="_blank" download class="w-full bg-gray-100 hover:bg-white text-black text-[11px] font-bold py-2.5 rounded-lg transition shadow-md flex items-center justify-center space-x-1.5 tracking-widest">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
       <span>提取高畫質原圖</span>
     </a>
