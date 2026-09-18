@@ -40,7 +40,7 @@ tailwind.config = {
         <p class="text-[10px] text-gray-500 tracking-widest uppercase">Digital Vault</p>
       </div>
     </div>
-    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.5 SECURE</span>
+    <span class="text-[10px] font-medium text-gray-400 bg-gray-900 px-2 py-1 rounded-lg border border-gray-700">v4.6 PRO</span>
   </div>
 </header>
 
@@ -197,7 +197,6 @@ tailwind.config = {
       請確認您為該車牌之車主本人後再行授權。
     </p>
 
-    <!-- 聯絡管理員 LINE 快捷按鈕 -->
     <div class="mb-5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-between text-left">
       <div>
         <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">遇到認領問題或誤佔？</div>
@@ -232,7 +231,6 @@ tailwind.config = {
     <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">車主專屬控制面板</h3>
     <p id="owner-modal-subtitle" class="text-xs text-gray-400 font-mono mb-5">車牌：BHS0759</p>
 
-    <!-- 公開 / 私密 切換開關 -->
     <div class="bg-black/60 border border-gray-800 rounded-xl p-4 mb-5 text-left flex items-center justify-between">
       <div>
         <h4 class="text-xs font-bold text-white">展間存取權限模式</h4>
@@ -243,7 +241,6 @@ tailwind.config = {
       </button>
     </div>
 
-    <!-- 車貼 QR Code -->
     <div class="bg-white p-4 rounded-xl inline-block mb-3 shadow-inner">
       <div id="owner-qrcode-container" class="flex justify-center"></div>
     </div>
@@ -258,43 +255,88 @@ tailwind.config = {
   </div>
 </div>
 
-<div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/98 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 flex flex-col justify-between">
-  <div class="flex items-center justify-between p-4 border-b border-gray-900 bg-black/50">
-    <div class="flex items-center space-x-3">
-      <div class="w-8 h-8 rounded-full bg-gray-800 overflow-hidden ring-1 ring-gray-700">
-        <img id="lb-avatar" src="" class="w-full h-full object-cover">
-      </div>
+<!-- 全新升級：左右雙欄沈浸式 Lightbox 燈箱視窗 -->
+<div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-2 sm:p-6">
+  <div class="bg-[#121212] border border-gray-800 rounded-2xl max-w-5xl w-full h-[90vh] sm:h-[82vh] grid grid-cols-1 md:grid-cols-3 overflow-hidden shadow-2xl relative">
+    
+    <button id="close-lightbox" class="absolute top-3 right-3 z-50 bg-black/70 hover:bg-white hover:text-black text-gray-300 p-2 rounded-full transition backdrop-blur border border-gray-700">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+
+    <!-- 左側：大張相片預覽區 (佔 2 欄) -->
+    <div class="md:col-span-2 bg-black flex items-center justify-center relative p-2 overflow-hidden" id="lightbox-bg-area">
+      <button id="lb-prev" class="absolute left-3 p-2.5 bg-black/60 hover:bg-gray-200 hover:text-black text-gray-300 rounded-full transition backdrop-blur z-30 border border-gray-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      
+      <img id="lightbox-img" src="" alt="Post Detail" class="max-h-full max-w-full object-contain drop-shadow-2xl z-20">
+      
+      <button id="lb-next" class="absolute right-3 p-2.5 bg-black/60 hover:bg-gray-200 hover:text-black text-gray-300 rounded-full transition backdrop-blur z-30 border border-gray-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
+
+    <!-- 右側：詳細資料與攝影師社群名片 (佔 1 欄) -->
+    <div class="p-5 sm:p-6 flex flex-col justify-between text-white bg-[#121212] border-t md:border-t-0 md:border-l border-gray-800 overflow-y-auto no-scrollbar">
+      
+      <!-- 上半部：車主與活動資訊 -->
       <div>
-        <h4 id="lb-plate" class="text-xs font-bold text-white font-mono tracking-widest">BHS0759</h4>
-        <p class="text-[9px] text-gray-600 uppercase tracking-widest">CARPULSE Official</p>
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-gray-800 overflow-hidden ring-1 ring-gray-700 flex-shrink-0">
+            <img id="lb-avatar" src="" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h4 id="lb-plate" class="text-sm font-bold text-white font-mono tracking-widest">BHS0759</h4>
+            <p id="lb-filename" class="text-[10px] text-gray-500 font-mono truncate max-w-[200px]">filename.jpg</p>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-800 pt-4 space-y-2.5 text-xs text-gray-300 font-mono">
+          <div class="flex justify-between"><span class="text-gray-500">當前活動</span><span id="lb-album-title" class="text-white font-bold">2026 春季車聚</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">照片進度</span><span id="lb-counter" class="text-emerald-400 font-bold">1 / 1</span></div>
+        </div>
       </div>
-    </div>
-    <button id="close-lightbox" class="text-gray-500 hover:text-white p-2 transition">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
-  </div>
 
-  <div class="flex-grow flex items-center justify-center p-2 overflow-hidden relative" id="lightbox-bg-area">
-    <button id="lb-prev" class="absolute left-2 sm:left-6 p-2 sm:p-3 bg-black/50 hover:bg-gray-200 hover:text-black text-gray-400 rounded-full transition-all backdrop-blur z-50 focus:outline-none border border-gray-800 hover:border-transparent">
-      <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-    </button>
-    
-    <img id="lightbox-img" src="" alt="Post Detail" class="max-h-[80vh] max-w-full object-contain drop-shadow-2xl z-40">
-    
-    <button id="lb-next" class="absolute right-2 sm:right-6 p-2 sm:p-3 bg-black/50 hover:bg-gray-200 hover:text-black text-gray-400 rounded-full transition-all backdrop-blur z-50 focus:outline-none border border-gray-800 hover:border-transparent">
-      <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-    </button>
-  </div>
+      <!-- 下半部：攝影師名片與多重社群導流按鈕 -->
+      <div class="border-t border-gray-800 pt-4 mt-4">
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-mono flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+          <span>Captured By Photographer</span>
+        </div>
+        
+        <div class="bg-black/60 p-3.5 rounded-xl border border-gray-800 space-y-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow">📷</div>
+            <div>
+              <span id="lb-photographer-name" class="text-sm font-bold text-white tracking-wide">Neilsu Photo</span>
+              <p class="text-[9px] text-amber-400 font-mono">OFFICIAL PARTNER</p>
+            </div>
+          </div>
 
-  <div class="p-4 border-t border-gray-900 bg-[#090a0f] flex items-center justify-between">
-    <div class="text-[10px] text-gray-500 font-mono truncate max-w-[60%] flex items-center space-x-2">
-      <span id="lb-counter" class="text-black font-bold bg-gray-300 px-2 py-0.5 rounded">1/1</span>
-      <span id="lb-filename">filename.jpg</span>
+          <!-- IG / FB / 官網按鈕並排 -->
+          <div class="grid grid-cols-3 gap-2 pt-1">
+            <a id="lb-ig-link" href="#" target="_blank" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white text-[11px] font-bold py-2 rounded-lg text-center transition shadow block tracking-wider">
+              Instagram
+            </a>
+            <a id="lb-fb-link" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold py-2 rounded-lg text-center transition shadow block tracking-wider">
+              Facebook
+            </a>
+            <a id="lb-web-link" href="#" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-[11px] font-bold py-2 rounded-lg text-center transition shadow block border border-gray-700 tracking-wider">
+              個人官網
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最下方：一鍵提取原圖按鈕 -->
+      <div class="pt-4">
+        <a id="download-btn" href="" target="_blank" download class="w-full bg-gray-100 hover:bg-white text-black text-xs font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2 tracking-widest font-mono">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>提取高畫質原圖</span>
+        </a>
+      </div>
+
     </div>
-    <a id="download-btn" href="" target="_blank" download class="bg-gray-200 hover:bg-white text-black text-[11px] font-bold px-4 py-2.5 rounded-lg transition shadow-lg flex items-center space-x-1.5 tracking-widest">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-      <span>提取原圖</span>
-    </a>
   </div>
 </div>
 
@@ -340,6 +382,11 @@ const lightboxImg = document.getElementById('lightbox-img');
 const lbAvatar = document.getElementById('lb-avatar');
 const lbPlate = document.getElementById('lb-plate');
 const lbFilename = document.getElementById('lb-filename');
+const lbAlbumTitle = document.getElementById('lb-album-title');
+const lbPhotographerName = document.getElementById('lb-photographer-name');
+const lbIgLink = document.getElementById('lb-ig-link');
+const lbFbLink = document.getElementById('lb-fb-link');
+const lbWebLink = document.getElementById('lb-web-link');
 const downloadBtn = document.getElementById('download-btn');
 const closeLightbox = document.getElementById('close-lightbox');
 
@@ -351,6 +398,8 @@ let errorTimeout;
 let activeCircleObj = null;
 
 let currentGalleryPhotos = [];
+let currentGalleryAlbums = [];
+let currentGalleryAlbumTitle = '';
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 let currentIsPublicState = false;
@@ -615,7 +664,7 @@ function openOwnerModal() {
         correctLevel: QRCode.CorrectLevel.H
     });
 
-    ownerModal.classList.remove('hidden');
+    ownerModal.classList.add('hidden');
 }
 
 function closeOwnerModal() {
@@ -665,6 +714,7 @@ async function togglePublicMode() {
 function renderAlbums(albums, plate) {
   albumsContainer.innerHTML = '';
   activeCircleObj = null;
+  currentGalleryAlbums = albums; // 暫存所有相簿供 Lightbox 讀取攝影師資料
 
   albums.forEach((album, index) => {
     const coverUrl = album.cover ? `${NAS_DOMAIN}/${plate}/${album.cover}` : `https://placehold.co/200x200/121212/ffffff?text=Event`;
@@ -693,6 +743,7 @@ function renderAlbums(albums, plate) {
       ringWrapper.classList.add('bg-gray-400', 'ring-active');
       activeCircleObj = ringWrapper;
 
+      currentGalleryAlbumTitle = safeTitle;
       renderGallery(safePhotos, plate, safeTitle);
     });
 
@@ -721,7 +772,6 @@ function renderGallery(photoPaths, plate, albumTitle) {
 
   photoPaths.forEach((path, index) => {
     const imgUrl = `${NAS_DOMAIN}/${plate}/${path}`;
-    const filename = path.split('/').pop();
 
     const div = document.createElement('div');
     div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
@@ -764,8 +814,32 @@ function showLightboxPhoto(index) {
   lightboxImg.src = imgUrl;
   lbPlate.textContent = profileTitle.textContent;
   lbFilename.textContent = filename;
+  lbAlbumTitle.textContent = currentGalleryAlbumTitle;
   lbCounter.textContent = `${index + 1} / ${currentGalleryPhotos.length}`;
   downloadBtn.href = imgUrl;
+
+  // 尋找當前相簿的攝影師資訊並動態綁定
+  const currentAlbum = currentGalleryAlbums.find(a => a.title === currentGalleryAlbumTitle) || {};
+  const photographer = currentAlbum.photographer || {
+      name: "Neilsu Photo",
+      ig: "https://instagram.com/neilsu_photo",
+      fb: "https://facebook.com/neilsuphoto",
+      web: "https://carpuse.cc"
+  };
+
+  lbPhotographerName.textContent = photographer.name;
+  setSocialLink(lbIgLink, photographer.ig);
+  setSocialLink(lbFbLink, photographer.fb);
+  setSocialLink(lbWebLink, photographer.web || "https://carpuse.cc");
+}
+
+function setSocialLink(element, url) {
+    if (url && url.trim() !== "" && url !== "#") {
+        element.href = url;
+        element.classList.remove('hidden');
+    } else {
+        element.classList.add('hidden');
+    }
 }
 
 function nextPhoto(e) {
