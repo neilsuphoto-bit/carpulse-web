@@ -297,8 +297,8 @@ tailwind.config = {
       </button>
     </div>
 
-    <!-- 右側：精簡側邊欄 (車輛資訊 + 低調質感攝影師名片) -->
-    <div class="w-full lg:w-[260px] flex-shrink-0 bg-[#0d0f17] border border-gray-800/80 rounded-xl p-4 flex flex-col justify-between text-white shadow-2xl">
+    <!-- 右側：精簡側邊欄 (車輛資訊 + 低調質感攝影師名片與高級懸浮預覽) -->
+    <div class="w-full lg:w-[260px] flex-shrink-0 bg-[#0d0f17] border border-gray-800/80 rounded-xl p-4 flex flex-col justify-between text-white shadow-2xl relative">
       
       <!-- 上半部：檔案與狀態 -->
       <div>
@@ -310,8 +310,8 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- 中段：攝影師低調質感名片與社群按鈕 -->
-      <div class="border-t border-gray-800/80 pt-3 mt-3">
+      <!-- 中段：攝影師質感名片與具備高質感 Hover Card 的按鈕 -->
+      <div class="border-t border-gray-800/80 pt-3 mt-3 relative">
         <div class="text-[9px] text-gray-500 uppercase tracking-widest mb-1.5 font-mono flex items-center justify-between">
           <span>PHOTOGRAPHER</span>
           <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
@@ -323,17 +323,46 @@ tailwind.config = {
             <span id="lb-photographer-name" class="text-xs font-bold text-white">Neilsu Photo</span>
           </div>
 
-          <!-- 緊湊型社群導流按鈕 -->
-          <div class="grid grid-cols-3 gap-1.5 pt-0.5">
-            <a id="lb-ig-link" href="https://instagram.com/neilsu_photo" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block tracking-wider">
-              IG
-            </a>
+          <!-- 緊湊型社群導流按鈕（含高質感 Hover Card 預覽觸發點） -->
+          <div class="grid grid-cols-3 gap-1.5 pt-0.5 relative">
+            
+            <!-- IG 按鈕 + Hover Card 容器 -->
+            <div class="relative group/hovercard">
+              <a id="lb-ig-link" href="https://instagram.com/neilsu_photo" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block tracking-wider">
+                IG
+              </a>
+              
+              <!-- 華麗流暢的高質感懸浮預覽卡 (Hover Card) -->
+              <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3.5 bg-[#12141c]/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover/hovercard:opacity-100 group-hover/hovercard:visible transition-all duration-300 transform group-hover/hovercard:-translate-y-1 z-50 pointer-events-none text-left">
+                <div class="flex items-center space-x-3 mb-2.5">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-amber-500 p-[2px] flex-shrink-0">
+                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-xs font-bold text-white">N</div>
+                  </div>
+                  <div class="overflow-hidden">
+                    <h5 id="hover-card-name" class="text-xs font-bold text-white truncate">Neilsu Photo</h5>
+                    <p id="hover-card-handle" class="text-[10px] text-purple-400 font-mono truncate">@neilsu_photo</p>
+                  </div>
+                </div>
+                <p class="text-[10px] text-gray-300 leading-relaxed font-mono mb-2 bg-black/40 p-2 rounded-lg border border-gray-800">
+                  📸 車聚動態寫真．精緻改裝紀錄
+                </p>
+                <div class="flex items-center justify-between text-[9px] text-gray-400 border-t border-gray-800/80 pt-2 font-mono">
+                  <span class="text-purple-300">⚡ 點擊即可造訪主頁</span>
+                  <span class="text-emerald-400 font-bold">VERIFIED</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- FB 按鈕 -->
             <a id="lb-fb-link" href="https://facebook.com/neilsuphoto" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-blue-800/50 block tracking-wider">
               FB
             </a>
+            
+            <!-- 官網按鈕 -->
             <a id="lb-web-link" href="https://carpuse.cc" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-[10px] font-bold py-1.5 rounded text-center transition border border-gray-700 block tracking-wider">
               官網
             </a>
+
           </div>
         </div>
       </div>
@@ -394,6 +423,8 @@ const lbAvatar = document.getElementById('lb-avatar');
 const lbPlate = document.getElementById('lb-plate');
 const lbFilename = document.getElementById('lb-filename');
 const lbPhotographerName = document.getElementById('lb-photographer-name');
+const hoverCardName = document.getElementById('hover-card-name');
+const hoverCardHandle = document.getElementById('hover-card-handle');
 const lbIgLink = document.getElementById('lb-ig-link');
 const lbFbLink = document.getElementById('lb-fb-link');
 const lbWebLink = document.getElementById('lb-web-link');
@@ -836,6 +867,18 @@ function showLightboxPhoto(index) {
   };
 
   lbPhotographerName.textContent = photographer.name;
+  hoverCardName.textContent = photographer.name;
+  
+  // 自動解析 IG 帳號顯示在小卡上
+  let igHandle = "@neilsu_photo";
+  if (photographer.ig && photographer.ig.includes("instagram.com/")) {
+      const parts = photographer.ig.split("instagram.com/");
+      if (parts[1]) {
+          igHandle = "@" + parts[1].replace(/\/$/, "");
+      }
+  }
+  hoverCardHandle.textContent = igHandle;
+
   setSocialLink(lbIgLink, photographer.ig);
   setSocialLink(lbFbLink, photographer.fb);
   setSocialLink(lbWebLink, photographer.web || "https://carpuse.cc");
