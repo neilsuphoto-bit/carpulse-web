@@ -25,6 +25,27 @@ tailwind.config = {
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .ring-active { ring-color: #3b82f6 !important; ring-width: 2px !important; ring-offset-width: 2px !important; ring-offset-color: #090a0f !important; }
   .blur-preview { filter: blur(12px); pointer-events: none; user-select: none; }
+  /* 添加瀑布流必要樣式 */
+  .masonry-layout {
+      column-count: 2;
+      column-gap: 0.5rem;
+  }
+  @media (min-width: 640px) {
+      .masonry-layout { column-count: 3; column-gap: 0.75rem; }
+  }
+  @media (min-width: 1024px) {
+      .masonry-layout { column-count: 4; column-gap: 1rem; }
+  }
+  .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 0.5rem;
+  }
+  @media (min-width: 640px) {
+      .masonry-item { margin-bottom: 0.75rem; }
+  }
+  @media (min-width: 1024px) {
+      .masonry-item { margin-bottom: 1rem; }
+  }
 </style>
 </head>
 <body class="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col justify-between selection:bg-indigo-600 selection:text-white">
@@ -47,7 +68,6 @@ tailwind.config = {
 <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
   
   <div id="search-container" class="transition-all duration-300">
-    
     <div class="text-center max-w-2xl mx-auto mb-12">
       <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-semibold bg-gray-900/80 text-gray-400 border border-gray-800 mb-4 tracking-widest uppercase shadow-inner">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -96,19 +116,19 @@ tailwind.config = {
     </div>
   </div>
 
-  <section id="gallery-section" class="mt-2 hidden max-w-2xl mx-auto">
+  <section id="gallery-section" class="mt-2 hidden max-w-2xl mx-auto lg:max-w-5xl">
     
-    <div class="bg-igcard border border-igborder rounded-2xl p-5 mb-6 shadow-xl relative overflow-hidden">
-      <div class="absolute top-0 right-0 p-4">
-        <button onclick="resetToSearch()" class="text-xs text-gray-400 hover:text-white transition flex items-center space-x-1 bg-gray-900/50 px-3 py-1.5 rounded-lg border border-gray-800">
+    <div id="profile-card-container" class="bg-igcard border border-igborder rounded-2xl p-5 mb-6 shadow-xl relative overflow-hidden transition-all duration-500">
+      <div class="absolute top-0 right-0 p-4 z-20">
+        <button onclick="resetToSearch()" class="text-xs text-gray-400 hover:text-white transition flex items-center space-x-1 bg-gray-900/50 px-3 py-1.5 rounded-lg border border-gray-800 backdrop-blur">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
           <span>返回大門</span>
         </button>
       </div>
 
-      <div class="flex items-center justify-between mb-4 mt-6">
-        <div class="flex items-center space-x-4">
-          <div class="relative">
+      <div id="title-container" class="flex items-center justify-between mb-4 mt-6">
+        <div id="profile-title-wrapper" class="flex items-center space-x-4 w-full">
+          <div id="avatar-container" class="relative transition-all duration-300">
             <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-tr from-gray-500 via-gray-400 to-white shadow-lg">
               <img id="profile-avatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full bg-black border-2 border-black" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=CARPULSE'">
             </div>
@@ -116,8 +136,8 @@ tailwind.config = {
               <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
             </div>
           </div>
-          <div>
-            <div class="flex items-center space-x-1.5">
+          <div id="title-text-wrapper" class="flex flex-col items-start transition-all duration-300">
+            <div class="flex items-center space-x-1.5 justify-center sm:justify-start w-full">
               <h3 id="profile-title" class="text-base sm:text-lg font-bold text-white tracking-widest font-mono">BHS0759</h3>
               <svg id="verified-badge" class="w-4 h-4 text-blue-500 flex-shrink-0 hidden" fill="currentColor" viewBox="0 0 20 20" title="車主已認證經營"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             </div>
@@ -125,7 +145,7 @@ tailwind.config = {
           </div>
         </div>
 
-        <div class="flex space-x-6 text-center pr-2">
+        <div id="stats-container" class="flex space-x-6 text-center pr-2 transition-all duration-300">
           <div>
             <div id="stat-posts" class="font-bold text-white text-base">0</div>
             <div class="text-[10px] text-gray-500 tracking-widest">總照片</div>
@@ -137,11 +157,11 @@ tailwind.config = {
         </div>
       </div>
 
-      <div class="text-xs sm:text-sm text-gray-300 space-y-1 mb-4 bg-black/60 border border-gray-800 p-4 rounded-xl shadow-inner font-mono tracking-wide">
-        <div id="profile-bio" class="whitespace-pre-line leading-relaxed">載入車輛介紹中...</div>
+      <div id="bio-container" class="text-xs sm:text-sm text-gray-300 space-y-1 mb-4 bg-black/60 border border-gray-800 p-4 rounded-xl shadow-inner font-mono tracking-wide transition-all duration-300">
+        <div id="profile-bio" class="whitespace-pre-line leading-relaxed text-left">載入車輛介紹中...</div>
       </div>
 
-      <div id="auth-action-box" class="mb-4 p-3.5 bg-gray-900/60 border border-gray-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div id="auth-action-box" class="mb-4 p-3.5 bg-gray-900/60 border border-gray-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 transition-all duration-300">
         <div class="flex items-center space-x-2 text-xs text-gray-400">
           <svg class="w-4 h-4 flex-shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
           <span id="auth-status-text">載入展間防護狀態中...</span>
@@ -158,33 +178,35 @@ tailwind.config = {
         </div>
       </div>
 
-      <div class="flex space-x-2">
+      <div id="share-btn-container" class="flex space-x-2 transition-all duration-300">
         <button onclick="shareProfile(event)" class="flex-1 bg-gray-100 hover:bg-white text-black text-xs font-bold py-3 rounded-xl transition shadow text-center tracking-widest">
           分享專屬展間 (SHARE)
         </button>
       </div>
     </div>
 
-    <div id="albums-container" class="py-2 mb-4 flex space-x-5 overflow-x-auto no-scrollbar pl-2">
+    <div id="albums-container-wrapper">
+        <div id="albums-container" class="py-2 mb-4 flex space-x-5 overflow-x-auto no-scrollbar pl-2">
+        </div>
+        
+        <div id="archive-divider" class="border-t border-igborder flex justify-center mb-1 transition-all duration-300">
+          <div class="border-t-2 border-gray-300 text-gray-200 px-6 py-3 flex items-center space-x-2 -mt-[1px]">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
+            <span class="text-[10px] font-bold tracking-widest uppercase">金庫檔案 (ARCHIVES)</span>
+          </div>
+        </div>
+        
+        <div id="current-album-label-wrapper" class="text-center mb-3">
+            <span id="current-album-label" class="text-xs font-medium text-gray-500">請點擊上方圓圈選擇活動場次</span>
+        </div>
     </div>
 
-    <div class="border-t border-igborder flex justify-center mb-1">
-      <div class="border-t-2 border-gray-300 text-gray-200 px-6 py-3 flex items-center space-x-2 -mt-[1px]">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
-        <span class="text-[10px] font-bold tracking-widest uppercase">金庫檔案 (ARCHIVES)</span>
-      </div>
-    </div>
-    
-    <div class="text-center mb-3">
-        <span id="current-album-label" class="text-xs font-medium text-gray-500">請點擊上方圓圈選擇活動場次</span>
-    </div>
-
-    <div id="results-container" class="grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px] relative">
+    <!-- 圖片顯示容器，預設九宮格，EVENT切換為瀑布流 -->
+    <div id="results-container" class="grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px] relative transition-all duration-500">
     </div>
   </section>
 </main>
 
-<!-- 防手賤惡意搶佔警告 Modal -->
 <div id="claim-warning-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
   <div class="bg-[#0c0e15] border border-red-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center">
     <div class="w-12 h-12 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-3 text-red-400">
@@ -197,7 +219,6 @@ tailwind.config = {
       請確認您為該車牌之車主本人後再行授權。
     </p>
 
-    <!-- 聯絡管理員 LINE 快捷按鈕 -->
     <div class="mb-5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-between text-left">
       <div>
         <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">遇到認領問題或誤佔？</div>
@@ -219,7 +240,6 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- 車主專屬控制面板 Modal -->
 <div id="owner-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
   <div class="bg-[#0c0e15] border border-gray-800 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl relative">
     <button onclick="closeOwnerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
@@ -232,7 +252,6 @@ tailwind.config = {
     <h3 class="text-lg font-bold text-white font-mono tracking-widest mb-1">車主專屬控制面板</h3>
     <p id="owner-modal-subtitle" class="text-xs text-gray-400 font-mono mb-5">車牌：BHS0759</p>
 
-    <!-- 公開 / 私密 切換開關 -->
     <div class="bg-black/60 border border-gray-800 rounded-xl p-4 mb-5 text-left flex items-center justify-between">
       <div>
         <h4 class="text-xs font-bold text-white">展間存取權限模式</h4>
@@ -243,7 +262,6 @@ tailwind.config = {
       </button>
     </div>
 
-    <!-- 車貼 QR Code -->
     <div class="bg-white p-4 rounded-xl inline-block mb-3 shadow-inner">
       <div id="owner-qrcode-container" class="flex justify-center"></div>
     </div>
@@ -259,42 +277,76 @@ tailwind.config = {
 </div>
 
 <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/98 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 flex flex-col justify-between">
-  <div class="flex items-center justify-between p-4 border-b border-gray-900 bg-black/50">
+  <!-- 頂部列 -->
+  <div class="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-gray-900 bg-black/60 z-50">
     <div class="flex items-center space-x-3">
       <div class="w-8 h-8 rounded-full bg-gray-800 overflow-hidden ring-1 ring-gray-700">
         <img id="lb-avatar" src="" class="w-full h-full object-cover">
       </div>
       <div>
         <h4 id="lb-plate" class="text-xs font-bold text-white font-mono tracking-widest">BHS0759</h4>
-        <p class="text-[9px] text-gray-600 uppercase tracking-widest">CARPULSE Official</p>
+        <p class="text-[9px] text-gray-500 uppercase tracking-widest">CARPULSE SECURE VAULT</p>
       </div>
     </div>
-    <button id="close-lightbox" class="text-gray-500 hover:text-white p-2 transition">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
-  </div>
-
-  <div class="flex-grow flex items-center justify-center p-2 overflow-hidden relative" id="lightbox-bg-area">
-    <button id="lb-prev" class="absolute left-2 sm:left-6 p-2 sm:p-3 bg-black/50 hover:bg-gray-200 hover:text-black text-gray-400 rounded-full transition-all backdrop-blur z-50 focus:outline-none border border-gray-800 hover:border-transparent">
-      <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-    </button>
-    
-    <img id="lightbox-img" src="" alt="Post Detail" class="max-h-[80vh] max-w-full object-contain drop-shadow-2xl z-40">
-    
-    <button id="lb-next" class="absolute right-2 sm:right-6 p-2 sm:p-3 bg-black/50 hover:bg-gray-200 hover:text-black text-gray-400 rounded-full transition-all backdrop-blur z-50 focus:outline-none border border-gray-800 hover:border-transparent">
-      <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-    </button>
-  </div>
-
-  <div class="p-4 border-t border-gray-900 bg-[#090a0f] flex items-center justify-between">
-    <div class="text-[10px] text-gray-500 font-mono truncate max-w-[60%] flex items-center space-x-2">
-      <span id="lb-counter" class="text-black font-bold bg-gray-300 px-2 py-0.5 rounded">1/1</span>
-      <span id="lb-filename">filename.jpg</span>
+    <div class="flex items-center space-x-3 sm:space-x-4">
+      <span id="lb-counter" class="text-[10px] font-mono text-gray-400 bg-gray-900 px-2.5 py-1 rounded-md border border-gray-800">1 / 1</span>
+      <button id="close-lightbox" class="text-gray-400 hover:text-white p-1.5 transition rounded-lg hover:bg-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
     </div>
-    <a id="download-btn" href="" target="_blank" download class="bg-gray-200 hover:bg-white text-black text-[11px] font-bold px-4 py-2.5 rounded-lg transition shadow-lg flex items-center space-x-1.5 tracking-widest">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-      <span>提取原圖</span>
-    </a>
+  </div>
+
+  <!-- 內容區 (雙欄結構) -->
+  <div class="flex-grow flex flex-col lg:flex-row items-center justify-center lg:justify-between p-0 lg:p-4 overflow-hidden relative gap-0 lg:gap-4" id="lightbox-bg-area">
+    <!-- 左側圖片區 -->
+    <div class="flex-grow h-[65vh] lg:h-full w-full lg:w-[75%] flex items-center justify-center relative bg-[#090a0f] lg:bg-transparent">
+      <button id="lb-prev" class="absolute left-2 sm:left-4 p-2.5 bg-black/60 hover:bg-white hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      
+      <img id="lightbox-img" src="" alt="Post Detail" class="max-h-[65vh] lg:max-h-[85vh] max-w-full object-contain drop-shadow-2xl z-30 lg:rounded-lg">
+      
+      <button id="lb-next" class="absolute right-2 sm:right-4 p-2.5 bg-black/60 hover:bg-white hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
+
+    <!-- 右側資訊與攝影師面板 -->
+    <div class="w-full lg:w-[260px] lg:flex-shrink-0 bg-[#0d0f17] border-t lg:border border-gray-800/80 lg:rounded-xl p-4 flex flex-col justify-start lg:justify-between text-white shadow-2xl h-[35vh] lg:h-auto overflow-y-auto lg:overflow-visible">
+      <!-- 上方檔案資訊 -->
+      <div class="hidden lg:block">
+        <div class="text-[9px] font-mono text-gray-500 uppercase tracking-widest mb-1">FILE INFO</div>
+        <div id="lb-filename" class="text-xs font-mono text-gray-300 truncate bg-black/40 px-2.5 py-1.5 rounded-lg border border-gray-800 mb-3">filename.jpg</div>
+        <div class="space-y-1.5 text-[11px] text-gray-400 font-mono border-t border-gray-800/60 pt-3">
+          <div class="flex justify-between"><span>檢索狀態</span><span class="text-emerald-400">SECURE OK</span></div>
+        </div>
+      </div>
+      
+      <!-- 下方攝影師資訊與下載按鈕 -->
+      <div class="border-t-0 lg:border-t border-gray-800/80 pt-0 lg:pt-3 mt-0 lg:mt-3">
+        <div class="text-[9px] text-gray-500 uppercase tracking-widest mb-2 font-mono flex items-center justify-between">
+          <span>PHOTOGRAPHER</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+        </div>
+        
+        <div class="bg-black/60 p-2.5 rounded-lg border border-gray-800 space-y-2 relative group cursor-pointer mb-3">
+          <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white">N</div>
+            <span class="text-xs font-bold text-white">Neilsu Photo</span>
+          </div>
+          <!-- IG/FB 社群按鈕 -->
+          <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+            <a href="https://www.instagram.com/neilsuphoto/" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block tracking-wider">IG</a>
+            <a href="https://www.facebook.com/neilsuphoto/" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-blue-800/50 block tracking-wider">FB</a>
+          </div>
+        </div>
+
+        <a id="download-btn" href="" target="_blank" download class="w-full bg-gray-200 hover:bg-white text-black text-[11px] font-bold px-4 py-2.5 rounded-lg transition shadow-lg flex items-center justify-center space-x-1.5 tracking-widest">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>提取原圖</span>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -397,12 +449,19 @@ async function loadHomeGrid() {
         cars.forEach(car => {
             const coverUrl = `${NAS_DOMAIN}/${car.cover}`;
             const cleanCarPlate = car.plate ? car.plate.split('/')[0].trim().toUpperCase() : '';
+            
+            // 判斷 EVENT- 給予特殊視覺標籤
+            const isEvent = cleanCarPlate.startsWith('EVENT-');
+            const badgeTag = isEvent 
+                ? `<span class="text-[10px] font-mono text-amber-400 mb-1 tracking-widest uppercase flex items-center space-x-1 font-bold"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg><span>OFFICIAL EVENT</span></span>`
+                : `<span class="text-[9px] font-mono text-emerald-400 mb-1 tracking-widest uppercase">FEATURED</span>`;
+
             const card = `
-                <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0c0e15] border border-gray-800 cursor-pointer shadow-lg hover:border-gray-500 hover:shadow-gray-500/20 transition-all duration-300">
+                <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0c0e15] border ${isEvent ? 'border-amber-900/50 shadow-amber-900/20 shadow-lg' : 'border-gray-800'} cursor-pointer hover:border-gray-500 hover:shadow-gray-500/20 transition-all duration-300">
                     <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-80 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${cleanCarPlate}'">
                     
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-4 opacity-100 transition duration-300">
-                        <span class="text-[9px] font-mono text-emerald-400 mb-1 tracking-widest uppercase">FEATURED</span>
+                        ${badgeTag}
                         <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${cleanCarPlate}</h4>
                     </div>
                 </div>
@@ -552,6 +611,50 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
 
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
 
+  // 雙棲 UI 自動切換邏輯
+  const isEvent = plate.startsWith('EVENT-');
+  const authBox = document.getElementById('auth-action-box');
+  const avatarContainer = document.getElementById('profile-avatar').parentElement.parentElement;
+  const statsContainer = document.getElementById('stats-container');
+  const shareBtnContainer = document.getElementById('share-btn-container').parentElement.querySelector('.flex.space-x-2');
+  const archiveDivider = document.getElementById('archive-divider') || document.querySelector('.border-t.border-igborder.flex.justify-center');
+  
+  if(isEvent) {
+      // 活動大廳模式隱藏車主 UI
+      if(authBox) authBox.classList.add('hidden');
+      if(avatarContainer) avatarContainer.classList.add('hidden');
+      if(statsContainer) statsContainer.classList.add('hidden');
+      if(shareBtnContainer) shareBtnContainer.classList.add('hidden');
+      
+      // 替換大標題樣式
+      const titleWrapper = document.getElementById('profile-title').parentElement.parentElement.parentElement;
+      titleWrapper.classList.remove('w-full', 'space-x-4');
+      titleWrapper.classList.add('justify-center');
+      profileTitle.className = 'text-2xl sm:text-4xl font-extrabold text-amber-400 drop-shadow-lg tracking-widest mt-2 mb-2 text-center';
+      document.getElementById('profile-bio').parentElement.className = 'text-xs sm:text-sm text-gray-400 mt-3 font-mono tracking-wide bg-transparent border-0 p-0 shadow-none text-center';
+      
+      if(archiveDivider) archiveDivider.style.display = 'none';
+      if(document.getElementById('albums-container')) document.getElementById('albums-container').style.display = 'none';
+      if(document.getElementById('current-album-label-wrapper')) document.getElementById('current-album-label-wrapper').style.display = 'none';
+      
+  } else {
+      // 一般車主模式恢復 UI
+      if(authBox) authBox.classList.remove('hidden');
+      if(avatarContainer) avatarContainer.classList.remove('hidden');
+      if(statsContainer) statsContainer.classList.remove('hidden');
+      if(shareBtnContainer) shareBtnContainer.classList.remove('hidden');
+      
+      const titleWrapper = document.getElementById('profile-title').parentElement.parentElement.parentElement;
+      titleWrapper.classList.add('w-full', 'space-x-4');
+      titleWrapper.classList.remove('justify-center');
+      profileTitle.className = 'text-base sm:text-lg font-bold text-white tracking-widest font-mono';
+      document.getElementById('profile-bio').parentElement.className = 'text-xs sm:text-sm text-gray-300 space-y-1 mb-4 bg-black/60 border border-gray-800 p-4 rounded-xl shadow-inner font-mono tracking-wide text-left';
+      
+      if(archiveDivider) archiveDivider.style.display = 'flex';
+      if(document.getElementById('albums-container')) document.getElementById('albums-container').style.display = 'flex';
+      if(document.getElementById('current-album-label-wrapper')) document.getElementById('current-album-label-wrapper').style.display = 'block';
+  }
+
   if (currentHasOwner) {
       verifiedBadge.classList.remove('hidden');
       profileStatusSubtitle.textContent = 'VERIFIED ACTIVE OWNER';
@@ -583,38 +686,18 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
   }
 }
 
-function openClaimWarningModal() {
-    claimWarningModal.classList.remove('hidden');
-}
-
-function closeClaimWarningModal() {
-    claimWarningModal.classList.add('hidden');
-}
-
-function proceedToLineLogin() {
-    const plate = profileTitle.textContent;
-    window.location.href = `/api/login?plate=${encodeURIComponent(plate)}`;
-}
+function openClaimWarningModal() { claimWarningModal.classList.remove('hidden'); }
+function closeClaimWarningModal() { claimWarningModal.classList.add('hidden'); }
+function proceedToLineLogin() { window.location.href = `/api/login?plate=${encodeURIComponent(profileTitle.textContent)}`; }
 
 function openOwnerModal() {
     const plate = profileTitle.textContent;
     ownerModalSubtitle.textContent = `車牌：${plate}`;
-    
     updateTogglePublicUI();
-
     const qrcodeContainer = document.getElementById('owner-qrcode-container');
     qrcodeContainer.innerHTML = '';
-    
     const currentUrl = window.location.origin + window.location.pathname + `?plate=${encodeURIComponent(plate)}`;
-    new QRCode(qrcodeContainer, {
-        text: currentUrl,
-        width: 160,
-        height: 160,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
-
+    new QRCode(qrcodeContainer, { text: currentUrl, width: 160, height: 160, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
     ownerModal.classList.remove('hidden');
 }
 
@@ -637,20 +720,12 @@ async function togglePublicMode() {
     const plate = profileTitle.textContent;
     const newStatus = !currentIsPublicState;
     const userUid = localStorage.getItem(`carpuse_uid_${plate}`) || 'LINE_USER_DEFAULT';
-
     togglePublicBtn.disabled = true;
     togglePublicBtn.textContent = '更新中...';
-
     try {
-        const res = await fetch('/api/toggle-public', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plate: plate, isPublic: newStatus, userUid: userUid })
-        });
-
+        const res = await fetch('/api/toggle-public', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plate: plate, isPublic: newStatus, userUid: userUid }) });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || '更新公開狀態失敗');
-        
         currentIsPublicState = newStatus;
         updateTogglePublicUI();
         loadAndShowVault(plate);
@@ -716,29 +791,57 @@ function renderGallery(photoPaths, plate, albumTitle) {
   currentGalleryPhotos = photoPaths;
   currentGalleryPlate = plate;
 
+  // 確認授權與是否為活動
+  const isEvent = plate.startsWith('EVENT-');
   const isAuthed = localStorage.getItem(`carpuse_auth_${plate}`) === 'true';
-  const canAccess = isAuthed || currentIsPublicState;
+  const canAccess = isEvent || isAuthed || currentIsPublicState; // 活動直接開放瀏覽
+
+  if (isEvent) {
+      // 官方活動：切換為瀑布流，移除黑底
+      resultsContainer.className = "masonry-layout w-full pb-10 mt-4";
+  } else {
+      // 車主展間：維持九宮格
+      resultsContainer.className = "grid grid-cols-3 gap-1 bg-black rounded-xl overflow-hidden shadow-2xl min-h-[200px] relative pb-10";
+  }
 
   photoPaths.forEach((path, index) => {
     const imgUrl = `${NAS_DOMAIN}/${plate}/${path}`;
     const filename = path.split('/').pop();
 
     const div = document.createElement('div');
-    div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
     
     if (canAccess) {
-        div.innerHTML = `
-          <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" onerror="this.style.display='none'">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-2">
-            <span class="text-gray-300 font-mono text-[9px] truncate tracking-widest uppercase">VIEW FILE</span>
-          </div>
-        `;
+        if (isEvent) {
+            // 瀑布流項目樣式
+            div.className = "masonry-item relative group cursor-pointer overflow-hidden rounded-xl bg-[#0c0e15]";
+            div.innerHTML = `
+              <img src="${imgUrl}" loading="lazy" class="w-full h-auto object-cover group-hover:scale-[1.02] transition duration-500 ease-out" onerror="this.style.display='none'">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
+                <span class="text-white font-mono text-[10px] tracking-widest uppercase flex items-center space-x-1.5 shadow-sm">
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  <span>VIEW</span>
+                </span>
+              </div>
+            `;
+        } else {
+            // 九宮格項目樣式
+            div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
+            div.innerHTML = `
+              <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" onerror="this.style.display='none'">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-2">
+                <span class="text-gray-300 font-mono text-[9px] truncate tracking-widest uppercase">VIEW FILE</span>
+              </div>
+            `;
+        }
+        
         div.addEventListener('click', () => {
           showLightboxPhoto(index);
           lightboxModal.classList.remove('hidden');
           setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
         });
     } else {
+        // 未授權鎖定樣式 (車主展間)
+        div.className = "aspect-square bg-[#090a0f] relative group cursor-pointer overflow-hidden border border-gray-900";
         div.innerHTML = `
           <img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover blur-preview" onerror="this.style.display='none'">
           <div class="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-2 text-center">
@@ -763,9 +866,11 @@ function showLightboxPhoto(index) {
 
   lightboxImg.src = imgUrl;
   lbPlate.textContent = profileTitle.textContent;
-  lbFilename.textContent = filename;
+  
+  if (lbFilename) lbFilename.textContent = filename;
+  
   lbCounter.textContent = `${index + 1} / ${currentGalleryPhotos.length}`;
-  downloadBtn.href = imgUrl;
+  if (downloadBtn) downloadBtn.href = imgUrl;
 }
 
 function nextPhoto(e) {
