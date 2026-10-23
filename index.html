@@ -229,3 +229,568 @@ tailwind.config = {
         <img id="lb-avatar" src="" class="w-full h-full object-cover">
       </div>
       <div>
+        <h4 id="lb-plate" class="text-xs font-bold text-white font-mono tracking-widest">BHS0759</h4>
+        <p class="text-[9px] text-cyan-400 uppercase tracking-widest font-mono">THECARFOLIO SECURE VAULT</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3 sm:space-x-4">
+      <span id="lb-counter" class="text-[10px] font-mono text-gray-400 bg-gray-900 px-2.5 py-1 rounded-md border border-gray-800">1 / 1</span>
+      <button id="close-lightbox" class="text-gray-400 hover:text-white p-1.5 transition rounded-lg hover:bg-gray-900 cursor-pointer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-grow flex flex-col lg:flex-row items-center justify-center lg:justify-between p-0 lg:p-4 overflow-hidden relative gap-0 lg:gap-4" id="lightbox-bg-area">
+    <div class="flex-grow h-[65vh] lg:h-full w-full lg:w-[75%] flex items-center justify-center relative bg-[#06070b] lg:bg-transparent">
+      <button id="lb-prev" class="absolute left-2 sm:left-4 p-2.5 bg-black/60 hover:bg-cyan-500 hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800 cursor-pointer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      <img id="lightbox-img" src="" alt="Post Detail" class="max-h-[65vh] lg:max-h-[85vh] max-w-full object-contain drop-shadow-2xl z-30 lg:rounded-lg">
+      <button id="lb-next" class="absolute right-2 sm:right-4 p-2.5 bg-black/60 hover:bg-cyan-500 hover:text-black text-gray-300 rounded-full transition-all backdrop-blur z-40 focus:outline-none border border-gray-800 cursor-pointer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
+
+    <div class="w-full lg:w-[260px] lg:flex-shrink-0 bg-[#0f1117] border-t lg:border border-gray-800/80 lg:rounded-xl p-4 flex flex-col justify-start lg:justify-between text-white shadow-2xl h-[35vh] lg:h-auto overflow-y-auto lg:overflow-visible font-mono">
+      <div class="hidden lg:block">
+        <div class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">FILE INFO</div>
+        <div id="lb-filename" class="text-xs text-gray-300 truncate bg-black/40 px-2.5 py-1.5 rounded-lg border border-gray-800 mb-3">filename.jpg</div>
+      </div>
+      
+      <div class="border-t-0 lg:border-t border-gray-800/80 pt-0 lg:pt-3 mt-0 lg:mt-3">
+        <div class="text-[9px] text-gray-500 uppercase tracking-widest mb-2 flex items-center justify-between">
+          <span>PHOTOGRAPHER</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        </div>
+        <div class="bg-black/60 p-2.5 rounded-lg border border-gray-800 space-y-2 mb-3">
+          <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white">N</div>
+            <span class="text-xs font-bold text-white">Neilsu Photo</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+            <a href="https://www.instagram.com/neilsuphoto/" target="_blank" class="bg-purple-950/60 hover:bg-purple-900 text-purple-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-purple-800/50 block">IG</a>
+            <a href="https://www.facebook.com/neilsuphoto/" target="_blank" class="bg-blue-950/60 hover:bg-blue-900 text-blue-200 text-[10px] font-bold py-1.5 rounded text-center transition border border-blue-800/50 block">FB</a>
+          </div>
+        </div>
+        <a id="download-btn" href="" target="_blank" download class="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-[11px] font-bold px-4 py-2.5 rounded-lg transition shadow-lg flex items-center justify-center space-x-1.5 tracking-widest cursor-pointer">
+          <span>提取原圖 (DOWNLOAD)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="owner-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+  <div class="bg-[#0f1117] border border-cyan-500/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center relative font-mono">
+    <button onclick="closeOwnerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="workspace w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto mb-3 border border-cyan-500/30">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+    </div>
+    <h3 class="text-base font-bold text-white mb-1">車主專屬管理 & QR Code</h3>
+    <p class="text-xs text-gray-400 mb-4">掃描下方 QR Code 或複製專屬展間連結，分享您的數位車庫。</p>
+    
+    <div id="qrcode-container" class="bg-white p-3 rounded-xl inline-block mb-4 shadow-inner flex justify-center"></div>
+    
+    <div class="space-y-2">
+      <button onclick="copyCurrentLink()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold py-2.5 rounded-xl transition cursor-pointer">
+        複製專屬展間連結
+      </button>
+      <button onclick="closeOwnerModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold py-2.5 rounded-xl transition cursor-pointer">
+        關閉視窗
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer class="border-t border-gray-800/50 bg-[#06070b] py-12 text-center text-[10px] text-gray-700 tracking-widest uppercase font-mono relative z-10">
+  <p>© 2026 THECARFOLIO SECURE VAULT. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<script>
+const NAS_DOMAIN = 'https://images.thecarfolio.com';
+
+// 50張完全不同的真實精選汽車寫真高畫質 URL 陣列，確保背景絕對不重複
+const DIVERSE_MICRO_CARS = [
+  "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1541348263662-e052662888f7?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1565043660720-332306fc6e23?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1502161254066-6c74af4b7aa1?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1542362567-b07e21598463?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1520031441872-265e4ff70366?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1541443131876-44503de71cce?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1517524208051-78923a54b9d0?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1570733577511-460d297779f4?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
+  "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=300&q=80"
+];
+
+let ambientTimer = null;
+let tilesList = [];
+
+// 動態產生 160 張完全不重複的微型車圖背景牆，具備波浪放大互動與自動跑馬燈循環
+function initBackgroundMicroWall() {
+  const wall = document.getElementById('background-micro-wall');
+  if (!wall) return;
+  wall.innerHTML = '';
+  
+  let shuffledPool = [...DIVERSE_MICRO_CARS];
+  for (let i = shuffledPool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledPool[i], shuffledPool[j]] = [shuffledPool[j], shuffledPool[i]];
+  }
+
+  tilesList = [];
+  for (let i = 0; i < 160; i++) {
+    const imgUrl = shuffledPool[i % shuffledPool.length];
+    const tile = document.createElement('div');
+    tile.className = "micro-tile aspect-square rounded-md overflow-hidden bg-gray-900 border border-gray-800/40 opacity-70 cursor-pointer shadow-sm";
+    tile.innerHTML = `<img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover">`;
+    wall.appendChild(tile);
+    tilesList.push(tile);
+  }
+
+  // 啟動背景自動跑馬燈波浪動畫（當滑鼠停留在搜尋框等非背景區域時）
+  if (ambientTimer) clearInterval(ambientTimer);
+  ambientTimer = setInterval(() => {
+    // 隨機選取 3~6 張微型車圖模擬群組波浪放大
+    tilesList.forEach(t => t.classList.remove('ambient-active'));
+    const count = 4 + Math.floor(Math.random() * 4);
+    for (let k = 0; k < count; k++) {
+      const randIdx = Math.floor(Math.random() * tilesList.length);
+      tilesList[randIdx].classList.add('ambient-active');
+    }
+    setTimeout(() => {
+      tilesList.forEach(t => t.classList.remove('ambient-active'));
+    }, 1200);
+  }, 2200);
+}
+
+const LOCAL_MOCK_DB = {
+    "cars": [
+        { plate: "BHS0759", cover: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80", name: "BMW M4 Competition" },
+        { plate: "GT3RS", cover: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80", name: "Porsche 911 GT3 RS" },
+        { plate: "R35GTR", cover: "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=800&q=80", name: "Nissan GT-R Nismo" },
+        { plate: "SUPRA90", cover: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80", name: "Toyota GR Supra A90" }
+    ],
+    "profiles": {
+        "BHS0759": {
+            "name": "BHS0759 // BMW M4 COMP",
+            "bio": "⚡ Twin Turbo Inline-6 | KW V4 Suspension\n🏁 Track Ready Setup | Custom Forged Wheels\n📍 Taipei Meet Official Archive",
+            "avatar": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=200&q=80",
+            "albums": [
+                {
+                    "title": "2026 台北車聚大會",
+                    "cover": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
+                    "photos": [
+                        "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80"
+                    ]
+                },
+                {
+                    "title": "陽明山夜景特輯",
+                    "cover": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
+                    "photos": [
+                        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
+                    ]
+                }
+            ]
+        },
+        "GT3RS": {
+            "name": "GT3RS // PORSCHE 911",
+            "bio": "🔥 Weissach Package | Magnesium Wheels\n🏎️ NA Flat-6 9000RPM Screamer\n🏁 Track Day Weapon",
+            "avatar": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=200&q=80",
+            "albums": [
+                {
+                    "title": "麗寶賽道日",
+                    "cover": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
+                    "photos": [
+                        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80"
+                    ]
+                }
+            ]
+        },
+        "R35GTR": {
+            "name": "R35GTR // NISSAN NISMO",
+            "bio": "🦖 VR38DETT Bi-Turbo | Carbon Aero Kit\n🚀 All-Wheel Drive Monster",
+            "avatar": "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=200&q=80",
+            "albums": [
+                {
+                    "title": "夜行首都高",
+                    "cover": "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
+                    "photos": [
+                        "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80"
+                    ]
+                }
+            ]
+        },
+        "SUPRA90": {
+            "name": "SUPRA90 // TOYOTA GR",
+            "bio": "🌊 Liquid Blue | HKS Exhaust & Intercooler\n🌪️ Widebody Aero & GT Wing",
+            "avatar": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=200&q=80",
+            "albums": [
+                {
+                    "title": "港口夕陽派對",
+                    "cover": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
+                    "photos": [
+                        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80",
+                        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80"
+                    ]
+                }
+            ]
+        }
+    }
+};
+
+const form = document.getElementById('search-form');
+const plateInput = document.getElementById('plate-input');
+const submitBtn = document.getElementById('submit-btn');
+const btnText = document.getElementById('btn-text');
+const btnSpinner = document.getElementById('btn-spinner');
+const errorToast = document.getElementById('error-toast');
+const errorMsg = document.getElementById('error-msg');
+const searchContainer = document.getElementById('search-container');
+const gallerySection = document.getElementById('gallery-section');
+const resultsContainer = document.getElementById('results-container');
+const albumsContainer = document.getElementById('albums-container');
+const currentAlbumLabel = document.getElementById('current-album-label');
+
+const profileAvatar = document.getElementById('profile-avatar');
+const profileTitle = document.getElementById('profile-title');
+const profileBio = document.getElementById('profile-bio');
+const statPosts = document.getElementById('stat-posts');
+const statAlbums = document.getElementById('stat-albums');
+
+const lightboxModal = document.getElementById('lightbox-modal');
+const lightboxImg = document.getElementById('lightbox-img');
+const lbAvatar = document.getElementById('lb-avatar');
+const lbPlate = document.getElementById('lb-plate');
+const lbFilename = document.getElementById('lb-filename');
+const downloadBtn = document.getElementById('download-btn');
+const closeLightbox = document.getElementById('close-lightbox');
+const lbPrevBtn = document.getElementById('lb-prev');
+const lbNextBtn = document.getElementById('lb-next');
+const lbCounter = document.getElementById('lb-counter');
+
+const ownerModal = document.getElementById('owner-modal');
+
+let errorTimeout;
+let currentGalleryPhotos = [];
+let currentGalleryIndex = 0;
+let currentGalleryPlate = '';
+
+window.addEventListener('DOMContentLoaded', () => {
+    initBackgroundMicroWall();
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramPlate = urlParams.get('plate');
+    if (paramPlate) {
+        const cleanPlate = paramPlate.split('/')[0].trim().toUpperCase();
+        plateInput.value = cleanPlate;
+        loadAndShowVault(cleanPlate);
+    } else {
+        loadHomeGrid();
+    }
+});
+
+async function loadHomeGrid() {
+    const gridContainer = document.getElementById('car-grid');
+    if (!gridContainer) return;
+    try {
+        let cars = [];
+        try {
+            const res = await fetch(`${NAS_DOMAIN}/cars.json?t=${Date.now()}`);
+            if (res.ok) cars = await res.json();
+            else throw new Error('NAS offline');
+        } catch {
+            cars = LOCAL_MOCK_DB.cars;
+        }
+
+        gridContainer.innerHTML = '';
+        cars.forEach(car => {
+            const coverUrl = car.cover.startsWith('http') ? car.cover : `${NAS_DOMAIN}/${car.cover}`;
+            const cleanCarPlate = car.plate ? car.plate.split('/')[0].trim().toUpperCase() : '';
+            const card = `
+                <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0f1117] border border-gray-800/80 cursor-pointer hover:border-cyan-500 transition-all duration-300 shadow-xl">
+                    <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-80 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${cleanCarPlate}'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-4">
+                        <span class="text-[9px] font-mono text-cyan-400 mb-1 tracking-widest uppercase">FEATURED</span>
+                        <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${cleanCarPlate}</h4>
+                    </div>
+                </div>
+            `;
+            gridContainer.insertAdjacentHTML('beforeend', card);
+        });
+    } catch (err) {
+        gridContainer.innerHTML = `<div class="col-span-full py-12 text-center text-gray-600 text-xs font-mono">ENCRYPTED VAULT OFFLINE</div>`;
+    }
+}
+
+function quickSelectPlate(plate) {
+    plateInput.value = plate.split('/')[0].trim().toUpperCase();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    form.dispatchEvent(new Event('submit'));
+}
+
+function showError(msg) {
+  errorMsg.textContent = msg;
+  errorToast.classList.remove('hidden');
+  requestAnimationFrame(() => errorToast.classList.remove('opacity-0'));
+  clearTimeout(errorTimeout);
+  errorTimeout = setTimeout(hideError, 6000);
+}
+
+function hideError() {
+  errorToast.classList.add('opacity-0');
+  setTimeout(() => errorToast.classList.add('hidden'), 300);
+}
+
+function resetToSearch() {
+  gallerySection.classList.add('hidden');
+  searchContainer.classList.remove('hidden');
+  plateInput.value = '';
+  window.history.replaceState({}, document.title, window.location.pathname);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  loadHomeGrid(); 
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  hideError();
+  let rawValue = plateInput.value.trim().toUpperCase();
+  let cleanPlate = rawValue.split('/')[0].trim().replace(/\s+/g, '');
+  if (!cleanPlate) return;
+  loadAndShowVault(cleanPlate);
+});
+
+async function loadAndShowVault(cleanPlate) {
+  submitBtn.disabled = true;
+  btnText.textContent = 'SEARCHING...';
+  btnSpinner.classList.remove('hidden');
+  try {
+    let profileData = null;
+    try {
+        const profileRes = await fetch(`${NAS_DOMAIN}/${cleanPlate}/profile.json?t=${Date.now()}`);
+        if (profileRes.ok) {
+            profileData = await profileRes.json();
+        } else {
+            throw new Error('Remote profile not found');
+        }
+    } catch {
+        if (LOCAL_MOCK_DB.profiles[cleanPlate]) {
+            profileData = LOCAL_MOCK_DB.profiles[cleanPlate];
+        } else {
+            profileData = {
+                name: `${cleanPlate} // CUSTOM VAULT`,
+                bio: `⚡ Verified Custom Vault Record\n🏁 Plate: ${cleanPlate}\n📍 THECARFOLIO Cloud Storage`,
+                avatar: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=200&q=80",
+                albums: [
+                    {
+                        "title": "車庫精選輯",
+                        "cover": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
+                        "photos": [
+                            "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
+                            "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80"
+                        ]
+                    }
+                ]
+            };
+        }
+    }
+
+    const albums = profileData.albums || [];
+    let totalPhotos = 0;
+    albums.forEach(a => totalPhotos += (a.photos ? a.photos.length : 0));
+
+    renderIGProfile(profileData, cleanPlate, totalPhotos, albums.length);
+    renderAlbums(albums, cleanPlate);
+    
+    searchContainer.classList.add('hidden');
+    gallerySection.classList.remove('hidden');
+    window.history.pushState({}, document.title, `?plate=${cleanPlate}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    showError(err.message || '查無此車牌相關檔案');
+  } finally {
+    submitBtn.disabled = false;
+    btnText.textContent = '立即檢索相簿 (SEARCH VAULT)';
+    btnSpinner.classList.add('hidden');
+  }
+}
+
+function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
+  profileTitle.textContent = profile.name || plate;
+  profileBio.textContent = profile.bio || `ARCHIVE ID: ${plate}`;
+  statPosts.textContent = totalPhotos;
+  statAlbums.textContent = totalAlbums;
+  if (profile.avatar) {
+      const avUrl = profile.avatar.startsWith('http') ? profile.avatar : `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
+      profileAvatar.src = avUrl;
+      lbAvatar.src = avUrl;
+  }
+}
+
+function renderAlbums(albums, plate) {
+  albumsContainer.innerHTML = '';
+  albums.forEach((album, index) => {
+    const rawCover = album.cover || '';
+    const coverUrl = rawCover.startsWith('http') ? rawCover : `${NAS_DOMAIN}/${plate}/${rawCover}`;
+    const circleDiv = document.createElement('div');
+    circleDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group w-16 sm:w-20";
+    circleDiv.innerHTML = `
+      <div class="ring-wrapper w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gray-800 group-hover:bg-cyan-500 transition-all duration-300">
+        <div class="w-full h-full rounded-full bg-black p-0.5">
+          <img src="${coverUrl}" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=Img'">
+        </div>
+      </div>
+      <span class="text-[10px] font-mono text-gray-400 mt-2 truncate w-full text-center group-hover:text-gray-200">${album.title}</span>
+    `;
+    circleDiv.addEventListener('click', () => renderGallery(album.photos || [], plate, album.title));
+    albumsContainer.appendChild(circleDiv);
+  });
+  if (albums.length > 0) setTimeout(() => albumsContainer.firstChild.click(), 100);
+}
+
+function renderGallery(photoPaths, plate, albumTitle) {
+  resultsContainer.innerHTML = '';
+  currentAlbumLabel.innerHTML = `目前場次：<span class="text-white font-bold">${albumTitle}</span> (${photoPaths.length}張)`;
+  currentGalleryPhotos = photoPaths;
+  currentGalleryPlate = plate;
+
+  photoPaths.forEach((path, index) => {
+    const imgUrl = path.startsWith('http') ? path : `${NAS_DOMAIN}/${plate}/${path}`;
+    const div = document.createElement('div');
+    div.className = "aspect-square bg-black relative group cursor-pointer overflow-hidden rounded-xl border border-gray-900";
+    div.innerHTML = `<img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`;
+    div.addEventListener('click', () => {
+      currentGalleryIndex = index;
+      lightboxImg.src = imgUrl;
+      lbPlate.textContent = profileTitle.textContent;
+      lbCounter.textContent = `${index + 1} / ${photoPaths.length}`;
+      lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
+      downloadBtn.href = imgUrl;
+      lightboxModal.classList.remove('hidden');
+      setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
+    });
+    resultsContainer.appendChild(div);
+  });
+}
+
+lbNextBtn.addEventListener('click', () => {
+  currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryPhotos.length;
+  showLightboxPhoto(currentGalleryIndex);
+});
+lbPrevBtn.addEventListener('click', () => {
+  currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryPhotos.length) % currentGalleryPhotos.length;
+  showLightboxPhoto(currentGalleryIndex);
+});
+function showLightboxPhoto(idx) {
+  const path = currentGalleryPhotos[idx];
+  const imgUrl = path.startsWith('http') ? path : `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
+  lightboxImg.src = imgUrl;
+  lbCounter.textContent = `${idx + 1} / ${currentGalleryPhotos.length}`;
+  lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
+  downloadBtn.href = imgUrl;
+}
+closeLightbox.addEventListener('click', () => {
+    lightboxModal.classList.add('opacity-0');
+    setTimeout(() => lightboxModal.classList.add('hidden'), 300);
+});
+
+function openOwnerModal() {
+    ownerModal.classList.remove('hidden');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    qrcodeContainer.innerHTML = '';
+    new QRCode(qrcodeContainer, {
+        text: window.location.href,
+        width: 140,
+        height: 140,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+function closeOwnerModal() {
+    ownerModal.classList.add('hidden');
+}
+
+function copyCurrentLink() {
+    const dummy = document.createElement('textarea');
+    document.body.appendChild(dummy);
+    dummy.value = window.location.href;
+    dummy.select();
+    document.execCommand('copy');
+    document.body.removeChild(dummy);
+    alertBox('已成功複製展間連結至剪貼簿！');
+}
+
+function shareProfile(e) {
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            url: window.location.href
+        }).catch(() => {});
+    } else {
+        openOwnerModal();
+    }
+}
+
+function alertBox(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-6 right-6 z-50 bg-cyan-500 text-black font-mono text-xs font-bold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+</script>
+</body>
+</html>
