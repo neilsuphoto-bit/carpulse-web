@@ -1,156 +1,466 @@
 <!DOCTYPE html>
 <html lang="zh-TW" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CARPULSE 車聚影像管理後台</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: { darkbg: '#090a0f' }
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THECARFOLIO // COMMAND CENTER</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        darkbg: '#06070b',
+        panelbg: '#0f1117',
+        panelborder: '#1f2430'
       }
     }
-  </script>
-</head>
-<body class="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+  }
+}
+</script>
+<style>
+  body {
+    background-color: #06070b;
+    color: #e5e7eb;
+    overflow-x: hidden;
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   
-  <header class="border-b border-gray-800 bg-[#0c0e15]/80 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-        </div>
-        <div>
-          <h1 class="text-lg font-bold tracking-wider text-white">CARPULSE Admin</h1>
-          <p class="text-xs text-gray-400">車聚系統管理後台</p>
-        </div>
-      </div>
-      <a href="/" class="text-xs font-medium text-gray-400 hover:text-white bg-gray-800/60 hover:bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-700 transition">返回前台查詢</a>
-    </div>
-  </header>
+  /* 科幻掃描線效果 */
+  .scanline {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(0deg, rgba(6,182,212,0) 0%, rgba(6,182,212,0.1) 50%, rgba(6,182,212,0) 100%);
+    opacity: 0.1;
+    position: absolute;
+    bottom: 100%;
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 50;
+  }
+  @keyframes scanline {
+    0% { bottom: 100%; }
+    100% { bottom: -100px; }
+  }
 
-  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+  /* 網格背景 */
+  .grid-bg {
+    background-image: 
+      linear-gradient(rgba(31, 36, 48, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(31, 36, 48, 0.3) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  .glass-panel {
+    background: rgba(15, 17, 23, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(31, 36, 48, 0.8);
+  }
+
+  .nav-item.active {
+    background: rgba(6, 182, 212, 0.1);
+    border-right: 3px solid #06b6d4;
+    color: #06b6d4;
+  }
+  
+  .fade-out {
+    animation: fadeOut 0.4s forwards;
+  }
+  @keyframes fadeOut {
+    to { opacity: 0; transform: scale(0.95); }
+  }
+</style>
+</head>
+<body class="min-h-screen flex font-mono selection:bg-cyan-500 selection:text-black">
+
+<!-- 安全防護罩 (Auth Gate) -->
+<div id="auth-gate" class="fixed inset-0 z-[100] bg-[#06070b] flex flex-col items-center justify-center grid-bg">
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#06070b]/80 to-[#06070b] pointer-events-none"></div>
+  <div class="relative z-10 w-full max-w-sm glass-panel p-8 rounded-2xl shadow-[0_0_80px_rgba(6,182,212,0.15)] text-center border border-cyan-500/20">
+    <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto mb-6 shadow-inner shadow-cyan-500/20">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+    </div>
+    <h2 class="text-xl font-bold text-white tracking-widest mb-1">SYSTEM LOCKED</h2>
+    <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Awaiting Authorization</p>
     
-    <!-- Login Screen -->
-    <div id="login-container" class="max-w-md mx-auto mt-16 bg-[#13151f] border border-gray-800/80 rounded-2xl p-8 shadow-2xl">
-      <h2 class="text-xl font-bold text-white mb-2 text-center">管理員身分驗證</h2>
-      <p class="text-xs text-gray-400 mb-6 text-center">請輸入後台管理密碼以存取資料</p>
-      
-      <form id="login-form" class="space-y-4">
-        <div>
-          <input type="password" id="admin-pwd" placeholder="請輸入管理密碼 (例如: admin1234)" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition font-mono" required>
-        </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg transition">進入後台</button>
-      </form>
-      <p id="login-error" class="text-red-400 text-xs mt-3 text-center hidden">密碼錯誤，請重新輸入</p>
-    </div>
-
-    <!-- Admin Panel Dashboard (Hidden by default) -->
-    <div id="dashboard-container" class="hidden space-y-8">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-extrabold text-white">車牌與影像對應管理</h2>
-          <p class="text-sm text-gray-400">在此檢視、新增或編輯前台對應的車牌、PIN 碼與相片連結。</p>
-        </div>
-        <button id="add-record-btn" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center space-x-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          <span>新增一筆對應資料</span>
-        </button>
+    <div class="space-y-4 text-left">
+      <div>
+        <label class="block text-[10px] text-gray-400 uppercase tracking-widest mb-2">Admin Token (測試請輸入 admin)</label>
+        <input type="password" id="auth-token" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-cyan-300 focus:outline-none focus:border-cyan-500 text-center tracking-widest shadow-inner transition" placeholder="••••••••">
       </div>
+      <button onclick="unlockSystem()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 rounded-xl transition shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center justify-center space-x-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+        <span>DECRYPT & ENTER</span>
+      </button>
+    </div>
+  </div>
+</div>
 
-      <!-- Data Table -->
-      <div class="bg-[#13151f] border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+<!-- 系統佈局 -->
+<div id="admin-layout" class="w-full h-screen flex hidden relative overflow-hidden">
+  <div class="scanline"></div>
+  
+  <!-- 左側導覽列 -->
+  <aside class="w-64 h-full glass-panel border-r border-panelborder flex flex-col justify-between relative z-20">
+    <div>
+      <div class="h-20 flex items-center px-6 border-b border-panelborder">
+        <div class="flex flex-col">
+          <span class="text-sm font-bold text-white tracking-widest">THECARFOLIO</span>
+          <span class="text-[9px] text-cyan-400 uppercase tracking-[0.2em] flex items-center space-x-1.5 mt-0.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>Command Center</span>
+          </span>
+        </div>
+      </div>
+      
+      <nav class="mt-6 flex flex-col space-y-1">
+        <button onclick="switchTab('moderation')" id="nav-moderation" class="nav-item active w-full text-left px-6 py-3.5 text-sm text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/5 transition flex items-center space-x-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span class="tracking-wider">UGC 審核管制區</span>
+          <span id="pending-badge" class="ml-auto bg-cyan-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full">3</span>
+        </button>
+        <button onclick="switchTab('fleet')" id="nav-fleet" class="nav-item w-full text-left px-6 py-3.5 text-sm text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/5 transition flex items-center space-x-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          <span class="tracking-wider">車籍產權仲裁</span>
+        </button>
+        <button onclick="switchTab('telemetry')" id="nav-telemetry" class="nav-item w-full text-left px-6 py-3.5 text-sm text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/5 transition flex items-center space-x-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <span class="tracking-wider">系統遙測狀態</span>
+        </button>
+      </nav>
+    </div>
+    
+    <div class="p-6 border-t border-panelborder">
+      <button onclick="location.reload()" class="w-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-bold py-2.5 rounded-lg transition flex items-center justify-center space-x-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        <span>LOCK & LOGOUT</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- 右側主要內容區 -->
+  <main class="flex-1 h-full overflow-y-auto bg-[#06070b] relative grid-bg p-8">
+    
+    <!-- Toast 通知容器 -->
+    <div id="toast-container" class="fixed top-8 right-8 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+
+    <!-- 模組一：UGC 審核區 -->
+    <section id="module-moderation" class="block animate-[fadeIn_0.3s_ease]">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-bold text-white tracking-widest">UGC 審核管制區 (PENDING QUEUE)</h2>
+          <p class="text-xs text-gray-400 mt-1">來自 S3 `pending/` 的車友上傳相片，審核通過後將寫入正式展間。</p>
+        </div>
+        <div class="flex space-x-3">
+          <button onclick="simulateBatchApprove()" class="bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold px-4 py-2 rounded-lg transition flex items-center space-x-1.5 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>批次全選核准</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 待審核照片網格 -->
+      <div id="pending-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- JS 動態生成 -->
+      </div>
+      
+      <div id="empty-queue" class="hidden h-64 flex flex-col items-center justify-center border border-dashed border-gray-800 rounded-2xl glass-panel mt-4">
+        <svg class="w-12 h-12 text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span class="text-sm text-gray-500 tracking-widest">目前沒有待審核的相片</span>
+      </div>
+    </section>
+
+    <!-- 模組二：車籍產權仲裁 -->
+    <section id="module-fleet" class="hidden animate-[fadeIn_0.3s_ease]">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-bold text-white tracking-widest">車籍產權仲裁 (FLEET REGISTRY)</h2>
+          <p class="text-xs text-gray-400 mt-1">管理所有已註冊的數位車庫。處理車主申訴與解除 LINE 惡意綁定。</p>
+        </div>
+        <div class="relative">
+          <input type="text" placeholder="Search Plate..." class="bg-[#0f1117] border border-gray-800 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition w-64">
+          <svg class="w-4 h-4 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+      </div>
+      
+      <div class="glass-panel border border-panelborder rounded-xl overflow-hidden shadow-2xl">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="border-b border-gray-800 text-xs font-semibold text-gray-400 uppercase bg-gray-900/50">
-                <th class="py-4 px-6">車牌號碼 (Plate)</th>
-                <th class="py-4 px-6">PIN 碼</th>
-                <th class="py-4 px-6">照片數量</th>
-                <th class="py-4 px-6 text-right">操作</th>
+              <tr class="bg-black/50 border-b border-gray-800/80 text-[10px] text-gray-400 uppercase tracking-widest">
+                <th class="p-4 font-normal">車牌 / 型號</th>
+                <th class="p-4 font-normal">車主資訊</th>
+                <th class="p-4 font-normal">LINE UID (HASH)</th>
+                <th class="p-4 font-normal text-center">相片數</th>
+                <th class="p-4 font-normal text-right">管理操作 (ACTIONS)</th>
               </tr>
             </thead>
-            <tbody id="records-table-body" class="divide-y divide-gray-800 text-sm">
-              <tr>
-                <td class="py-4 px-6 font-mono text-white">ABC-1234</td>
-                <td class="py-4 px-6 font-mono text-gray-400">8888</td>
-                <td class="py-4 px-6 text-gray-300">3 張照片</td>
-                <td class="py-4 px-6 text-right space-x-2">
-                  <button class="text-blue-400 hover:underline text-xs font-medium">編輯</button>
-                  <button class="text-red-400 hover:underline text-xs font-medium">刪除</button>
-                </td>
-              </tr>
-              <tr>
-                <td class="py-4 px-6 font-mono text-white">XX-9999</td>
-                <td class="py-4 px-6 font-mono text-gray-400">1234</td>
-                <td class="py-4 px-6 text-gray-300">1 張照片</td>
-                <td class="py-4 px-6 text-right space-x-2">
-                  <button class="text-blue-400 hover:underline text-xs font-medium">編輯</button>
-                  <button class="text-red-400 hover:underline text-xs font-medium">刪除</button>
-                </td>
-              </tr>
+            <tbody id="fleet-table-body" class="divide-y divide-gray-800/50 text-sm">
+              <!-- JS 動態生成 -->
             </tbody>
           </table>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- 模組三：系統遙測狀態 -->
+    <section id="module-telemetry" class="hidden animate-[fadeIn_0.3s_ease]">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white tracking-widest">系統遙測狀態 (TELEMETRY)</h2>
+        <p class="text-xs text-gray-400 mt-1">雲端伺服器負載狀態與金庫儲存量監控。</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="glass-panel p-6 rounded-xl border border-panelborder flex flex-col relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+          <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">AWS S3 儲存用量</span>
+          <span class="text-3xl font-bold text-white tracking-wider">1.24 <span class="text-sm text-cyan-400">GB</span></span>
+          <div class="mt-4 w-full bg-gray-900 rounded-full h-1.5">
+            <div class="bg-cyan-400 h-1.5 rounded-full" style="width: 25%"></div>
+          </div>
+        </div>
+        <div class="glass-panel p-6 rounded-xl border border-panelborder flex flex-col relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+          <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">已建檔數位車庫</span>
+          <span class="text-3xl font-bold text-white tracking-wider">42 <span class="text-sm text-purple-400">VAULTS</span></span>
+          <span class="text-[10px] text-gray-500 mt-3 flex items-center"><span class="text-emerald-400 mr-1">+3</span> 本週新增</span>
+        </div>
+        <div class="glass-panel p-6 rounded-xl border border-panelborder flex flex-col relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+          <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">雲端閘道狀態</span>
+          <div class="flex items-center space-x-3 mt-1">
+            <span class="relative flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
+            </span>
+            <span class="text-lg font-bold text-emerald-400 tracking-widest">ONLINE SECURE</span>
+          </div>
+          <span class="text-[10px] text-gray-500 mt-4">API Latency: 42ms</span>
+        </div>
+      </div>
+    </section>
 
   </main>
+</div>
 
-  <!-- Footer -->
-  <footer class="border-t border-gray-800/80 bg-[#090a0f] py-6 text-center text-xs text-gray-500">
-    <p>&copy; 2026 CARPULSE. All rights reserved. Admin Management Panel.</p>
-  </footer>
+<script>
+// ==========================================
+// 系統核心邏輯與驗證
+// ==========================================
+function unlockSystem() {
+  const token = document.getElementById('auth-token').value;
+  if (token === 'admin') { // 測試用，實際將呼叫 API 驗證
+    document.getElementById('auth-gate').style.opacity = '0';
+    document.getElementById('auth-gate').style.transition = 'opacity 0.5s ease';
+    setTimeout(() => {
+      document.getElementById('auth-gate').classList.add('hidden');
+      document.getElementById('admin-layout').classList.remove('hidden');
+      showToast('System Decrypted. Welcome back, Commander.', 'success');
+      renderPendingQueue();
+      renderFleetRegistry();
+    }, 500);
+  } else {
+    document.getElementById('auth-token').classList.add('border-red-500', 'text-red-400');
+    showToast('Access Denied: Invalid Token', 'error');
+    setTimeout(() => {
+      document.getElementById('auth-token').classList.remove('border-red-500', 'text-red-400');
+    }, 1000);
+  }
+}
 
-  <!-- Admin Script -->
-  <script>
-    const loginForm = document.getElementById('login-form');
-    const loginContainer = document.getElementById('login-container');
-    const dashboardContainer = document.getElementById('dashboard-container');
-    const adminPwdInput = document.getElementById('admin-pwd');
-    const loginError = document.getElementById('login-error');
+document.getElementById('auth-token').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') unlockSystem();
+});
 
-    // 處理登入邏輯
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const pwd = adminPwdInput.value.trim();
-      
-      // 這裡設定了兩組測試密碼
-      if (pwd === 'admin1234' || pwd === 'carpulse2026') {
-        loginContainer.classList.add('hidden');
-        dashboardContainer.classList.remove('hidden');
-      } else {
-        loginError.classList.remove('hidden');
-        adminPwdInput.classList.add('border-red-500');
-        
-        // 3秒後隱藏錯誤訊息
-        setTimeout(() => {
-          loginError.classList.add('hidden');
-          adminPwdInput.classList.remove('border-red-500');
-        }, 3000);
-      }
-    });
+// ==========================================
+// UI 互動：分頁切換
+// ==========================================
+function switchTab(tabId) {
+  // Update Nav
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById(`nav-${tabId}`).classList.add('active');
+  
+  // Update Content
+  document.querySelectorAll('main > section').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`module-${tabId}`).classList.remove('hidden');
+}
 
-    // 處理新增資料按鈕點擊 (僅作展示)
-    document.getElementById('add-record-btn').addEventListener('click', () => {
-      // 在實際應用中，這會開啟一個 Modal 表單讓管理員輸入新資料
-      const tbody = document.getElementById('records-table-body');
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td class="py-4 px-6 font-mono text-white">NEW-0000</td>
-        <td class="py-4 px-6 font-mono text-gray-400">0000</td>
-        <td class="py-4 px-6 text-gray-300">0 張照片</td>
-        <td class="py-4 px-6 text-right space-x-2">
-          <button class="text-blue-400 hover:underline text-xs font-medium">編輯</button>
-          <button class="text-red-400 hover:underline text-xs font-medium">刪除</button>
-        </td>
-      `;
-      tbody.prepend(newRow);
-    });
-  </script>
+// ==========================================
+// 系統通知 (Toast) 系統
+// ==========================================
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  const bgColor = type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border-red-500/30 text-red-400';
+  const icon = type === 'success' 
+    ? `<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`
+    : `<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+  
+  toast.className = `flex items-center p-3 rounded-lg border backdrop-blur-md shadow-xl text-xs font-bold tracking-wider animate-[slideInRight_0.3s_ease] pointer-events-auto ${bgColor}`;
+  toast.innerHTML = `${icon} <span>${message}</span>`;
+  
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// 加入動畫 keyframes 到 body (僅供 toast 用)
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
+document.head.appendChild(style);
+
+
+// ==========================================
+// 模組一：UGC 待審核管理邏輯 (Mock Data)
+// ==========================================
+let pendingMocks = [
+  { id: 'img_001', plate: 'BHS0759', album: '2026 跑山日常', url: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=400&q=80', time: '10 mins ago' },
+  { id: 'img_002', plate: 'GT3RS', album: '麗寶賽道日', url: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=400&q=80', time: '1 hour ago' },
+  { id: 'img_003', plate: 'TEST001', album: '隨手拍', url: 'https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=400&q=80', time: '3 hours ago' }
+];
+
+function renderPendingQueue() {
+  const grid = document.getElementById('pending-grid');
+  const emptyState = document.getElementById('empty-queue');
+  const badge = document.getElementById('pending-badge');
+  
+  grid.innerHTML = '';
+  badge.textContent = pendingMocks.length;
+  
+  if (pendingMocks.length === 0) {
+    grid.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    badge.classList.add('hidden');
+    return;
+  }
+  
+  grid.classList.remove('hidden');
+  emptyState.classList.add('hidden');
+  badge.classList.remove('hidden');
+
+  pendingMocks.forEach(item => {
+    const card = document.createElement('div');
+    card.id = `card-${item.id}`;
+    card.className = "glass-panel border border-panelborder rounded-xl overflow-hidden flex flex-col shadow-lg transition-all duration-300";
+    card.innerHTML = `
+      <div class="h-48 relative group">
+        <img src="${item.url}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition space-x-3">
+          <button onclick="window.open('${item.url}', '_blank')" class="bg-gray-800 text-white p-2 rounded-full hover:bg-cyan-500 hover:text-black transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="p-4 flex flex-col flex-1">
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-sm font-bold text-white tracking-widest">${item.plate}</span>
+          <span class="text-[9px] text-gray-500">${item.time}</span>
+        </div>
+        <span class="text-xs text-cyan-400 mb-4 truncate block flex-1">📂 ${item.album}</span>
+        <div class="grid grid-cols-2 gap-2 mt-auto">
+          <button onclick="handleUgcAction('${item.id}', 'reject')" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 text-xs font-bold py-2 rounded-lg transition flex justify-center items-center">
+            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>駁回
+          </button>
+          <button onclick="handleUgcAction('${item.id}', 'approve')" class="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-black border border-emerald-500/30 text-xs font-bold py-2 rounded-lg transition flex justify-center items-center">
+            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>核准
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function handleUgcAction(id, action) {
+  const card = document.getElementById(`card-${id}`);
+  card.classList.add('fade-out');
+  
+  setTimeout(() => {
+    pendingMocks = pendingMocks.filter(i => i.id !== id);
+    renderPendingQueue();
+    if (action === 'approve') {
+      showToast(`已核准照片寫入公開金庫。`, 'success');
+    } else {
+      showToast(`已駁回並銷毀該照片檔案。`, 'error');
+    }
+  }, 400); // 配合動畫時間
+}
+
+function simulateBatchApprove() {
+  if (pendingMocks.length === 0) return;
+  pendingMocks = [];
+  document.getElementById('pending-grid').innerHTML = '';
+  renderPendingQueue();
+  showToast('批次核准完成，所有排隊影像已發布至 S3。', 'success');
+}
+
+
+// ==========================================
+// 模組二：車籍產權仲裁邏輯 (Mock Data)
+// ==========================================
+const fleetMocks = [
+  { plate: 'BHS0759', model: 'BMW M4 COMP', owner: 'Neil', uid: 'U1a2b3c4d...890', photos: 12, status: 'Active' },
+  { plate: 'GT3RS', model: 'PORSCHE 911 GT3 RS', owner: 'Alex', uid: 'U9z8y7x6w...321', photos: 6, status: 'Active' },
+  { plate: 'SUPRA90', model: 'TOYOTA GR SUPRA', owner: 'Ben', uid: 'U4f5g6h7j...654', photos: 2, status: 'Active' },
+  { plate: 'FAKE123', model: 'HONDA CIVIC', owner: 'Unknown', uid: 'Uxxx...xxx', photos: 0, status: 'Flagged' }
+];
+
+function renderFleetRegistry() {
+  const tbody = document.getElementById('fleet-table-body');
+  tbody.innerHTML = '';
+  
+  fleetMocks.forEach((car, index) => {
+    const statusBadge = car.status === 'Active' 
+      ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[9px] uppercase tracking-widest">VERIFIED</span>`
+      : `<span class="bg-red-500/10 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[9px] uppercase tracking-widest">FLAGGED</span>`;
+
+    const row = document.createElement('tr');
+    row.id = `fleet-row-${index}`;
+    row.className = "hover:bg-gray-900/50 transition group";
+    row.innerHTML = `
+      <td class="p-4">
+        <div class="font-bold text-white tracking-widest mb-0.5">${car.plate}</div>
+        <div class="text-[10px] text-gray-500">${car.model}</div>
+      </td>
+      <td class="p-4 text-gray-300">👤 ${car.owner}</td>
+      <td class="p-4 text-gray-500 text-xs font-mono">${car.uid}</td>
+      <td class="p-4 text-center text-cyan-400 font-bold">${car.photos}</td>
+      <td class="p-4 text-right flex justify-end items-center space-x-2">
+        ${statusBadge}
+        <button onclick="resetOwner('${index}', '${car.plate}')" title="解除車主綁定" class="p-2 bg-gray-800 hover:bg-yellow-500/20 hover:text-yellow-400 text-gray-400 rounded-lg transition border border-transparent hover:border-yellow-500/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        </button>
+        <button onclick="window.open('/?plate=${car.plate}', '_blank')" title="前往展間" class="p-2 bg-gray-800 hover:bg-cyan-500 hover:text-black text-gray-400 rounded-lg transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function resetOwner(index, plate) {
+  const row = document.getElementById(`fleet-row-${index}`);
+  row.querySelector('td:nth-child(2)').innerHTML = '<span class="text-red-400 italic">Unbound</span>';
+  row.querySelector('td:nth-child(3)').innerHTML = '<span class="text-gray-600">---</span>';
+  showToast(`車牌 ${plate} 產權已重置，等待新車主認領。`, 'success');
+}
+</script>
 </body>
 </html>
