@@ -152,6 +152,10 @@ tailwind.config = {
     
     <div id="profile-card-container" class="bg-[#0f1117]/95 backdrop-blur-md border border-gray-800/80 rounded-2xl p-6 sm:p-8 mb-6 shadow-2xl relative overflow-hidden transition-all duration-500">
       <div class="absolute top-0 right-0 p-4 z-20 flex items-center space-x-2">
+        <button onclick="openUgcModal()" class="text-xs text-emerald-300 hover:text-black transition flex items-center space-x-1 bg-emerald-950/60 hover:bg-emerald-400 px-3 py-2 rounded-xl border border-emerald-500/30 backdrop-blur cursor-pointer font-mono font-bold">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span>＋ 車主相簿</span>
+        </button>
         <button onclick="openGarageBuilder(currentGalleryPlate)" class="text-xs text-cyan-300 hover:text-black transition flex items-center space-x-1 bg-cyan-950/60 hover:bg-cyan-400 px-3 py-2 rounded-xl border border-cyan-500/30 backdrop-blur cursor-pointer font-mono font-bold">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
           <span>編輯車主名片</span>
@@ -203,6 +207,7 @@ tailwind.config = {
         <div class="flex items-center space-x-2 text-xs text-gray-400">
           <svg class="w-4 h-4 flex-shrink-0 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
           <span id="auth-status-text">安全金庫已加密保護 · 車主專屬展間</span>
+          <button onclick="openDisputeModal()" class="ml-2 text-[10px] text-gray-500 hover:text-red-400 underline transition cursor-pointer">⚠️ 歸屬異議申訴</button>
         </div>
         
         <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
@@ -265,8 +270,14 @@ tailwind.config = {
         <span class="text-[9px] text-gray-600">TELEMETRY CARD v2.0</span>
       </div>
       <div class="flex items-center space-x-3.5">
-        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 p-[2px] flex-shrink-0">
-          <div class="w-full h-full rounded-full bg-[#06070b] flex items-center justify-center font-bold text-xs text-cyan-300" id="preview-avatar-text">CAR</div>
+        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 p-[2px] flex-shrink-0 cursor-pointer relative group" onclick="document.getElementById('builder-avatar-input').click()" title="點擊上傳愛車大頭貼">
+          <div class="w-full h-full rounded-full bg-[#06070b] flex items-center justify-center font-bold text-xs text-cyan-300 overflow-hidden relative">
+            <span id="preview-avatar-text">CAR</span>
+            <img id="preview-avatar-img" src="" class="w-full h-full object-cover hidden" alt="Avatar">
+            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            </div>
+          </div>
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center space-x-2 flex-wrap">
@@ -279,6 +290,7 @@ tailwind.config = {
     </div>
 
     <form id="garage-builder-form" class="space-y-4">
+      <input type="file" id="builder-avatar-input" accept="image/*" class="hidden">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">車牌號碼 (必填) *</label>
@@ -406,6 +418,65 @@ tailwind.config = {
         關閉視窗
       </button>
     </div>
+  </div>
+</div>
+
+<!-- 車主自建相簿 (UGC) Modal -->
+<div id="ugc-album-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-[#0f1117] border border-emerald-500/30 rounded-2xl max-w-lg w-full p-6 shadow-[0_0_60px_rgba(16,185,129,0.15)] relative my-8 font-mono">
+    <button onclick="closeUgcModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1 cursor-pointer">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="mb-5">
+      <h3 class="text-lg font-bold text-white tracking-wider flex items-center space-x-2">
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <span>建立車主相簿 (UGC)</span>
+      </h3>
+      <p class="text-xs text-gray-400 mt-1 font-sans">上傳您的愛車照片。系統將自動壓縮，並經由管理員審核後展示於展間。</p>
+    </div>
+    <form id="ugc-form" class="space-y-4">
+      <div>
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">相簿名稱 (例: 2026 跑山日常)</label>
+        <input type="text" id="ugc-album-title" required class="w-full bg-[#06070b] border border-gray-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm">
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">選擇照片 (最多 6 張)</label>
+        <div class="flex items-center justify-center w-full">
+          <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-800 border-dashed rounded-xl cursor-pointer bg-[#06070b] hover:bg-gray-900 transition">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg class="w-8 h-8 mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+              <p class="mb-2 text-xs text-gray-400"><span class="font-bold text-emerald-400">點擊上傳</span> 或拖曳圖片至此</p>
+            </div>
+            <input id="ugc-file-input" type="file" class="hidden" multiple accept="image/*" />
+          </label>
+        </div>
+      </div>
+      <div id="ugc-preview-container" class="grid grid-cols-3 gap-2 empty:hidden mt-3"></div>
+      <button type="submit" id="ugc-submit-btn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl transition text-xs tracking-widest shadow-lg shadow-emerald-500/20 cursor-pointer">
+        上傳並送出審核 (SUBMIT)
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- 異議申訴 Modal -->
+<div id="dispute-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+  <div class="bg-[#0f1117] border border-red-500/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center relative font-mono">
+    <button onclick="closeDisputeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="w-12 h-12 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-3 border border-red-500/30">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+    </div>
+    <h3 class="text-base font-bold text-white mb-1">車牌遭惡意搶註？</h3>
+    <p class="text-xs text-gray-400 mb-4 leading-relaxed">若您是本車真實車主，但發現車牌已被他人綁定，請掃描下方 QR Code 聯繫管理員，並出示行照或合影進行認領。</p>
+    <div class="bg-white p-3 rounded-xl inline-block mb-4 shadow-inner flex justify-center">
+      <img src="https://placehold.co/140x140/ffffff/000000?text=LINE+QR" alt="Admin LINE" class="w-[140px] h-[140px]">
+    </div>
+    <div class="text-[10px] text-gray-500 mb-4">LINE ID: NEILSUPHOTO0312</div>
+    <button onclick="closeDisputeModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold py-2.5 rounded-xl transition cursor-pointer">
+      關閉視窗
+    </button>
   </div>
 </div>
 
@@ -631,12 +702,16 @@ const lbCounter = document.getElementById('lb-counter');
 
 const ownerModal = document.getElementById('owner-modal');
 const garageBuilderModal = document.getElementById('garage-builder-modal');
+const ugcModal = document.getElementById('ugc-album-modal');
+const disputeModal = document.getElementById('dispute-modal');
 
 let errorTimeout;
 let currentGalleryPhotos = [];
 let currentGalleryIndex = 0;
 let currentGalleryPlate = '';
 let currentProfileCache = {};
+let currentUploadedAvatarData = '';
+let currentUgcPhotos = [];
 
 window.addEventListener('DOMContentLoaded', () => {
     initBackgroundMicroWall();
@@ -668,16 +743,21 @@ async function loadHomeGrid() {
         const customPlates = JSON.parse(localStorage.getItem('thecarfolio_custom_plates') || '[]');
         customPlates.forEach(p => {
             if (!cars.some(c => c.plate === p)) {
+                let customCover = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80";
+                try {
+                    const draft = JSON.parse(localStorage.getItem(`thecarfolio_draft_${p}`) || '{}');
+                    if (draft.avatar) customCover = draft.avatar;
+                } catch {}
                 cars.unshift({
                     plate: p,
-                    cover: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"
+                    cover: customCover
                 });
             }
         });
 
         gridContainer.innerHTML = '';
         cars.forEach(car => {
-            const coverUrl = car.cover.startsWith('http') ? car.cover : `${NAS_DOMAIN}/${car.cover}`;
+            const coverUrl = (car.cover.startsWith('http') || car.cover.startsWith('data:')) ? car.cover : `${NAS_DOMAIN}/${car.cover}`;
             const cleanCarPlate = car.plate ? car.plate.split('/')[0].trim().toUpperCase() : '';
             const card = `
                 <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0f1117] border border-gray-800/80 cursor-pointer hover:border-cyan-500 transition-all duration-300 shadow-xl">
@@ -821,7 +901,7 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
   }
 
   if (profile.avatar) {
-      const avUrl = profile.avatar.startsWith('http') ? profile.avatar : `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
+      const avUrl = (profile.avatar.startsWith('http') || profile.avatar.startsWith('data:')) ? profile.avatar : `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
       profileAvatar.src = avUrl;
       lbAvatar.src = avUrl;
   } else {
@@ -862,11 +942,15 @@ function renderAlbums(albums, plate) {
 
   albums.forEach((album, index) => {
     const rawCover = album.cover || '';
-    const coverUrl = rawCover.startsWith('http') ? rawCover : `${NAS_DOMAIN}/${plate}/${rawCover}`;
+    const coverUrl = rawCover.startsWith('http') || rawCover.startsWith('data:') ? rawCover : `${NAS_DOMAIN}/${plate}/${rawCover}`;
     const circleDiv = document.createElement('div');
     circleDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group w-16 sm:w-20";
+    
+    // 若為車主自建相簿，給予翠綠色的提示外框
+    const isUgc = album.isUgc ? 'border-emerald-500/50' : 'border-transparent';
+
     circleDiv.innerHTML = `
-      <div class="ring-wrapper w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gray-800 group-hover:bg-cyan-500 transition-all duration-300">
+      <div class="ring-wrapper w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gray-800 group-hover:bg-cyan-500 transition-all duration-300 border-2 ${isUgc}">
         <div class="w-full h-full rounded-full bg-black p-0.5">
           <img src="${coverUrl}" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=Img'">
         </div>
@@ -887,7 +971,7 @@ function renderGallery(photoPaths, plate, albumTitle) {
   currentGalleryPlate = plate;
 
   photoPaths.forEach((path, index) => {
-    const imgUrl = path.startsWith('http') ? path : `${NAS_DOMAIN}/${plate}/${path}`;
+    const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${plate}/${path}`;
     const div = document.createElement('div');
     div.className = "aspect-square bg-black relative group cursor-pointer overflow-hidden rounded-xl border border-gray-900";
     div.innerHTML = `<img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`;
@@ -914,6 +998,34 @@ const bOwner = document.getElementById('builder-owner');
 const bLocation = document.getElementById('builder-location');
 const bIg = document.getElementById('builder-ig');
 const bBio = document.getElementById('builder-bio');
+const bAvatarInput = document.getElementById('builder-avatar-input');
+const previewAvatarImg = document.getElementById('preview-avatar-img');
+const previewAvatarText = document.getElementById('preview-avatar-text');
+
+// 頭貼上傳與 Canvas 置中正方壓縮 (400x400)
+bAvatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 400; canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+            const minSide = Math.min(img.width, img.height);
+            const sx = (img.width - minSide) / 2;
+            const sy = (img.height - minSide) / 2;
+            ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, 400, 400);
+            currentUploadedAvatarData = canvas.toDataURL('image/jpeg', 0.85);
+            previewAvatarImg.src = currentUploadedAvatarData;
+            previewAvatarImg.classList.remove('hidden');
+            previewAvatarText.classList.add('hidden');
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+});
 
 function updateLivePreview() {
     const p = (bPlate.value || 'BHS0759').toUpperCase().trim();
@@ -922,7 +1034,7 @@ function updateLivePreview() {
     const loc = bLocation.value.trim() || '未設定地區';
     const bio = bBio.value.trim() || '改裝明細與個人簡介即時預覽...';
 
-    document.getElementById('preview-avatar-text').textContent = p.slice(0, 3);
+    previewAvatarText.textContent = p.slice(0, 3);
     document.getElementById('preview-title').textContent = `${p} // ${m}`;
     document.getElementById('preview-location').textContent = loc;
     document.getElementById('preview-bio').textContent = o ? `👤 ${o} · ${bio}` : bio;
@@ -936,6 +1048,10 @@ function openGarageBuilder(prefillPlate = '') {
     hideError();
     const targetPlate = (prefillPlate || currentGalleryPlate || plateInput.value || '').replace(/[\s-]+/g, '').toUpperCase();
     bPlate.value = targetPlate;
+    bAvatarInput.value = '';
+    currentUploadedAvatarData = '';
+    previewAvatarImg.classList.add('hidden');
+    previewAvatarText.classList.remove('hidden');
 
     if (targetPlate && currentGalleryPlate === targetPlate && currentProfileCache) {
         bModel.value = currentProfileCache.car_model || '';
@@ -943,14 +1059,25 @@ function openGarageBuilder(prefillPlate = '') {
         bLocation.value = currentProfileCache.location || '';
         bIg.value = currentProfileCache.ig_handle || '';
         bBio.value = currentProfileCache.bio || '';
+        
+        if (currentProfileCache.avatar) {
+            currentUploadedAvatarData = currentProfileCache.avatar.startsWith('http') || currentProfileCache.avatar.startsWith('data:') 
+                ? currentProfileCache.avatar 
+                : `${NAS_DOMAIN}/${targetPlate}/${currentProfileCache.avatar}`;
+            previewAvatarImg.src = currentUploadedAvatarData;
+            previewAvatarImg.classList.remove('hidden');
+            previewAvatarText.classList.add('hidden');
+        }
     } else {
         bModel.value = '';
         bOwner.value = '';
         bLocation.value = '';
         bIg.value = '';
         bBio.value = '';
+        currentUploadedAvatarData = '';
     }
     updateLivePreview();
+    renderAvatarPreviewUI();
     garageBuilderModal.classList.remove('hidden');
 }
 
@@ -970,7 +1097,7 @@ function buildProfilePayload() {
         ig_handle: bIg.value.trim().replace('@', ''),
         bio: bBio.value.trim(),
         locked: false,
-        avatar: (currentGalleryPlate === cleanPlate && currentProfileCache.avatar) ? currentProfileCache.avatar : "",
+        avatar: currentUploadedAvatarData || (currentGalleryPlate === cleanPlate && currentProfileCache.avatar ? currentProfileCache.avatar : ""),
         albums: (currentGalleryPlate === cleanPlate && currentProfileCache.albums) ? currentProfileCache.albums : []
     };
 }
@@ -1033,7 +1160,7 @@ lbPrevBtn.addEventListener('click', () => {
 });
 function showLightboxPhoto(idx) {
   const path = currentGalleryPhotos[idx];
-  const imgUrl = path.startsWith('http') ? path : `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
+  const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
   lightboxImg.src = imgUrl;
   lbCounter.textContent = `${idx + 1} / ${currentGalleryPhotos.length}`;
   lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
@@ -1093,6 +1220,99 @@ function alertBox(msg) {
         setTimeout(() => toast.remove(), 300);
     }, 2500);
 }
+
+// 異議申訴 Modal 控制
+function openDisputeModal() { disputeModal.classList.remove('hidden'); }
+function closeDisputeModal() { disputeModal.classList.add('hidden'); }
+
+// UGC 車主相簿上傳控制
+const ugcFileInput = document.getElementById('ugc-file-input');
+const ugcPreviewContainer = document.getElementById('ugc-preview-container');
+
+function openUgcModal() { 
+  if(!currentGalleryPlate) return;
+  ugcFileInput.value = '';
+  currentUgcPhotos = [];
+  ugcPreviewContainer.innerHTML = '';
+  document.getElementById('ugc-album-title').value = '';
+  ugcModal.classList.remove('hidden'); 
+}
+function closeUgcModal() { ugcModal.classList.add('hidden'); }
+
+// Canvas 強制壓縮演算法 (長邊不超過 1600px)
+function compressImage(file, maxSize = 1600) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width; let h = img.height;
+                if (w > maxSize || h > maxSize) {
+                    if (w > h) { h = Math.round((h * maxSize) / w); w = maxSize; }
+                    else { w = Math.round((w * maxSize) / h); h = maxSize; }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                resolve(canvas.toDataURL('image/jpeg', 0.8));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+ugcFileInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files).slice(0, 6 - currentUgcPhotos.length); // 限制最多6張
+    for (let file of files) {
+        const base64Str = await compressImage(file);
+        currentUgcPhotos.push(base64Str);
+        const div = document.createElement('div');
+        div.className = 'aspect-square bg-gray-900 rounded-lg overflow-hidden border border-gray-700';
+        div.innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover">`;
+        ugcPreviewContainer.appendChild(div);
+    }
+});
+
+document.getElementById('ugc-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(currentUgcPhotos.length === 0) {
+        alertBox('請至少選擇一張照片');
+        return;
+    }
+    const title = document.getElementById('ugc-album-title').value.trim();
+    const btn = document.getElementById('ugc-submit-btn');
+    btn.textContent = '雲端壓縮送出中...';
+    btn.disabled = true;
+
+    // 模擬送出到後端暫存區，目前先即時顯示在前端以供預覽 (加上 isUgc 標記)
+    setTimeout(() => {
+        if(!currentProfileCache.albums) currentProfileCache.albums = [];
+        // 將新相簿推入最前方
+        currentProfileCache.albums.unshift({
+            title: title + " (審核中)",
+            cover: currentUgcPhotos[0],
+            photos: currentUgcPhotos,
+            isUgc: true
+        });
+        
+        // 更新本地快取
+        localStorage.setItem(`thecarfolio_draft_${currentGalleryPlate}`, JSON.stringify(currentProfileCache));
+        
+        btn.textContent = '上傳並送出審核 (SUBMIT)';
+        btn.disabled = false;
+        closeUgcModal();
+        alertBox('照片已送出！待官方審核後即可正式公開。');
+        
+        // 重新渲染相簿與數字
+        let totalPhotos = 0;
+        currentProfileCache.albums.forEach(a => totalPhotos += (a.photos ? a.photos.length : 0));
+        statPosts.textContent = totalPhotos;
+        statAlbums.textContent = currentProfileCache.albums.length;
+        renderAlbums(currentProfileCache.albums, currentGalleryPlate);
+    }, 1500);
+});
 </script>
 </body>
 </html>
