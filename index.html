@@ -152,6 +152,7 @@ tailwind.config = {
     
     <div id="profile-card-container" class="bg-[#0f1117]/95 backdrop-blur-md border border-gray-800/80 rounded-2xl p-6 sm:p-8 mb-6 shadow-2xl relative overflow-hidden transition-all duration-500">
       <div class="absolute top-0 right-0 p-4 z-20 flex items-center space-x-2">
+        <!-- 新增車主 UGC 相簿入口 -->
         <button onclick="openUgcModal()" class="text-xs text-emerald-300 hover:text-black transition flex items-center space-x-1 bg-emerald-950/60 hover:bg-emerald-400 px-3 py-2 rounded-xl border border-emerald-500/30 backdrop-blur cursor-pointer font-mono font-bold">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           <span>＋ 車主相簿</span>
@@ -182,7 +183,7 @@ tailwind.config = {
               <svg id="verified-badge" class="w-4 h-4 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             </div>
             <p id="profile-status-subtitle" class="text-[10px] font-mono text-cyan-400 mt-1 tracking-widest uppercase">Verified Secure Vault Showcase</p>
-            <!-- 結構化車主徽章列 (車主稱呼 / 地區 / IG 導流) -->
+            <!-- 結構化車主徽章列 -->
             <div id="profile-badges" class="flex flex-wrap items-center gap-1.5 mt-2.5"></div>
           </div>
         </div>
@@ -207,6 +208,7 @@ tailwind.config = {
         <div class="flex items-center space-x-2 text-xs text-gray-400">
           <svg class="w-4 h-4 flex-shrink-0 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
           <span id="auth-status-text">安全金庫已加密保護 · 車主專屬展間</span>
+          <!-- 異議申訴按鈕 -->
           <button onclick="openDisputeModal()" class="ml-2 text-[10px] text-gray-500 hover:text-red-400 underline transition cursor-pointer">⚠️ 歸屬異議申訴</button>
         </div>
         
@@ -246,7 +248,7 @@ tailwind.config = {
 </main>
 
 <!-- ========================================== -->
-<!-- 新增：車主建檔與名片工作室 (Garage Studio Modal) -->
+<!-- 車主建檔與名片工作室 (Garage Studio Modal) -->
 <!-- ========================================== -->
 <div id="garage-builder-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 overflow-y-auto">
   <div class="bg-[#0f1117] border border-cyan-500/30 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-[0_0_60px_rgba(6,182,212,0.15)] relative my-8 font-mono">
@@ -270,6 +272,7 @@ tailwind.config = {
         <span class="text-[9px] text-gray-600">TELEMETRY CARD v2.0</span>
       </div>
       <div class="flex items-center space-x-3.5">
+        <!-- Canvas 大頭貼上傳熱區 -->
         <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 p-[2px] flex-shrink-0 cursor-pointer relative group" onclick="document.getElementById('builder-avatar-input').click()" title="點擊上傳愛車大頭貼">
           <div class="w-full h-full rounded-full bg-[#06070b] flex items-center justify-center font-bold text-xs text-cyan-300 overflow-hidden relative">
             <span id="preview-avatar-text">CAR</span>
@@ -332,6 +335,70 @@ tailwind.config = {
         </button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 車主自建相簿 (UGC) Modal -->
+<!-- ========================================== -->
+<div id="ugc-album-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-[#0f1117] border border-emerald-500/30 rounded-2xl max-w-lg w-full p-6 shadow-[0_0_60px_rgba(16,185,129,0.15)] relative my-8 font-mono">
+    <button onclick="closeUgcModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1 cursor-pointer">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="mb-5">
+      <h3 class="text-lg font-bold text-white tracking-wider flex items-center space-x-2">
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <span>建立車主相簿 (UGC)</span>
+      </h3>
+      <p class="text-xs text-gray-400 mt-1 font-sans">上傳您的愛車照片。系統將自動壓縮，並經由管理員審核後展示於展間。</p>
+    </div>
+    <form id="ugc-form" class="space-y-4">
+      <div>
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">相簿名稱 (例: 2026 跑山日常)</label>
+        <input type="text" id="ugc-album-title" required class="w-full bg-[#06070b] border border-gray-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm">
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">選擇照片 (最多 6 張)</label>
+        <div class="flex items-center justify-center w-full">
+          <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-800 border-dashed rounded-xl cursor-pointer bg-[#06070b] hover:bg-gray-900 transition">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg class="w-8 h-8 mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+              <p class="mb-2 text-xs text-gray-400"><span class="font-bold text-emerald-400">點擊上傳</span> 或拖曳圖片至此</p>
+            </div>
+            <input id="ugc-file-input" type="file" class="hidden" multiple accept="image/*" />
+          </label>
+        </div>
+      </div>
+      <div id="ugc-preview-container" class="grid grid-cols-3 gap-2 empty:hidden mt-3"></div>
+      <button type="submit" id="ugc-submit-btn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl transition text-xs tracking-widest shadow-lg shadow-emerald-500/20 cursor-pointer">
+        上傳並送出審核 (SUBMIT)
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 異議申訴 Modal -->
+<!-- ========================================== -->
+<div id="dispute-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+  <div class="bg-[#0f1117] border border-red-500/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center relative font-mono">
+    <button onclick="closeDisputeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="w-12 h-12 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-3 border border-red-500/30">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+    </div>
+    <h3 class="text-base font-bold text-white mb-1">車牌遭惡意搶註？</h3>
+    <p class="text-xs text-gray-400 mb-4 leading-relaxed">若您是本車真實車主，但發現車牌已被他人綁定，請掃描下方 QR Code 聯繫管理員，並出示行照或合影進行認領。</p>
+    <div class="bg-white p-3 rounded-xl inline-block mb-4 shadow-inner flex justify-center">
+      <!-- 替換為你的真實 LINE QR Code 圖片 -->
+      <img src="https://placehold.co/140x140/ffffff/000000?text=LINE+QR" alt="Admin LINE" class="w-[140px] h-[140px]">
+    </div>
+    <div class="text-[10px] text-gray-500 mb-4">LINE ID: NEILSUPHOTO0312</div>
+    <button onclick="closeDisputeModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold py-2.5 rounded-xl transition cursor-pointer">
+      關閉視窗
+    </button>
   </div>
 </div>
 
@@ -421,65 +488,6 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- 車主自建相簿 (UGC) Modal -->
-<div id="ugc-album-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 overflow-y-auto">
-  <div class="bg-[#0f1117] border border-emerald-500/30 rounded-2xl max-w-lg w-full p-6 shadow-[0_0_60px_rgba(16,185,129,0.15)] relative my-8 font-mono">
-    <button onclick="closeUgcModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1 cursor-pointer">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
-    <div class="mb-5">
-      <h3 class="text-lg font-bold text-white tracking-wider flex items-center space-x-2">
-        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-        <span>建立車主相簿 (UGC)</span>
-      </h3>
-      <p class="text-xs text-gray-400 mt-1 font-sans">上傳您的愛車照片。系統將自動壓縮，並經由管理員審核後展示於展間。</p>
-    </div>
-    <form id="ugc-form" class="space-y-4">
-      <div>
-        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">相簿名稱 (例: 2026 跑山日常)</label>
-        <input type="text" id="ugc-album-title" required class="w-full bg-[#06070b] border border-gray-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm">
-      </div>
-      <div>
-        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">選擇照片 (最多 6 張)</label>
-        <div class="flex items-center justify-center w-full">
-          <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-800 border-dashed rounded-xl cursor-pointer bg-[#06070b] hover:bg-gray-900 transition">
-            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg class="w-8 h-8 mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-              <p class="mb-2 text-xs text-gray-400"><span class="font-bold text-emerald-400">點擊上傳</span> 或拖曳圖片至此</p>
-            </div>
-            <input id="ugc-file-input" type="file" class="hidden" multiple accept="image/*" />
-          </label>
-        </div>
-      </div>
-      <div id="ugc-preview-container" class="grid grid-cols-3 gap-2 empty:hidden mt-3"></div>
-      <button type="submit" id="ugc-submit-btn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl transition text-xs tracking-widest shadow-lg shadow-emerald-500/20 cursor-pointer">
-        上傳並送出審核 (SUBMIT)
-      </button>
-    </form>
-  </div>
-</div>
-
-<!-- 異議申訴 Modal -->
-<div id="dispute-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-  <div class="bg-[#0f1117] border border-red-500/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center relative font-mono">
-    <button onclick="closeDisputeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
-    <div class="w-12 h-12 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-3 border border-red-500/30">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-    </div>
-    <h3 class="text-base font-bold text-white mb-1">車牌遭惡意搶註？</h3>
-    <p class="text-xs text-gray-400 mb-4 leading-relaxed">若您是本車真實車主，但發現車牌已被他人綁定，請掃描下方 QR Code 聯繫管理員，並出示行照或合影進行認領。</p>
-    <div class="bg-white p-3 rounded-xl inline-block mb-4 shadow-inner flex justify-center">
-      <img src="https://placehold.co/140x140/ffffff/000000?text=LINE+QR" alt="Admin LINE" class="w-[140px] h-[140px]">
-    </div>
-    <div class="text-[10px] text-gray-500 mb-4">LINE ID: NEILSUPHOTO0312</div>
-    <button onclick="closeDisputeModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold py-2.5 rounded-xl transition cursor-pointer">
-      關閉視窗
-    </button>
-  </div>
-</div>
-
 <footer class="border-t border-gray-800/50 bg-[#06070b] py-12 text-center text-[10px] text-gray-700 tracking-widest uppercase font-mono relative z-10">
   <p>© 2026 THECARFOLIO SECURE VAULT. ALL RIGHTS RESERVED.</p>
 </footer>
@@ -487,7 +495,6 @@ tailwind.config = {
 <script>
 const NAS_DOMAIN = 'https://images.thecarfolio.com';
 
-// 50張完全不同的真實精選汽車寫真高畫質 URL 陣列，確保背景絕對不重複
 const DIVERSE_MICRO_CARS = [
   "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
   "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
@@ -544,7 +551,6 @@ const DIVERSE_MICRO_CARS = [
 let ambientTimer = null;
 let tilesList = [];
 
-// 動態產生 160 張完全不重複的微型車圖背景牆，具備波浪放大互動與自動跑馬燈循環
 function initBackgroundMicroWall() {
   const wall = document.getElementById('background-micro-wall');
   if (!wall) return;
@@ -566,7 +572,6 @@ function initBackgroundMicroWall() {
     tilesList.push(tile);
   }
 
-  // 啟動背景自動跑馬燈波浪動畫（當滑鼠停留在搜尋框等非背景區域時）
   if (ambientTimer) clearInterval(ambientTimer);
   ambientTimer = setInterval(() => {
     tilesList.forEach(t => t.classList.remove('ambient-active'));
@@ -603,65 +608,7 @@ const LOCAL_MOCK_DB = {
                     "cover": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
                     "photos": [
                         "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                },
-                {
-                    "title": "陽明山夜景特輯",
-                    "cover": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        },
-        "GT3RS": {
-            "name": "GT3RS // PORSCHE 911",
-            "car_model": "PORSCHE 911 GT3 RS",
-            "bio": "🔥 Weissach Package | Magnesium Wheels\n🏎️ NA Flat-6 9000RPM Screamer\n🏁 Track Day Weapon",
-            "avatar": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "麗寶賽道日",
-                    "cover": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        },
-        "R35GTR": {
-            "name": "R35GTR // NISSAN NISMO",
-            "car_model": "NISSAN GT-R NISMO",
-            "bio": "🦖 VR38DETT Bi-Turbo | Carbon Aero Kit\n🚀 All-Wheel Drive Monster",
-            "avatar": "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "夜行首都高",
-                    "cover": "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        },
-        "SUPRA90": {
-            "name": "SUPRA90 // TOYOTA GR",
-            "car_model": "TOYOTA GR SUPRA",
-            "bio": "🌊 Liquid Blue | HKS Exhaust & Intercooler\n🌪️ Widebody Aero & GT Wing",
-            "avatar": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "港口夕陽派對",
-                    "cover": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80"
+                        "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80"
                     ]
                 }
             ]
@@ -739,7 +686,6 @@ async function loadHomeGrid() {
             cars = [...LOCAL_MOCK_DB.cars];
         }
 
-        // 將車主在本機新註冊的車庫一併呈現在首頁展示牆最前方
         const customPlates = JSON.parse(localStorage.getItem('thecarfolio_custom_plates') || '[]');
         customPlates.forEach(p => {
             if (!cars.some(c => c.plate === p)) {
@@ -757,7 +703,7 @@ async function loadHomeGrid() {
 
         gridContainer.innerHTML = '';
         cars.forEach(car => {
-            const coverUrl = (car.cover.startsWith('http') || car.cover.startsWith('data:')) ? car.cover : `${NAS_DOMAIN}/${car.cover}`;
+            const coverUrl = car.cover.startsWith('http') || car.cover.startsWith('data:') ? car.cover : `${NAS_DOMAIN}/${car.cover}`;
             const cleanCarPlate = car.plate ? car.plate.split('/')[0].trim().toUpperCase() : '';
             const card = `
                 <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0f1117] border border-gray-800/80 cursor-pointer hover:border-cyan-500 transition-all duration-300 shadow-xl">
@@ -841,7 +787,6 @@ async function loadAndShowVault(cleanPlate) {
         }
     }
 
-    // 若車主剛在網頁編輯過名片，優先套用最新名片欄位並保留雲端相簿
     if (localDraft && profileData) {
         const draftObj = JSON.parse(localDraft);
         profileData = {
@@ -881,7 +826,6 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
   statPosts.textContent = totalPhotos;
   statAlbums.textContent = totalAlbums;
 
-  // 渲染結構化車主徽章 (車主暱稱、出沒地區、Instagram 導流按鈕)
   if (profileBadges) {
       profileBadges.innerHTML = '';
       if (profile.owner_name) {
@@ -901,7 +845,7 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
   }
 
   if (profile.avatar) {
-      const avUrl = (profile.avatar.startsWith('http') || profile.avatar.startsWith('data:')) ? profile.avatar : `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
+      const avUrl = profile.avatar.startsWith('http') || profile.avatar.startsWith('data:') ? profile.avatar : `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
       profileAvatar.src = avUrl;
       lbAvatar.src = avUrl;
   } else {
@@ -913,7 +857,6 @@ function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
 function renderAlbums(albums, plate) {
   albumsContainer.innerHTML = '';
 
-  // 若為新手車主註冊 (0 張照片)，顯示高質感空車庫引導面板
   if (!albums || albums.length === 0) {
       currentAlbumLabel.innerHTML = `目前狀態：<span class="text-cyan-400 font-bold">數位車庫名片已建檔就緒 (0 場活動寫真)</span>`;
       resultsContainer.className = "w-full bg-[#0f1117]/90 border border-gray-800/80 rounded-2xl p-8 text-center my-2 font-mono shadow-2xl";
@@ -946,7 +889,6 @@ function renderAlbums(albums, plate) {
     const circleDiv = document.createElement('div');
     circleDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group w-16 sm:w-20";
     
-    // 若為車主自建相簿，給予翠綠色的提示外框
     const isUgc = album.isUgc ? 'border-emerald-500/50' : 'border-transparent';
 
     circleDiv.innerHTML = `
@@ -1002,7 +944,7 @@ const bAvatarInput = document.getElementById('builder-avatar-input');
 const previewAvatarImg = document.getElementById('preview-avatar-img');
 const previewAvatarText = document.getElementById('preview-avatar-text');
 
-// 頭貼上傳與 Canvas 置中正方壓縮 (400x400)
+// 頭貼上傳與 Canvas 置中正方壓縮
 bAvatarInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -1077,7 +1019,6 @@ function openGarageBuilder(prefillPlate = '') {
         currentUploadedAvatarData = '';
     }
     updateLivePreview();
-    renderAvatarPreviewUI();
     garageBuilderModal.classList.remove('hidden');
 }
 
@@ -1133,7 +1074,6 @@ document.getElementById('garage-builder-form').addEventListener('submit', async 
     }
 
     try {
-        // 呼叫後端 API 自動寫入 AWS S3 的 {plate}/profile.json
         await fetch('/api/save-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1150,82 +1090,9 @@ document.getElementById('garage-builder-form').addEventListener('submit', async 
     }
 });
 
-lbNextBtn.addEventListener('click', () => {
-  currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryPhotos.length;
-  showLightboxPhoto(currentGalleryIndex);
-});
-lbPrevBtn.addEventListener('click', () => {
-  currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryPhotos.length) % currentGalleryPhotos.length;
-  showLightboxPhoto(currentGalleryIndex);
-});
-function showLightboxPhoto(idx) {
-  const path = currentGalleryPhotos[idx];
-  const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
-  lightboxImg.src = imgUrl;
-  lbCounter.textContent = `${idx + 1} / ${currentGalleryPhotos.length}`;
-  lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
-  downloadBtn.href = imgUrl;
-}
-closeLightbox.addEventListener('click', () => {
-    lightboxModal.classList.add('opacity-0');
-    setTimeout(() => lightboxModal.classList.add('hidden'), 300);
-});
-
-function openOwnerModal() {
-    ownerModal.classList.remove('hidden');
-    const qrcodeContainer = document.getElementById('qrcode-container');
-    qrcodeContainer.innerHTML = '';
-    new QRCode(qrcodeContainer, {
-        text: window.location.href,
-        width: 140,
-        height: 140,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
-}
-
-function closeOwnerModal() {
-    ownerModal.classList.add('hidden');
-}
-
-function copyCurrentLink() {
-    const dummy = document.createElement('textarea');
-    document.body.appendChild(dummy);
-    dummy.value = window.location.href;
-    dummy.select();
-    document.execCommand('copy');
-    document.body.removeChild(dummy);
-    alertBox('已成功複製展間連結至剪貼簿！');
-}
-
-function shareProfile(e) {
-    if (navigator.share) {
-        navigator.share({
-            title: document.title,
-            url: window.location.href
-        }).catch(() => {});
-    } else {
-        openOwnerModal();
-    }
-}
-
-function alertBox(msg) {
-    const toast = document.createElement('div');
-    toast.className = 'fixed bottom-6 right-6 z-50 bg-cyan-500 text-black font-mono text-xs font-bold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300';
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 2500);
-}
-
-// 異議申訴 Modal 控制
-function openDisputeModal() { disputeModal.classList.remove('hidden'); }
-function closeDisputeModal() { disputeModal.classList.add('hidden'); }
-
-// UGC 車主相簿上傳控制
+// ==========================================
+// UGC 車主相簿上傳邏輯
+// ==========================================
 const ugcFileInput = document.getElementById('ugc-file-input');
 const ugcPreviewContainer = document.getElementById('ugc-preview-container');
 
@@ -1264,7 +1131,7 @@ function compressImage(file, maxSize = 1600) {
 }
 
 ugcFileInput.addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files).slice(0, 6 - currentUgcPhotos.length); // 限制最多6張
+    const files = Array.from(e.target.files).slice(0, 6 - currentUgcPhotos.length);
     for (let file of files) {
         const base64Str = await compressImage(file);
         currentUgcPhotos.push(base64Str);
@@ -1281,25 +1148,93 @@ document.getElementById('ugc-form').addEventListener('submit', (e) => {
         alertBox('請至少選擇一張照片');
         return;
     }
-    const title = document.getElementById('ugc-album-title').value.trim();
     const btn = document.getElementById('ugc-submit-btn');
     btn.textContent = '雲端壓縮送出中...';
     btn.disabled = true;
 
-    // 模擬送出到後端隔離暫存區 (Pending)
+    // 安全送出邏輯：假裝送往 API，不更新本地畫面
     setTimeout(() => {
-        // 真實環境下，這裡會呼叫 fetch('/api/submit-photo') 
-        // 絕對不會在這裡去更新 currentProfileCache 或重新 renderAlbums！
-        
         btn.textContent = '上傳並送出審核 (SUBMIT)';
         btn.disabled = false;
         closeUgcModal();
-        
-        // 只給予成功提示，畫面保持原樣，確保垃圾內容絕對不會立刻上線
         alertBox('照片已成功送往後台！待管理員審核通過後，即可於您的數位展間公開展示。');
-        
     }, 1500);
 });
+
+// ==========================================
+// 異議申訴 Modal 控制
+// ==========================================
+function openDisputeModal() { disputeModal.classList.remove('hidden'); }
+function closeDisputeModal() { disputeModal.classList.add('hidden'); }
+
+// ==========================================
+// 其他輔助函數
+// ==========================================
+lbNextBtn.addEventListener('click', () => {
+  currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryPhotos.length;
+  showLightboxPhoto(currentGalleryIndex);
+});
+lbPrevBtn.addEventListener('click', () => {
+  currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryPhotos.length) % currentGalleryPhotos.length;
+  showLightboxPhoto(currentGalleryIndex);
+});
+function showLightboxPhoto(idx) {
+  const path = currentGalleryPhotos[idx];
+  const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
+  lightboxImg.src = imgUrl;
+  lbCounter.textContent = `${idx + 1} / ${currentGalleryPhotos.length}`;
+  lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
+  downloadBtn.href = imgUrl;
+}
+closeLightbox.addEventListener('click', () => {
+    lightboxModal.classList.add('opacity-0');
+    setTimeout(() => lightboxModal.classList.add('hidden'), 300);
+});
+
+function openOwnerModal() {
+    ownerModal.classList.remove('hidden');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    qrcodeContainer.innerHTML = '';
+    new QRCode(qrcodeContainer, {
+        text: window.location.href,
+        width: 140,
+        height: 140,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+function closeOwnerModal() { ownerModal.classList.add('hidden'); }
+
+function copyCurrentLink() {
+    const dummy = document.createElement('textarea');
+    document.body.appendChild(dummy);
+    dummy.value = window.location.href;
+    dummy.select();
+    document.execCommand('copy');
+    document.body.removeChild(dummy);
+    alertBox('已成功複製展間連結至剪貼簿！');
+}
+
+function shareProfile(e) {
+    if (navigator.share) {
+        navigator.share({ title: document.title, url: window.location.href }).catch(() => {});
+    } else {
+        openOwnerModal();
+    }
+}
+
+function alertBox(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-6 right-6 z-50 bg-cyan-500 text-black font-mono text-xs font-bold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
 </script>
 </body>
 </html>
