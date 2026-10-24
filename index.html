@@ -1286,31 +1286,18 @@ document.getElementById('ugc-form').addEventListener('submit', (e) => {
     btn.textContent = '雲端壓縮送出中...';
     btn.disabled = true;
 
-    // 模擬送出到後端暫存區，目前先即時顯示在前端以供預覽 (加上 isUgc 標記)
+    // 模擬送出到後端隔離暫存區 (Pending)
     setTimeout(() => {
-        if(!currentProfileCache.albums) currentProfileCache.albums = [];
-        // 將新相簿推入最前方
-        currentProfileCache.albums.unshift({
-            title: title + " (審核中)",
-            cover: currentUgcPhotos[0],
-            photos: currentUgcPhotos,
-            isUgc: true
-        });
-        
-        // 更新本地快取
-        localStorage.setItem(`thecarfolio_draft_${currentGalleryPlate}`, JSON.stringify(currentProfileCache));
+        // 真實環境下，這裡會呼叫 fetch('/api/submit-photo') 
+        // 絕對不會在這裡去更新 currentProfileCache 或重新 renderAlbums！
         
         btn.textContent = '上傳並送出審核 (SUBMIT)';
         btn.disabled = false;
         closeUgcModal();
-        alertBox('照片已送出！待官方審核後即可正式公開。');
         
-        // 重新渲染相簿與數字
-        let totalPhotos = 0;
-        currentProfileCache.albums.forEach(a => totalPhotos += (a.photos ? a.photos.length : 0));
-        statPosts.textContent = totalPhotos;
-        statAlbums.textContent = currentProfileCache.albums.length;
-        renderAlbums(currentProfileCache.albums, currentGalleryPlate);
+        // 只給予成功提示，畫面保持原樣，確保垃圾內容絕對不會立刻上線
+        alertBox('照片已成功送往後台！待管理員審核通過後，即可於您的數位展間公開展示。');
+        
     }, 1500);
 });
 </script>
