@@ -8,7 +8,7 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
-
+ 
 module.exports = async function handler(req, res) {
   // 1. 開啟 CORS 通行證，讓你的前端網頁可以呼叫這支 API
   res.setHeader('Access-Control-Allow-Credentials', true);
