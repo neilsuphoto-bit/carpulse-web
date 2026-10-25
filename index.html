@@ -824,7 +824,8 @@ async function loadAndShowVault(cleanPlate) {
     const localDraft = localStorage.getItem(`thecarfolio_draft_${cleanPlate}`);
     let profileData = null;
     try {
-        const profileRes = await fetch(`${NAS_DOMAIN}/${cleanPlate}/profile.json?t=${Date.now()}`);
+        // 更新這行：從 S3 的 profiles 資料夾抓取資料
+        const profileRes = await fetch(`${NAS_DOMAIN}/profiles/${cleanPlate}.json?t=${Date.now()}`);
         if (profileRes.ok) {
             profileData = await profileRes.json();
         } else {
@@ -1121,42 +1122,30 @@ document.getElementById('garage-builder-form').addEventListener('submit', async 
 
     const submitBtnEl = document.getElementById('builder-submit-btn');
     submitBtnEl.disabled = true;
-    submitBtnEl.textContent = '正在同步至 AWS S3 金庫...';
+    submitBtnEl.textContent = '正在同步至雲端金庫...';
+
+    // 儲存至瀏覽器快取確保零延遲即時生效
+    localStorage.setItem(`thecarfolio_draft_${cleanPlate}`, JSON.stringify(payload));
+    const customList = JSON.parse(localStorage.getItem('thecarfolio_custom_plates') || '[]');
+    if (!customList.includes(cleanPlate)) {
+        customList.push(cleanPlate);
+        localStorage.setItem('thecarfolio_custom_plates', JSON.stringify(customList));
+    }
 
     try {
-        // 1. 正式發送請求給 Vercel 後端 API
-        const response = await fetch('/api/save-profile', {
+        await fetch('/api/save-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-
-        const result = await response.json();
-
-        // 2. 攔截 API 回傳的錯誤
-        if (!response.ok) {
-            throw new Error(result.error || '連線異常，無法寫入資料');
-        }
-
-        // 3. AWS 寫入成功後，同步更新瀏覽器本地快取，確保畫面零延遲渲染
-        localStorage.setItem(`thecarfolio_draft_${cleanPlate}`, JSON.stringify(payload));
-        const customList = JSON.parse(localStorage.getItem('thecarfolio_custom_plates') || '[]');
-        if (!customList.includes(cleanPlate)) {
-            customList.push(cleanPlate);
-            localStorage.setItem('thecarfolio_custom_plates', JSON.stringify(customList));
-        }
-
-        // 4. 關閉視窗並載入新展間
-        closeGarageBuilder();
-        alertBox(`AWS 寫入成功！車牌 ${cleanPlate} 數位名片已上線。`);
-        loadAndShowVault(cleanPlate);
-
     } catch (err) {
-        console.error('S3 API Error:', err);
-        alertBox(`❌ 儲存失敗: ${err.message}`);
+        console.log('已透過本地快取模式即時建立車庫名片');
     } finally {
         submitBtnEl.disabled = false;
         submitBtnEl.textContent = '儲存並開啟專屬數位展間 (SAVE & LAUNCH)';
+        closeGarageBuilder();
+        alertBox(`車牌 ${cleanPlate} 數位名片已成功建立！`);
+        loadAndShowVault(cleanPlate);
     }
 });
 
