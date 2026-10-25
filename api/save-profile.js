@@ -27,8 +27,8 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const data = req.body;
-    const licensePlate = data.licensePlate;
+  const data = req.body;
+const licensePlate = data.plate;
 
     if (!licensePlate) {
       return res.status(400).json({ error: '拒絕存取：車牌號碼為必填欄位' });
