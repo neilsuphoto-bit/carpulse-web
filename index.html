@@ -1161,63 +1161,63 @@ function openUgcModal() {
   currentUgcPhotos = [];
   ugcPreviewContainer.innerHTML = '';
   document.getElementById('ugc-album-title').value = '';
-  ugcModal.classList.remove('hidden'); 
-}
-function closeUgcModal() { ugcModal.classList.add('hidden'); }
-
-// Canvas 強制壓縮演算法 (長邊不超過 1600px)
-function compressImage(file, maxSize = 1600) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                let w = img.width; let h = img.height;
-                if (w > maxSize || h > maxSize) {
-                    if (w > h) { h = Math.round((h * maxSize) / w); w = maxSize; }
-                    else { w = Math.round((w * maxSize) / h); h = maxSize; }
-                }
-                const canvas = document.createElement('canvas');
-                canvas.width = w; canvas.height = h;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, w, h);
-                resolve(canvas.toDataURL('image/jpeg', 0.8));
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
 ugcFileInput.addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files).slice(0, 6 - currentUgcPhotos.length);
-    for (let file of files) {
-        const base64Str = await compressImage(file);
-        currentUgcPhotos.push(base64Str);
-        const div = document.createElement('div');
-        div.className = 'aspect-square bg-gray-900 rounded-lg overflow-hidden border border-gray-700';
-        div.innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover">`;
-        ugcPreviewContainer.appendChild(div);
-    }
+    const files = Array.from(e.target.files).slice(0, 6 - currentUgcPhotos.length);
+    for (let file of files) {
+        const base64Str = await compressImage(file);
+        currentUgcPhotos.push(base64Str);
+        const div = document.createElement('div');
+        div.className = 'aspect-square bg-gray-900 rounded-lg overflow-hidden border border-gray-700';
+        div.innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover">`;
+        ugcPreviewContainer.appendChild(div);
+    }
 });
 
-document.getElementById('ugc-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    if(currentUgcPhotos.length === 0) {
-        alertBox('請至少選擇一張照片');
+document.getElementById('ugc-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if(currentUgcPhotos.length === 0) {
+        alertBox('請至少選擇一張照片');
+        return;
+    }
+    const albumTitle = document.getElementById('ugc-album-title').value.trim();
+    if (!albumTitle) {
+        alertBox('請輸入相簿名稱');
         return;
     }
-    const btn = document.getElementById('ugc-submit-btn');
-    btn.textContent = '雲端壓縮送出中...';
-    btn.disabled = true;
 
-    // 安全送出邏輯：假裝送往 API，不更新本地畫面
-    setTimeout(() => {
+    const btn = document.getElementById('ugc-submit-btn');
+    btn.textContent = '雲端壓縮同步中...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/upload-photos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plate: currentGalleryPlate,
+                albumTitle: albumTitle,
+                photos: currentUgcPhotos
+            })
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.error || '上傳失敗');
+        }
+
+        closeUgcModal();
+        alertBox(`相簿「${albumTitle}」上傳成功！已同步至 AWS S3。`);
+        
+        // 重新載入展間，讓剛上傳的相簿立刻顯示出來
+        loadAndShowVault(currentGalleryPlate);
+
+    } catch (err) {
+        console.error('UGC Upload Error:', err);
+        alertBox(`❌ 上傳失敗: ${err.message}`);
+    } finally {
         btn.textContent = '上傳並送出審核 (SUBMIT)';
         btn.disabled = false;
-        closeUgcModal();
-        alertBox('照片已成功送往後台！待管理員審核通過後，即可於您的數位展間公開展示。');
-    }, 1500);
+    }
 });
 
 // ==========================================
