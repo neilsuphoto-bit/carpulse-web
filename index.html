@@ -959,7 +959,7 @@ function renderAlbums(albums, plate) {
     const rawCover = album.cover || '';
     const coverUrl = rawCover.startsWith('http') || rawCover.startsWith('data:') ? rawCover : `${NAS_DOMAIN}/${plate}/${rawCover}`;
     const circleDiv = document.createElement('div');
-    circleDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group w-16 sm:w-20";
+    circleDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group w-16 sm:w-20 relative";
     
     const isUgc = album.isUgc ? 'border-emerald-500/50' : 'border-transparent';
 
@@ -969,39 +969,7 @@ function renderAlbums(albums, plate) {
           <img src="${coverUrl}" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=Img'">
         </div>
       </div>
-      <span class="text-[10px] font-mono text-gray-400 mt-2 truncate w-full text-center group-hover:text-gray-200">${album.title}</span>
-    `;
-    circleDiv.addEventListener('click', () => renderGallery(album.photos || [], plate, album.title));
-    albumsContainer.appendChild(circleDiv);
-  });
-  if (albums.length > 0) setTimeout(() => albumsContainer.firstChild.click(), 100);
-}
-
-function renderGallery(photoPaths, plate, albumTitle) {
-  resultsContainer.className = "grid grid-cols-3 gap-1.5 bg-[#06070b]/90 rounded-2xl overflow-hidden shadow-2xl min-h-[220px] relative border border-gray-800/60 p-1";
-  resultsContainer.innerHTML = '';
-  currentAlbumLabel.innerHTML = `目前場次：<span class="text-white font-bold">${albumTitle}</span> (${photoPaths.length}張)`;
-  currentGalleryPhotos = photoPaths;
-  currentGalleryPlate = plate;
-
-  photoPaths.forEach((path, index) => {
-    const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${plate}/${path}`;
-    const div = document.createElement('div');
-    div.className = "aspect-square bg-black relative group cursor-pointer overflow-hidden rounded-xl border border-gray-900";
-    div.innerHTML = `<img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`;
-    div.addEventListener('click', () => {
-      currentGalleryIndex = index;
-      lightboxImg.src = imgUrl;
-      lbPlate.textContent = profileTitle.textContent;
-      lbCounter.textContent = `${index + 1} / ${photoPaths.length}`;
-      lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
-      downloadBtn.href = imgUrl;
-      lightboxModal.classList.remove('hidden');
-      setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
-    });
-    resultsContainer.appendChild(div);
-  });
-}
+      <span class="text-[10px] font-mono text-gray-40
 
 // ==========================================
 // 車主建檔與名片工作室 (Garage Studio) 邏輯
