@@ -24,7 +24,6 @@ tailwind.config = {
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   
-  /* 微型車輛寫真磚塊與波浪放大互動效果 */
   .micro-tile {
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease, box-shadow 0.4s ease;
     will-change: transform;
@@ -49,7 +48,6 @@ tailwind.config = {
 <body class="min-h-screen bg-[#06070b] text-gray-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-black relative overflow-x-hidden">
 
 <div id="background-micro-wall" class="fixed inset-0 grid grid-cols-8 sm:grid-cols-12 md:grid-cols-16 lg:grid-cols-20 gap-1 p-2 opacity-25 pointer-events-auto z-0 overflow-hidden select-none">
-  <!-- 動態填入 160 張完全不同的微型車圖 -->
 </div>
 <div class="fixed inset-0 bg-gradient-to-b from-[#06070b]/90 via-[#06070b]/80 to-[#06070b] pointer-events-none z-1"></div>
 
@@ -81,7 +79,6 @@ tailwind.config = {
 </header>
 
 <main class="flex-grow max-w-5xl mx-auto px-4 py-10 w-full relative z-10">
-  
   <div id="search-container" class="transition-all duration-300">
     <div class="text-center max-w-2xl mx-auto mb-10">
       <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-[10px] font-mono bg-cyan-950/40 text-cyan-300 border border-cyan-500/20 mb-4 tracking-widest uppercase">
@@ -114,7 +111,6 @@ tailwind.config = {
         <button onclick="quickSelectPlate('SUPRA90')" class="text-[11px] font-mono bg-gray-900 hover:bg-cyan-950 text-cyan-300 px-3 py-1 rounded-lg border border-gray-800 hover:border-cyan-500/40 transition cursor-pointer">SUPRA90</button>
       </div>
 
-      <!-- 新手車主引導列 -->
       <div class="mt-4 pt-3 border-t border-gray-800/40 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
         <span class="text-gray-500 text-[11px]">尚未建立愛車檔案？預先生成專屬名片與車貼 QR Code</span>
         <button type="button" onclick="openGarageBuilder()" class="text-cyan-400 hover:text-cyan-300 font-bold underline cursor-pointer flex-shrink-0">
@@ -143,16 +139,13 @@ tailwind.config = {
       </div>
       
       <div id="car-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        <!-- 動態填入車輛卡片 -->
       </div>
     </div>
   </div>
 
   <section id="gallery-section" class="mt-2 hidden max-w-2xl mx-auto lg:max-w-5xl">
-    
     <div id="profile-card-container" class="bg-[#0f1117]/95 backdrop-blur-md border border-gray-800/80 rounded-2xl p-6 sm:p-8 mb-6 shadow-2xl relative overflow-hidden transition-all duration-500">
       <div class="absolute top-0 right-0 p-4 z-20 flex items-center space-x-2">
-        <!-- 新增：UGC 相簿按鈕 -->
         <button onclick="openUgcModal()" class="text-xs text-emerald-300 hover:text-black transition flex items-center space-x-1 bg-emerald-950/60 hover:bg-emerald-400 px-3 py-2 rounded-xl border border-emerald-500/30 backdrop-blur cursor-pointer font-mono font-bold shadow-lg">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           <span>＋ 車主相簿</span>
@@ -183,7 +176,6 @@ tailwind.config = {
               <svg id="verified-badge" class="w-4 h-4 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.25a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             </div>
             <p id="profile-status-subtitle" class="text-[10px] font-mono text-cyan-400 mt-1 tracking-widest uppercase">Verified Secure Vault Showcase</p>
-            <!-- 結構化車主徽章列 (車主稱呼 / 地區 / IG 導流) -->
             <div id="profile-badges" class="flex flex-wrap items-center gap-1.5 mt-2.5"></div>
           </div>
         </div>
@@ -208,7 +200,6 @@ tailwind.config = {
         <div class="flex items-center space-x-2 text-xs text-gray-400">
           <svg class="w-4 h-4 flex-shrink-0 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
           <span id="auth-status-text">安全金庫已加密保護 · 車主專屬展間</span>
-          <!-- 異議申訴按鈕 -->
           <button onclick="openDisputeModal()" class="ml-2 text-[10px] text-gray-500 hover:text-red-400 underline transition cursor-pointer">⚠️ 歸屬異議申訴</button>
         </div>
         
@@ -247,9 +238,6 @@ tailwind.config = {
   </section>
 </main>
 
-<!-- ========================================== -->
-<!-- 車主建檔與名片工作室 (Garage Studio Modal) -->
-<!-- ========================================== -->
 <div id="garage-builder-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 overflow-y-auto">
   <div class="bg-[#0f1117] border border-cyan-500/30 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-[0_0_60px_rgba(6,182,212,0.15)] relative my-8 font-mono">
     <button onclick="closeGarageBuilder()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1 cursor-pointer">
@@ -265,14 +253,12 @@ tailwind.config = {
       <p class="text-xs text-gray-400 mt-1 font-sans">填寫愛車資訊即可自動生成雲端 <code class="text-cyan-300 font-mono">profile.json</code> 結構，並保留您既有的活動相簿紀錄。</p>
     </div>
 
-    <!-- 即時名片預覽卡與頭貼上傳 -->
     <div class="bg-[#06070b] border border-gray-800/90 rounded-xl p-4 mb-6 shadow-inner">
       <div class="flex items-center justify-between mb-2.5">
         <span class="text-[9px] text-cyan-400 uppercase tracking-widest">LIVE PREVIEW · 展間名片即時預覽</span>
         <span class="text-[9px] text-gray-600">TELEMETRY CARD v2.0</span>
       </div>
       <div class="flex items-center space-x-3.5">
-        <!-- 大頭貼上傳區 -->
         <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 p-[2px] flex-shrink-0 cursor-pointer relative group" onclick="document.getElementById('builder-avatar-input').click()" title="點擊上傳大頭貼">
           <div class="w-full h-full rounded-full bg-[#06070b] flex items-center justify-center font-bold text-xs text-cyan-300 overflow-hidden relative">
             <span id="preview-avatar-text">CAR</span>
@@ -306,7 +292,6 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- 車主管理密碼欄位 -->
       <div>
         <label class="block text-[10px] font-bold text-cyan-400 uppercase tracking-wider mb-1.5">車主管理密碼 (PIN 碼) *</label>
         <input type="password" id="builder-pin" placeholder="設定 4-6 碼密碼，未來修改資料或上傳相簿需以此驗證" required class="w-full bg-[#06070b] border border-cyan-500/40 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 font-mono tracking-widest">
@@ -345,9 +330,6 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- ========================================== -->
-<!-- 車主自建相簿 (UGC) Modal -->
-<!-- ========================================== -->
 <div id="ugc-album-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 overflow-y-auto">
   <div class="bg-[#0f1117] border border-emerald-500/30 rounded-2xl max-w-lg w-full p-6 shadow-[0_0_60px_rgba(16,185,129,0.15)] relative my-8 font-mono">
     <button onclick="closeUgcModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1 cursor-pointer">
@@ -366,7 +348,6 @@ tailwind.config = {
         <input type="text" id="ugc-album-title" required class="w-full bg-[#06070b] border border-gray-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm">
       </div>
       
-      <!-- 新增：UGC 上傳時驗證車主密碼 -->
       <div>
         <label class="block text-[10px] font-bold text-cyan-400 uppercase tracking-wider mb-1.5">車主管理密碼 (PIN 碼) *</label>
         <input type="password" id="ugc-pin" placeholder="請輸入您建檔時設定的密碼" required class="w-full bg-[#06070b] border border-cyan-500/40 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-500 text-sm font-mono tracking-widest">
@@ -392,9 +373,6 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- ========================================== -->
-<!-- 異議申訴 Modal -->
-<!-- ========================================== -->
 <div id="dispute-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
   <div class="bg-[#0f1117] border border-red-500/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center relative font-mono">
     <button onclick="closeDisputeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">
@@ -406,7 +384,6 @@ tailwind.config = {
     <h3 class="text-base font-bold text-white mb-1">車牌遭惡意搶註？</h3>
     <p class="text-xs text-gray-400 mb-4 leading-relaxed">若您是本車真實車主，但發現車牌已被他人綁定，請掃描下方 QR Code 聯繫管理員，並出示行照或合影進行認領。</p>
     <div class="bg-white p-3 rounded-xl inline-block mb-4 shadow-inner flex justify-center">
-      <!-- 替換為你的真實 LINE QR Code 圖片 -->
       <img src="https://placehold.co/140x140/ffffff/000000?text=LINE+QR" alt="Admin LINE" class="w-[140px] h-[140px]">
     </div>
     <div class="text-[10px] text-gray-500 mb-4">LINE ID: NEILSUPHOTO0312</div>
@@ -507,900 +484,5 @@ tailwind.config = {
 </footer>
 
 <script>
-// 直接對應到你真實的 AWS S3 網域
-const NAS_DOMAIN = 'https://thecarfolio-images-2026.s3.ap-northeast-1.amazonaws.com';
-
-const DIVERSE_MICRO_CARS = [
-  "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1541348263662-e052662888f7?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1565043660720-332306fc6e23?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1502161254066-6c74af4b7aa1?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1542362567-b07e21598463?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1520031441872-265e4ff70366?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1541443131876-44503de71cce?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1517524208051-78923a54b9d0?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1570733577511-460d297779f4?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
-  "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=300&q=80"
-];
-
-let ambientTimer = null;
-let tilesList = [];
-
-function initBackgroundMicroWall() {
-  const wall = document.getElementById('background-micro-wall');
-  if (!wall) return;
-  wall.innerHTML = '';
-  
-  let shuffledPool = [...DIVERSE_MICRO_CARS];
-  for (let i = shuffledPool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledPool[i], shuffledPool[j]] = [shuffledPool[j], shuffledPool[i]];
-  }
-
-  tilesList = [];
-  for (let i = 0; i < 160; i++) {
-    const imgUrl = shuffledPool[i % shuffledPool.length];
-    const tile = document.createElement('div');
-    tile.className = "micro-tile aspect-square rounded-md overflow-hidden bg-gray-900 border border-gray-800/40 opacity-70 cursor-pointer shadow-sm";
-    tile.innerHTML = `<img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover">`;
-    wall.appendChild(tile);
-    tilesList.push(tile);
-  }
-
-  if (ambientTimer) clearInterval(ambientTimer);
-  ambientTimer = setInterval(() => {
-    tilesList.forEach(t => t.classList.remove('ambient-active'));
-    const count = 4 + Math.floor(Math.random() * 4);
-    for (let k = 0; k < count; k++) {
-      const randIdx = Math.floor(Math.random() * tilesList.length);
-      tilesList[randIdx].classList.add('ambient-active');
-    }
-    setTimeout(() => {
-      tilesList.forEach(t => t.classList.remove('ambient-active'));
-    }, 1200);
-  }, 2200);
-}
-
-const LOCAL_MOCK_DB = {
-    "cars": [
-        { plate: "BHS0759", cover: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80", name: "BMW M4 Competition" },
-        { plate: "GT3RS", cover: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80", name: "Porsche 911 GT3 RS" },
-        { plate: "R35GTR", cover: "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=800&q=80", name: "Nissan GT-R Nismo" },
-        { plate: "SUPRA90", cover: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80", name: "Toyota GR Supra A90" }
-    ],
-    "profiles": {
-        "BHS0759": {
-            "name": "BHS0759 // BMW M4 COMP",
-            "car_model": "BMW M4 COMP",
-            "owner_name": "Neil",
-            "location": "台北市",
-            "ig_handle": "neilsuphoto",
-            "bio": "⚡ Twin Turbo Inline-6 | KW V4 Suspension\n🏁 Track Ready Setup | Custom Forged Wheels\n📍 Taipei Meet Official Archive",
-            "avatar": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "2026 台北車聚大會",
-                    "cover": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                },
-                {
-                    "title": "陽明山夜景特輯",
-                    "cover": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        },
-        "GT3RS": {
-            "name": "GT3RS // PORSCHE 911",
-            "car_model": "PORSCHE 911 GT3 RS",
-            "bio": "🔥 Weissach Package | Magnesium Wheels\n🏎️ NA Flat-6 9000RPM Screamer\n🏁 Track Day Weapon",
-            "avatar": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "麗寶賽道日",
-                    "cover": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        },
-        "R35GTR": {
-            "name": "R35GTR // NISSAN NISMO",
-            "car_model": "NISSAN GT-R NISMO",
-            "bio": "🦖 VR38DETT Bi-Turbo | Carbon Aero Kit\n🚀 All-Wheel Drive Monster",
-            "avatar": "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "夜行首都高",
-                    "cover": "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1607853585997-e354a973d42e?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        },
-        "SUPRA90": {
-            "name": "SUPRA90 // TOYOTA GR",
-            "car_model": "TOYOTA GR SUPRA",
-            "bio": "🌊 Liquid Blue | HKS Exhaust & Intercooler\n🌪️ Widebody Aero & GT Wing",
-            "avatar": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=200&q=80",
-            "albums": [
-                {
-                    "title": "港口夕陽派對",
-                    "cover": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80",
-                    "photos": [
-                        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80",
-                        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80"
-                    ]
-                }
-            ]
-        }
-    }
-};
-
-const form = document.getElementById('search-form');
-const plateInput = document.getElementById('plate-input');
-const submitBtn = document.getElementById('submit-btn');
-const btnText = document.getElementById('btn-text');
-const btnSpinner = document.getElementById('btn-spinner');
-const errorToast = document.getElementById('error-toast');
-const errorMsg = document.getElementById('error-msg');
-const searchContainer = document.getElementById('search-container');
-const gallerySection = document.getElementById('gallery-section');
-const resultsContainer = document.getElementById('results-container');
-const albumsContainer = document.getElementById('albums-container');
-const currentAlbumLabel = document.getElementById('current-album-label');
-
-const profileAvatar = document.getElementById('profile-avatar');
-const profileTitle = document.getElementById('profile-title');
-const profileBio = document.getElementById('profile-bio');
-const profileBadges = document.getElementById('profile-badges');
-const statPosts = document.getElementById('stat-posts');
-const statAlbums = document.getElementById('stat-albums');
-
-const lightboxModal = document.getElementById('lightbox-modal');
-const lightboxImg = document.getElementById('lightbox-img');
-const lbAvatar = document.getElementById('lb-avatar');
-const lbPlate = document.getElementById('lb-plate');
-const lbFilename = document.getElementById('lb-filename');
-const downloadBtn = document.getElementById('download-btn');
-const closeLightbox = document.getElementById('close-lightbox');
-const lbPrevBtn = document.getElementById('lb-prev');
-const lbNextBtn = document.getElementById('lb-next');
-const lbCounter = document.getElementById('lb-counter');
-
-const ownerModal = document.getElementById('owner-modal');
-const garageBuilderModal = document.getElementById('garage-builder-modal');
-const ugcModal = document.getElementById('ugc-album-modal');
-const disputeModal = document.getElementById('dispute-modal');
-
-let errorTimeout;
-let currentGalleryPhotos = [];
-let currentGalleryIndex = 0;
-let currentGalleryPlate = '';
-let currentProfileCache = {};
-let currentUploadedAvatarData = '';
-let currentUgcPhotos = [];
-
-window.addEventListener('DOMContentLoaded', () => {
-    initBackgroundMicroWall();
-    const urlParams = new URLSearchParams(window.location.search);
-    const paramPlate = urlParams.get('plate');
-    if (paramPlate) {
-        const cleanPlate = paramPlate.split('/')[0].trim().toUpperCase();
-        plateInput.value = cleanPlate;
-        loadAndShowVault(cleanPlate);
-    } else {
-        loadHomeGrid();
-    }
-});
-
-async function loadHomeGrid() {
-    const gridContainer = document.getElementById('car-grid');
-    if (!gridContainer) return;
-    try {
-        let cars = [];
-        try {
-            const res = await fetch(`${NAS_DOMAIN}/cars.json?t=${Date.now()}`);
-            if (res.ok) cars = await res.json();
-            else throw new Error('NAS offline');
-        } catch {
-            cars = [...LOCAL_MOCK_DB.cars];
-        }
-
-        const customPlates = JSON.parse(localStorage.getItem('thecarfolio_custom_plates') || '[]');
-        customPlates.forEach(p => {
-            if (!cars.some(c => c.plate === p)) {
-                let customCover = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80";
-                try {
-                    const draft = JSON.parse(localStorage.getItem(`thecarfolio_draft_${p}`) || '{}');
-                    if (draft.avatar) customCover = draft.avatar;
-                } catch {}
-                cars.unshift({
-                    plate: p,
-                    cover: customCover
-                });
-            }
-        });
-
-        gridContainer.innerHTML = '';
-        cars.forEach(car => {
-            const coverUrl = car.cover.startsWith('http') || car.cover.startsWith('data:') ? car.cover : `${NAS_DOMAIN}/${car.cover}`;
-            const cleanCarPlate = car.plate ? car.plate.split('/')[0].trim().toUpperCase() : '';
-            const card = `
-                <div onclick="quickSelectPlate('${cleanCarPlate}')" class="group relative block aspect-square rounded-2xl overflow-hidden bg-[#0f1117] border border-gray-800/80 cursor-pointer hover:border-cyan-500 transition-all duration-300 shadow-xl">
-                    <img src="${coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-80 group-hover:opacity-100" onerror="this.src='https://placehold.co/400x400/121212/ffffff?text=${cleanCarPlate}'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-4">
-                        <span class="text-[9px] font-mono text-cyan-400 mb-1 tracking-widest uppercase">FEATURED</span>
-                        <h4 class="text-base font-bold text-white font-mono leading-tight tracking-widest">${cleanCarPlate}</h4>
-                    </div>
-                </div>
-            `;
-            gridContainer.insertAdjacentHTML('beforeend', card);
-        });
-    } catch (err) {
-        gridContainer.innerHTML = `<div class="col-span-full py-12 text-center text-gray-600 text-xs font-mono">ENCRYPTED VAULT OFFLINE</div>`;
-    }
-}
-
-function quickSelectPlate(plate) {
-    plateInput.value = plate.split('/')[0].trim().toUpperCase();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    form.dispatchEvent(new Event('submit'));
-}
-
-function showError(msg) {
-  errorMsg.textContent = msg;
-  errorToast.classList.remove('hidden');
-  requestAnimationFrame(() => errorToast.classList.remove('opacity-0'));
-  clearTimeout(errorTimeout);
-  errorTimeout = setTimeout(hideError, 6000);
-}
-
-function hideError() {
-  errorToast.classList.add('opacity-0');
-  setTimeout(() => errorToast.classList.add('hidden'), 300);
-}
-
-function resetToSearch() {
-  gallerySection.classList.add('hidden');
-  searchContainer.classList.remove('hidden');
-  plateInput.value = '';
-  window.history.replaceState({}, document.title, window.location.pathname);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  loadHomeGrid(); 
-}
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  hideError();
-  let rawValue = plateInput.value.trim().toUpperCase();
-  let cleanPlate = rawValue.split('/')[0].trim().replace(/[\s-]+/g, '');
-  if (!cleanPlate) return;
-  loadAndShowVault(cleanPlate);
-});
-
-async function loadAndShowVault(cleanPlate) {
-  submitBtn.disabled = true;
-  btnText.textContent = 'SEARCHING...';
-  btnSpinner.classList.remove('hidden');
-  try {
-    const localDraft = localStorage.getItem(`thecarfolio_draft_${cleanPlate}`);
-    let profileData = null;
-    try {
-        const profileRes = await fetch(`${NAS_DOMAIN}/${cleanPlate}.json?t=${Date.now()}`);
-        if (profileRes.ok) {
-            profileData = await profileRes.json();
-        } else {
-            throw new Error('Remote profile not found');
-        }
-    } catch {
-        if (localDraft) {
-            profileData = JSON.parse(localDraft);
-        } else if (LOCAL_MOCK_DB.profiles[cleanPlate]) {
-            profileData = LOCAL_MOCK_DB.profiles[cleanPlate];
-        } else {
-            profileData = {
-                name: `${cleanPlate} // CUSTOM VAULT`,
-                bio: `⚡ Verified Custom Vault Record\n🏁 Plate: ${cleanPlate}\n📍 THECARFOLIO Cloud Storage`,
-                avatar: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=200&q=80",
-                albums: []
-            };
-        }
-    }
-
-    if (localDraft && profileData) {
-        const draftObj = JSON.parse(localDraft);
-        profileData = {
-            ...profileData,
-            ...draftObj,
-            albums: (profileData.albums && profileData.albums.length > 0) ? profileData.albums : (draftObj.albums || [])
-        };
-    }
-
-    currentProfileCache = profileData;
-    currentGalleryPlate = cleanPlate;
-
-    const albums = profileData.albums || [];
-    let totalPhotos = 0;
-    albums.forEach(a => totalPhotos += (a.photos ? a.photos.length : 0));
-
-    renderIGProfile(profileData, cleanPlate, totalPhotos, albums.length);
-    renderAlbums(albums, cleanPlate);
-    
-    searchContainer.classList.add('hidden');
-    gallerySection.classList.remove('hidden');
-    window.history.pushState({}, document.title, `?plate=${cleanPlate}`);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } catch (err) {
-    showError(err.message || '查無此車牌相關檔案');
-  } finally {
-    submitBtn.disabled = false;
-    btnText.textContent = '立即檢索相簿 (SEARCH VAULT)';
-    btnSpinner.classList.add('hidden');
-  }
-}
-
-function renderIGProfile(profile, plate, totalPhotos, totalAlbums) {
-  const displayName = profile.car_model ? `${plate} // ${profile.car_model}` : (profile.name || plate);
-  profileTitle.textContent = displayName;
-  profileBio.textContent = profile.bio || `ARCHIVE ID: ${plate}`;
-  statPosts.textContent = totalPhotos;
-  statAlbums.textContent = totalAlbums;
-
-  if (profileBadges) {
-      profileBadges.innerHTML = '';
-      if (profile.owner_name) {
-          profileBadges.insertAdjacentHTML('beforeend', `<span class="text-[11px] font-mono bg-gray-900 text-gray-200 px-2.5 py-1 rounded-lg border border-gray-800">👤 ${profile.owner_name}</span>`);
-      }
-      if (profile.location) {
-          profileBadges.insertAdjacentHTML('beforeend', `<span class="text-[11px] font-mono bg-gray-900 text-cyan-300 px-2.5 py-1 rounded-lg border border-cyan-500/20">📍 ${profile.location}</span>`);
-      }
-      if (profile.ig_handle) {
-          const cleanIg = profile.ig_handle.replace('@', '').trim();
-          profileBadges.insertAdjacentHTML('beforeend', `
-            <a href="https://www.instagram.com/${cleanIg}/" target="_blank" class="text-[11px] font-mono bg-gradient-to-r from-purple-950/80 to-pink-950/80 hover:from-purple-800 hover:to-pink-800 text-pink-200 px-2.5 py-1 rounded-lg border border-pink-500/30 transition flex items-center space-x-1">
-              <span>📸 @${cleanIg}</span>
-            </a>
-          `);
-      }
-  }
-
-  if (profile.avatar) {
-      const avUrl = profile.avatar.startsWith('http') || profile.avatar.startsWith('data:') ? profile.avatar : `${NAS_DOMAIN}/${plate}/${profile.avatar}`;
-      profileAvatar.src = avUrl;
-      lbAvatar.src = avUrl;
-  } else {
-      profileAvatar.src = `https://placehold.co/200x200/121212/06b6d4?text=${plate}`;
-      lbAvatar.src = `https://placehold.co/100x100/121212/06b6d4?text=${plate}`;
-  }
-}
-
-function renderAlbums(albums, plate) {
-  albumsContainer.innerHTML = '';
-
-  if (!albums || albums.length === 0) {
-      currentAlbumLabel.innerHTML = `目前狀態：<span class="text-cyan-400 font-bold">數位車庫名片已建檔就緒 (0 場活動寫真)</span>`;
-      resultsContainer.className = "w-full bg-[#0f1117]/90 border border-gray-800/80 rounded-2xl p-8 text-center my-2 font-mono shadow-2xl";
-      resultsContainer.innerHTML = `
-        <div class="max-w-md mx-auto space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
-          </div>
-          <h4 class="text-base font-bold text-white tracking-wider">[ GARAGE INITIALIZED · 數位車庫已啟動 ]</h4>
-          <p class="text-xs text-gray-400 leading-relaxed font-sans">
-            您的專屬車主名片已建立完成！目前尚無車聚活動照片入庫。<br>
-            您可先領取<strong>「專屬車貼 QR Code」</strong>或匯出 <code class="text-cyan-300 font-mono">profile.json</code>，未來參與拍攝後照片將自動歸檔至此展間。
-          </p>
-          <div class="pt-2 flex flex-wrap justify-center gap-3">
-            <button onclick="openOwnerModal()" class="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-lg cursor-pointer">
-              領取專屬車貼 QR Code
-            </button>
-            <button onclick="openGarageBuilder('${plate}')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
-              編輯名片資料
-            </button>
-          </div>
-        </div>
-      `;
-      return;
-  }
-
-  albums.forEach((album, index) => {
-    const rawCover = album.cover || '';
-    const coverUrl = rawCover.startsWith('http') || rawCover.startsWith('data:') ? rawCover : `${NAS_DOMAIN}/${plate}/${rawCover}`;
-    const circleDiv = document.createElement('div');
-    circleDiv.className = "flex flex-col items-center flex-shrink-0 cursor-pointer group w-16 sm:w-20 relative";
-    
-    const isUgc = album.isUgc ? 'border-emerald-500/50' : 'border-transparent';
-
-    circleDiv.innerHTML = `
-      <div class="ring-wrapper w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gray-800 group-hover:bg-cyan-500 transition-all duration-300 border-2 ${isUgc}">
-        <div class="w-full h-full rounded-full bg-black p-0.5">
-          <img src="${coverUrl}" class="w-full h-full object-cover rounded-full" onerror="this.src='https://placehold.co/200x200/121212/ffffff?text=Img'">
-        </div>
-      </div>
-      <span class="text-[10px] font-mono text-gray-400 mt-2 truncate w-full text-center group-hover:text-gray-200">${album.title}</span>
-      <button class="delete-album-btn hidden group-hover:block absolute -top-1 -right-1 bg-red-600 hover:bg-red-500 text-white w-5 h-5 rounded-full text-[10px] font-bold shadow-lg transition">×</button>
-    `;
-
-    // 點擊圓圈載入照片
-    circleDiv.addEventListener('click', (e) => {
-      // 避免點到刪除按鈕時也觸發載入相簿
-      if(e.target.classList.contains('delete-album-btn')) return; 
-      renderGallery(album.photos || [], plate, album.title);
-    });
-
-    // 點擊刪除按鈕
-    const delBtn = circleDiv.querySelector('.delete-album-btn');
-    delBtn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      const pin = prompt(`即將刪除場次「${album.title}」。\n為確保是本人操作，請輸入車主管理密碼 (PIN)：`);
-      if (!pin) return;
-      
-      try {
-        const res = await fetch('/api/delete-album', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plate, owner_pin: pin, albumIndex: index })
-        });
-        const result = await res.json();
-        if (!res.ok) throw new Error(result.error);
-        
-        alertBox('🗑️ 相簿已成功刪除');
-        // 刪除後直接重新抓取該車牌的雲端資料
-        loadAndShowVault(plate);
-      } catch (err) {
-        alertBox(`❌ ${err.message}`);
-      }
-    });
-
-    albumsContainer.appendChild(circleDiv);
-  });
-
-  if (albums.length > 0) setTimeout(() => albumsContainer.firstChild.click(), 100);
-}
-
-function renderGallery(photoPaths, plate, albumTitle) {
-  resultsContainer.className = "grid grid-cols-3 gap-1.5 bg-[#06070b]/90 rounded-2xl overflow-hidden shadow-2xl min-h-[220px] relative border border-gray-800/60 p-1";
-  resultsContainer.innerHTML = '';
-  currentAlbumLabel.innerHTML = `目前場次：<span class="text-white font-bold">${albumTitle}</span> (${photoPaths.length}張)`;
-  currentGalleryPhotos = photoPaths;
-  currentGalleryPlate = plate;
-
-  photoPaths.forEach((path, index) => {
-    const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${plate}/${path}`;
-    const div = document.createElement('div');
-    div.className = "aspect-square bg-black relative group cursor-pointer overflow-hidden rounded-xl border border-gray-900";
-    div.innerHTML = `<img src="${imgUrl}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`;
-    div.addEventListener('click', () => {
-      currentGalleryIndex = index;
-      lightboxImg.src = imgUrl;
-      lbPlate.textContent = profileTitle.textContent;
-      lbCounter.textContent = `${index + 1} / ${photoPaths.length}`;
-      lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
-      downloadBtn.href = imgUrl;
-      lightboxModal.classList.remove('hidden');
-      setTimeout(() => lightboxModal.classList.remove('opacity-0'), 10);
-    });
-    resultsContainer.appendChild(div);
-  });
-}
-
-// ==========================================
-// 車主建檔與名片工作室 (Garage Studio) 邏輯
-// ==========================================
-const bPlate = document.getElementById('builder-plate');
-const bModel = document.getElementById('builder-model');
-const bOwner = document.getElementById('builder-owner');
-const bLocation = document.getElementById('builder-location');
-const bIg = document.getElementById('builder-ig');
-const bBio = document.getElementById('builder-bio');
-const bAvatarInput = document.getElementById('builder-avatar-input');
-const previewAvatarImg = document.getElementById('preview-avatar-img');
-const previewAvatarText = document.getElementById('preview-avatar-text');
-
-// 頭貼上傳與 Canvas 置中正方壓縮
-bAvatarInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 400; canvas.height = 400;
-            const ctx = canvas.getContext('2d');
-            const minSide = Math.min(img.width, img.height);
-            const sx = (img.width - minSide) / 2;
-            const sy = (img.height - minSide) / 2;
-            ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, 400, 400);
-            currentUploadedAvatarData = canvas.toDataURL('image/jpeg', 0.85);
-            previewAvatarImg.src = currentUploadedAvatarData;
-            previewAvatarImg.classList.remove('hidden');
-            previewAvatarText.classList.add('hidden');
-        };
-        img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-});
-
-function updateLivePreview() {
-    const p = (bPlate.value || 'BHS0759').toUpperCase().trim();
-    const m = (bModel.value || 'BMW M4').trim();
-    const o = bOwner.value.trim();
-    const loc = bLocation.value.trim() || '未設定地區';
-    const bio = bBio.value.trim() || '改裝明細與個人簡介即時預覽...';
-
-    previewAvatarText.textContent = p.slice(0, 3);
-    document.getElementById('preview-title').textContent = `${p} // ${m}`;
-    document.getElementById('preview-location').textContent = loc;
-    document.getElementById('preview-bio').textContent = o ? `👤 ${o} · ${bio}` : bio;
-}
-
-[bPlate, bModel, bOwner, bLocation, bIg, bBio].forEach(el => {
-    el.addEventListener('input', updateLivePreview);
-});
-
-function openGarageBuilder(prefillPlate = '') {
-    hideError();
-    const targetPlate = (prefillPlate || currentGalleryPlate || plateInput.value || '').replace(/[\s-]+/g, '').toUpperCase();
-    bPlate.value = targetPlate;
-    bAvatarInput.value = '';
-    currentUploadedAvatarData = '';
-    previewAvatarImg.classList.add('hidden');
-    previewAvatarText.classList.remove('hidden');
-
-    if (document.getElementById('builder-pin')) {
-        document.getElementById('builder-pin').value = '';
-    }
-
-    if (targetPlate && currentGalleryPlate === targetPlate && currentProfileCache) {
-        bModel.value = currentProfileCache.car_model || '';
-        bOwner.value = currentProfileCache.owner_name || '';
-        bLocation.value = currentProfileCache.location || '';
-        bIg.value = currentProfileCache.ig_handle || '';
-        bBio.value = currentProfileCache.bio || '';
-        
-        if (currentProfileCache.avatar) {
-            currentUploadedAvatarData = currentProfileCache.avatar.startsWith('http') || currentProfileCache.avatar.startsWith('data:') 
-                ? currentProfileCache.avatar 
-                : `${NAS_DOMAIN}/${targetPlate}/${currentProfileCache.avatar}`;
-            previewAvatarImg.src = currentUploadedAvatarData;
-            previewAvatarImg.classList.remove('hidden');
-            previewAvatarText.classList.add('hidden');
-        }
-    } else {
-        bModel.value = '';
-        bOwner.value = '';
-        bLocation.value = '';
-        bIg.value = '';
-        bBio.value = '';
-        currentUploadedAvatarData = '';
-    }
-    updateLivePreview();
-    garageBuilderModal.classList.remove('hidden');
-}
-
-function closeGarageBuilder() {
-    garageBuilderModal.classList.add('hidden');
-}
-
-function buildProfilePayload() {
-    const cleanPlate = (bPlate.value || 'BHS0759').trim().toUpperCase().replace(/[\s-]+/g, '');
-    const modelStr = bModel.value.trim();
-    const pinStr = (document.getElementById('builder-pin').value || '').trim();
-    return {
-        plate: cleanPlate,
-        owner_pin: pinStr,
-        name: modelStr ? `${cleanPlate} // ${modelStr}` : cleanPlate,
-        car_model: modelStr,
-        owner_name: bOwner.value.trim(),
-        location: bLocation.value.trim(),
-        ig_handle: bIg.value.trim().replace('@', ''),
-        bio: bBio.value.trim(),
-        locked: false,
-        avatar: currentUploadedAvatarData || (currentGalleryPlate === cleanPlate && currentProfileCache.avatar ? currentProfileCache.avatar : ""),
-        albums: (currentGalleryPlate === cleanPlate && currentProfileCache.albums) ? currentProfileCache.albums : []
-    };
-}
-
-function downloadCurrentProfileJson() {
-    const payload = buildProfilePayload();
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 4));
-    const dlAnchor = document.createElement('a');
-    dlAnchor.setAttribute("href", dataStr);
-    dlAnchor.setAttribute("download", "profile.json");
-    document.body.appendChild(dlAnchor);
-    dlAnchor.click();
-    dlAnchor.remove();
-    alertBox(`已匯出 ${payload.plate} 的 profile.json 檔案！`);
-}
-
-document.getElementById('garage-builder-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const payload = buildProfilePayload();
-    const cleanPlate = payload.plate;
-    if (!cleanPlate) return;
-
-    if (!payload.owner_pin) {
-        alertBox('請設定您的車主管理密碼');
-        return;
-    }
-
-    const submitBtnEl = document.getElementById('builder-submit-btn');
-    submitBtnEl.disabled = true;
-    submitBtnEl.textContent = '正在同步至雲端金庫...';
-
-    // 儲存至瀏覽器快取確保零延遲即時生效
-    localStorage.setItem(`thecarfolio_draft_${cleanPlate}`, JSON.stringify(payload));
-    const customList = JSON.parse(localStorage.getItem('thecarfolio_custom_plates') || '[]');
-    if (!customList.includes(cleanPlate)) {
-        customList.push(cleanPlate);
-        localStorage.setItem('thecarfolio_custom_plates', JSON.stringify(customList));
-    }
-
-    try {
-        const response = await fetch('/api/save-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-            throw new Error(result.error || '連線異常，無法寫入資料');
-        }
-
-        closeGarageBuilder();
-        alertBox(`車牌 ${cleanPlate} 數位名片已成功儲存！`);
-        loadAndShowVault(cleanPlate);
-
-    } catch (err) {
-        console.error('Save Profile Error:', err);
-        alertBox(`❌ 儲存失敗: ${err.message}`);
-    } finally {
-        submitBtnEl.disabled = false;
-        submitBtnEl.textContent = '儲存並開啟專屬數位展間 (SAVE & LAUNCH)';
-    }
-});
-
-// ==========================================
-// UGC 車主相簿上傳邏輯
-// ==========================================
-const ugcFileInput = document.getElementById('ugc-file-input');
-const ugcPreviewContainer = document.getElementById('ugc-preview-container');
-
-function openUgcModal() { 
-  if(!currentGalleryPlate) return;
-  ugcFileInput.value = '';
-  currentUgcPhotos = [];
-  ugcPreviewContainer.innerHTML = '';
-  document.getElementById('ugc-album-title').value = '';
-  
-  if (document.getElementById('ugc-pin')) {
-      document.getElementById('ugc-pin').value = '';
-  }
-
-  ugcModal.classList.remove('hidden'); 
-}
-
-function closeUgcModal() { ugcModal.classList.add('hidden'); }
-
-// Canvas 強制壓縮演算法 (長邊不超過 1600px)
-function compressImage(file, maxSize = 1600) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                let w = img.width; let h = img.height;
-                if (w > maxSize || h > maxSize) {
-                    if (w > h) { h = Math.round((h * maxSize) / w); w = maxSize; }
-                    else { w = Math.round((w * maxSize) / h); h = maxSize; }
-                }
-                const canvas = document.createElement('canvas');
-                canvas.width = w; canvas.height = h;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, w, h);
-                resolve(canvas.toDataURL('image/jpeg', 0.8));
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-ugcFileInput.addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files).slice(0, 6 - currentUgcPhotos.length);
-    for (let file of files) {
-        const base64Str = await compressImage(file);
-        currentUgcPhotos.push(base64Str);
-        const div = document.createElement('div');
-        div.className = 'aspect-square bg-gray-900 rounded-lg overflow-hidden border border-gray-700';
-        div.innerHTML = `<img src="${base64Str}" class="w-full h-full object-cover">`;
-        ugcPreviewContainer.appendChild(div);
-    }
-});
-
-document.getElementById('ugc-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if(currentUgcPhotos.length === 0) {
-        alertBox('請至少選擇一張照片');
-        return;
-    }
-    const albumTitle = document.getElementById('ugc-album-title').value.trim();
-    const pinStr = document.getElementById('ugc-pin').value.trim();
-
-    if (!albumTitle) {
-        alertBox('請輸入相簿名稱');
-        return;
-    }
-    if (!pinStr) {
-        alertBox('請輸入車主密碼進行驗證');
-        return;
-    }
-
-    const btn = document.getElementById('ugc-submit-btn');
-    btn.textContent = '雲端壓縮同步中...';
-    btn.disabled = true;
-
-    try {
-        const response = await fetch('/api/upload-photos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                plate: currentGalleryPlate,
-                owner_pin: pinStr,
-                albumTitle: albumTitle,
-                photos: currentUgcPhotos
-            })
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-            throw new Error(result.error || '上傳失敗');
-        }
-
-        closeUgcModal();
-        alertBox(`相簿「${albumTitle}」上傳成功！已同步至 AWS S3。`);
-        
-        // 重新載入展間，讓剛上傳的相簿立刻顯示出來
-        loadAndShowVault(currentGalleryPlate);
-
-    } catch (err) {
-        console.error('UGC Upload Error:', err);
-        alertBox(`❌ 上傳失敗: ${err.message}`);
-    } finally {
-        btn.textContent = '上傳並送出審核 (SUBMIT)';
-        btn.disabled = false;
-    }
-});
-
-// ==========================================
-// 異議申訴 Modal 控制
-// ==========================================
-function openDisputeModal() { disputeModal.classList.remove('hidden'); }
-function closeDisputeModal() { disputeModal.classList.add('hidden'); }
-
-// ==========================================
-// 其他輔助函數
-// ==========================================
-lbNextBtn.addEventListener('click', () => {
-  currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryPhotos.length;
-  showLightboxPhoto(currentGalleryIndex);
-});
-lbPrevBtn.addEventListener('click', () => {
-  currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryPhotos.length) % currentGalleryPhotos.length;
-  showLightboxPhoto(currentGalleryIndex);
-});
-function showLightboxPhoto(idx) {
-  const path = currentGalleryPhotos[idx];
-  const imgUrl = path.startsWith('http') || path.startsWith('data:') ? path : `${NAS_DOMAIN}/${currentGalleryPlate}/${path}`;
-  lightboxImg.src = imgUrl;
-  lbCounter.textContent = `${idx + 1} / ${currentGalleryPhotos.length}`;
-  lbFilename.textContent = path.split('/').pop() || 'photo.jpg';
-  downloadBtn.href = imgUrl;
-}
-closeLightbox.addEventListener('click', () => {
-    lightboxModal.classList.add('opacity-0');
-    setTimeout(() => lightboxModal.classList.add('hidden'), 300);
-});
-
-function openOwnerModal() {
-    ownerModal.classList.remove('hidden');
-    const qrcodeContainer = document.getElementById('qrcode-container');
-    qrcodeContainer.innerHTML = '';
-    new QRCode(qrcodeContainer, {
-        text: window.location.href,
-        width: 140,
-        height: 140,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
-}
-
-function closeOwnerModal() { ownerModal.classList.add('hidden'); }
-
-function copyCurrentLink() {
-    const dummy = document.createElement('textarea');
-    document.body.appendChild(dummy);
-    dummy.value = window.location.href;
-    dummy.select();
-    document.execCommand('copy');
-    document.body.removeChild(dummy);
-    alertBox('已成功複製展間連結至剪貼簿！');
-}
-
-function shareProfile(e) {
-    if (navigator.share) {
-        navigator.share({ title: document.title, url: window.location.href }).catch(() => {});
-    } else {
-        openOwnerModal();
-    }
-}
-
-function alertBox(msg) {
-    const toast = document.createElement('div');
-    toast.className = 'fixed bottom-6 right-6 z-50 bg-cyan-500 text-black font-mono text-xs font-bold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300';
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 2500);
-}
-</script>
-</body>
-</html>
+// 精準對齊 S3 儲存桶
+const NAS_DOMAIN = '
