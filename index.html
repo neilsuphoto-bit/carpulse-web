@@ -507,8 +507,8 @@ tailwind.config = {
 </footer>
 
 <script>
-// 直接對應到你的 AWS S3 網域 (或你的 S3 靜態網址 / CloudFront)
-const NAS_DOMAIN = 'https://thecarfolio-vault.s3.amazonaws.com';
+// 直接對應到你真實的 AWS S3 網域
+const NAS_DOMAIN = 'https://thecarfolio-images-2026.s3.ap-northeast-1.amazonaws.com';
 
 const DIVERSE_MICRO_CARS = [
   "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80",
@@ -839,7 +839,7 @@ async function loadAndShowVault(cleanPlate) {
     const localDraft = localStorage.getItem(`thecarfolio_draft_${cleanPlate}`);
     let profileData = null;
     try {
-        const profileRes = await fetch(`${NAS_DOMAIN}/profiles/${cleanPlate}.json?t=${Date.now()}`);
+        const profileRes = await fetch(`${NAS_DOMAIN}/${cleanPlate}.json?t=${Date.now()}`);
         if (profileRes.ok) {
             profileData = await profileRes.json();
         } else {
